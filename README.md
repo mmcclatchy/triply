@@ -1,98 +1,69 @@
-# Flask React Project
+# Road Trip App
 
-This is the backend for the Flask React project.
+Check out the app: [Live Demo](https://)
 
-## Getting started
+## Table of Contents
 
-1. Clone this repository (only this branch)
+1. [Technologies Used](#technologies-used)
+2. [Feature List](#feature-list)
+3. [MVP](#mvp)
+4. [Front End Routes](#front-end-routes)
+5. [Back End Routes](#back-end-routes)
+6. [Database Schema](#database-schema)
 
-   ```bash
-   git clone https://github.com/appacademy-starters/react-project-starter.git
-   ```
+---
 
-2. Install dependencies
+## **Technologies Used**
 
-      ```bash
-      pipenv install --dev -r dev-requirements.txt && pipenv install -r requirements.txt
-      ```
+* React
+* Redux
+* Google Map API
+  * [Distance Matrix API](https://developers.google.com/maps/documentation/distance-matrix/overview)
+  * [Places API](https://developers.google.com/places/web-service/overview)
+* Fuel Effeciency API
 
-3. Create a **.env** file based on the example with proper settings for your
-   development environment
-4. Setup your PostgreSQL user, password and database and make sure it matches your **.env** file
+---
 
-5. Get into your pipenv, migrate your database, seed your database, and run your flask app
+## **Feature List**
 
-   ```bash
-   pipenv shell
-   ```
+---
 
-   ```bash
-   flask db upgrade
-   ```
+## **MVP**
 
-   ```bash
-   flask seed all
-   ```
+1. Users
 
-   ```bash
-   flask run
-   ```
+    * User Registration with validations
+    * Guest User for demonstration
+    * Profile photo
+    * Create preferences for restaurants and hotels
+    * Add trips, delete trips
 
-6. To run the React App in development, checkout the [README](./react-app/README.md) inside the `react-app` directory.
+2. Trips
 
-***
-*IMPORTANT!*
-   If you add any python dependencies to your pipfiles, you'll need to regenerate your requirements.txt before deployment.
-   You can do this by running:
+    * Map starting point and ending point
+    * Decide what time you want to leave or what time you want to arrive
+    * Make nodes for stops along the route
 
-   ```bash
-   pipenv lock -r > requirements.txt
-   ```
+3. Suggestions
 
-*ALSO IMPORTANT!*
-   psycopg2-binary MUST remain a dev dependency because you can't install it on apline-linux.
-   There is a layer in the Dockerfile that will install psycopg2 (not binary) for us.
-***
+    * Make suggestions for gas stations, restaurants and hotels
+    * Suggestions will be based off of user preferences/car info
+    * Make API calls to Google and Federal Government to query info needed
 
-## Deploy to Heroku
+4. Map
 
-1. Create a new project on Heroku
-2. Under Resources click "Find more add-ons" and add the add on called "Heroku Postgres"
-3. Install the [Heroku CLI](https://devcenter.heroku.com/articles/heroku-command-line)
-4. Run
+    * Displays trip route with stops
 
-   ```bash
-   heroku login
-   ```
+---
 
-5. Login to the heroku container registry
+## **Front End Routes**
 
-   ```bash
-   heroku container:login
-   ```
+---
 
-6. Update the `REACT_APP_BASE_URL` variable in the Dockerfile.
-   This should be the full URL of your Heroku app: i.e. "https://flask-react-aa.herokuapp.com"
-7. Push your docker container to heroku from the root directory of your project.
-   This will build the dockerfile and push the image to your heroku container registry
+## **Back End Routes**
 
-   ```bash
-   heroku container:push web -a {NAME_OF_HEROKU_APP}
-   ```
+---
 
-8. Release your docker container to heroku
+## **Schema**
 
-   ```bash
-   heroku container:release web -a {NAME_OF_HEROKU_APP}
-   ```
-
-9. set up your database:
-
-   ```bash
-   heroku run -a {NAME_OF_HEROKU_APP} pipenv run flask db upgrade
-   heroku run -a {NAME_OF_HEROKU_APP} pipenv run flask seed all
-   ```
-
-10. Under Settings find "Config Vars" and add any additional/secret .env variables.
-
-11. profit
+![Database Schema](schema_image.png)
