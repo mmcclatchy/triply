@@ -5,7 +5,7 @@ from .user_cuisines import user_cuisines
 
 
 class User(db.Model, UserMixin):
-    __tablename__ = 'users'
+    __tablename__ = "users"
 
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(40), nullable=False, unique=True)
@@ -14,10 +14,11 @@ class User(db.Model, UserMixin):
     star_min = db.Column(db.Integer)
     star_max = db.Column(db.Integer)
 
-    cars = db.relationship('Car', backref='user', lazy='joined')
-    cuisines = db.relationship('Cuisine', secondary=user_cuisines,
-                               lazy='joined',
-                               backref=db.backref('user', lazy=True))
+    cars = db.relationship("Car", back_populates="users")
+    # cars = db.relationship("Car", backref="user", lazy="joined")
+    cuisines = db.relationship("Cuisine", secondary=user_cuisines,
+                               lazy="joined",
+                               backref=db.backref("user", lazy=True))
 
     @property
     def password(self):
