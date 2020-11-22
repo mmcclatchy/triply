@@ -9,4 +9,4 @@ class Restaurant(db.Model):
     cuisine_id = db.Column(db.Integer, ForeignKey='cuisine.id', nullable=False)
     name = db.Column(db.String(100), nullable=False)
 
-    
+    stops = db.relationship('Stop', backref='restaurant', lazy='joined')
