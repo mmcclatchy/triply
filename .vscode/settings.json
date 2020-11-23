@@ -2,5 +2,26 @@
     "python.pythonPath": "/home/echo/dev/appacademy/starters/python-project-starter/.venv/bin/python",
     "python.linting.pylintEnabled": false,
     "python.linting.enabled": true,
-    "python.linting.pycodestyleEnabled": true
+    "python.linting.pycodestyleEnabled": true,
+    "[javascript]": {
+        "editor.insertSpaces": true,
+        "editor.tabSize": 2,
+    },
+    "[javascriptreact]": {
+        "editor.insertSpaces": true,
+        "editor.tabSize": 2,
+    },
+    "[python]": {
+        "editor.insertSpaces": true,
+        "editor.tabSize": 4,
+    },
+    "prettier.jsxSingleQuote": true,
+    "prettier.printWidth": 79,
+    "prettier.singleQuote": true,
+    "prettier.semi": true,
+    "prettier.trailingComma": "none",
+    "prettier.bracketSpacing": true,
+    "prettier.jsxBracketSameLine": true,
+    "prettier.arrowParens": "avoid",
+    
 }
