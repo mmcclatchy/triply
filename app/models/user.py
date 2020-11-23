@@ -14,8 +14,7 @@ class User(db.Model, UserMixin):
     star_min = db.Column(db.Integer)
     star_max = db.Column(db.Integer)
 
-    cars = db.relationship("Car", back_populates="users")
-    # cars = db.relationship("Car", backref="user", lazy="joined")
+    cars = db.relationship("Car", backref="user", lazy="joined")
     cuisines = db.relationship("Cuisine", secondary=user_cuisines,
                                lazy="joined",
                                backref=db.backref("user", lazy=True))
