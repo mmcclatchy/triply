@@ -4,7 +4,8 @@ from .cuisines import Cuisine
 from .gas_stations import GasStation
 from .hotels import Hotel
 from .restaurants import Restaurant
+from .restaurant_cuisines import restaurant_cuisines
 from .stops import Stop
+from .stop_cuisines import stop_cuisines
 from .trips import Trip
-from .user_cuisines import user_cuisines
 from .user import User

@@ -1,10 +1,10 @@
 from .db import db
 
 
-user_cuisines = db.Table('user_cuisines',
-                         db.Column('user_id',
+stop_cuisines = db.Table('stop_cuisines',
+                         db.Column('stop_id',
                                    db.Integer,
-                                   db.ForeignKey('users.id'),
+                                   db.ForeignKey('stops.id'),
                                    primary_key=True),
                          db.Column('cuisine_id',
                                    db.Integer,
