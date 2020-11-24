@@ -12,7 +12,9 @@ car_routes = Blueprint('cars', __name__, url_prefix='/api')
 def get_cars(user_id):
     try:
         cars = Car.query.filter(Car.user_id == user_id).all()
-        return {'cars': normalize(cars)}
+        car_json = jsonify({'cars': normalize(cars)})
+        print('**************\n\nCAR JSON: ', car_json)
+        return car_json
     except SQLAlchemyError as e:
         error = str(e.__dict__['orig'])
         print(error)
