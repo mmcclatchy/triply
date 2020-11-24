@@ -16,4 +16,4 @@ class Trip(db.Model):
     end_time = db.Column(db.DateTime, nullable=False)
     end_location = db.Column(db.String(255), nullable=False)
 
-    sub_stops = db.relationship('SubStop', backref='trip', lazy='joined')
+    stops = db.relationship('Stop', backref='trip', lazy='joined')
