@@ -1,0 +1,10 @@
+.logo {
+  background-image: url("../assets/triply_logo2.png");
+
+  width: 100px;
+  height: 100px;
+}
+
+.header__content {
+  display: flex;
+}
