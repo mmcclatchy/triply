@@ -37,7 +37,15 @@ def get_car(car_id):
 @car_routes.route('/users/<int:user_id>/cars', methods=['POST'])
 @login_required
 def post_car(user_id):
-    car = Car(user_id=user_id, car_id=request.data.carId)
+    data = request.data
+    car = Car(
+        user_id=user_id,
+        api_id=data.apiId,
+        make=data.make,
+        model=data.model,
+        year=data.year,
+        mpg=data.mpg
+        )
     try:
         db.session.add(car)
         db.session.commit()
