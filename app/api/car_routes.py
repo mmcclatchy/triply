@@ -44,8 +44,7 @@ def post_car(user_id):
         make=data.make,
         model=data.model,
         year=data.year,
-        mpg=data.mpg
-        )
+        mpg=data.mpg)
     try:
         db.session.add(car)
         db.session.commit()
