@@ -6,7 +6,6 @@ from app.models import User
 
 dr = DataRequired()
 e = Email()
-match = EqualTo('confirm', message='Passwords must match')
 
 
 def user_exists(form, field):
@@ -19,6 +18,5 @@ def user_exists(form, field):
 
 class SignUpForm(FlaskForm):
     username = StringField('username', validators=[dr])
-    email = StringField('email', validators=[dr, user_exists])
-    password = StringField('password', validators=[dr, match])
-    confirm = StringField('confirm')
+    email = StringField('email', validators=[dr, e, user_exists])
+    password = StringField('password', validators=[dr])
