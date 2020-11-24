@@ -8,6 +8,7 @@ from .Stop import Stop
 
 class Trip:
 
+
     ##todo: add method that converts to things that can easily save
     ##      add static method to give id from database and builds a trip
     def __init__(self, **kwargs):
@@ -17,7 +18,7 @@ class Trip:
         self.travelPerIncrement = kwargs.get('travelPerIncrement')
         self.foodType = kwargs.get('foodTypes')
         self.car = kwargs.get('car')
-        
+
         self.stops = []
 
         self.checkCorAndSetDirections()

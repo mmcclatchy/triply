@@ -1,8 +1,8 @@
-"""create tables
+"""updated models
 
-Revision ID: dfbd53fc8887
-Revises: 
-Create Date: 2020-11-23 13:37:42.216413
+Revision ID: f29ff29b7670
+Revises:
+Create Date: 2020-11-24 12:54:14.655519
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'dfbd53fc8887'
+revision = 'f29ff29b7670'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -54,7 +54,7 @@ def upgrade():
     op.create_table('cars',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('user_id', sa.Integer(), nullable=False),
-    sa.Column('vehicle_id', sa.Integer(), nullable=False),
+    sa.Column('api_id', sa.Integer(), nullable=False),
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
@@ -70,6 +70,8 @@ def upgrade():
     sa.Column('user_id', sa.Integer(), nullable=False),
     sa.Column('name', sa.String(length=100), nullable=False),
     sa.Column('car_id', sa.Integer(), nullable=False),
+    sa.Column('daily_time_limit', sa.Integer(), nullable=False),
+    sa.Column('stop_time_limit', sa.Integer(), nullable=False),
     sa.Column('toll', sa.Boolean(), nullable=False),
     sa.Column('start_time', sa.DateTime(), nullable=False),
     sa.Column('start_location', sa.String(length=255), nullable=False),

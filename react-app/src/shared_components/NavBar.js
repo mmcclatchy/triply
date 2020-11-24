@@ -1,24 +1,27 @@
-import React from "react";
-import { NavLink } from "react-router-dom";
-import LogoutButton from "./LogoutButton";
+import React from 'react';
+import { NavLink } from 'react-router-dom';
+import LogoutButton from './LogoutButton';
 
-const NavBar = ({ setAuthenticated }) => {
+const NavBar = ({ setAuthenticated, userId }) => {
   return (
     <nav>
       <ul>
         <li>
-          <NavLink to="/" exact={true} activeClassName="active">
+          <NavLink to='/' exact={true} activeClassName='active'>
             Home
           </NavLink>
         </li>
         <li>
-          <NavLink to="/sign-up" exact={true} activeClassName="active">
+          <NavLink to='/sign-up' exact={true} activeClassName='active'>
             Sign Up
           </NavLink>
         </li>
         <li>
-          <NavLink to="/users" exact={true} activeClassName="active">
-            User List
+          <NavLink
+            to={`/profile/${userId}`}
+            exact={true}
+            activeClassName='active'>
+            My Profile
           </NavLink>
         </li>
         <li>
