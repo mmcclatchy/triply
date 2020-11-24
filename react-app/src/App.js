@@ -10,10 +10,12 @@ import { authenticate } from './services/auth';
 function App() {
   const [authenticated, setAuthenticated] = useState(false);
   const [loaded, setLoaded] = useState(false);
+  const [userId, setUserId] = useState('');
 
   useEffect(() => {
     (async () => {
       const user = await authenticate();
+      setUserId(user.id);
       if (!user.errors) {
         setAuthenticated(true);
       }
@@ -40,13 +42,13 @@ function App() {
         />
       </Route>
       <ProtectedRoute
-        path='/users/:userId'
+        path='/profile/:userId'
         exact={true}
         authenticated={authenticated}>
         <User />
       </ProtectedRoute>
       <ProtectedRoute path='/' exact={true} authenticated={authenticated}>
-        <Homepage setAuthenticated={setAuthenticated} />
+        <Homepage setAuthenticated={setAuthenticated} userId={userId} />
       </ProtectedRoute>
     </BrowserRouter>
   );
