@@ -7,15 +7,18 @@ from .Stop import Stop
 
 
 class Trip:
-    def __init__(self, startCor, endCor, travelPerDay, travelPerIncrement, foodTypes):
+
+    ##todo: add method that converts to things that can easily save
+    ##      add static method to give id from database and builds a trip
+    def __init__(self, startCor, endCor, travelPerDay, travelPerIncrement, foodTypes, car):
         self.startCor = startCor
         self.endCor = endCor
         self.travelPerDay = travelPerDay
         self.travelPerIncrement = travelPerIncrement
         self.foodType = foodTypes
+        self.car = car
         
         self.stops = []
-
 
     def decodePolyline(self, encoded):
         return decodePolyline(encoded)
@@ -48,6 +51,7 @@ class Trip:
 
     def addStop(self, cord, **kwargs):
         self.stops.append(Stop(cord, **kwargs))
+
 
 
 
