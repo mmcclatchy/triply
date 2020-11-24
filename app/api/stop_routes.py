@@ -57,7 +57,7 @@ def post_stop(trip_id):
 
 
 # PUT (Modify) a specific stop
-@stop_routes.route('/stops/<int:stop_id', methods=['PUT'])
+@stop_routes.route('/stops/<int:stop_id>', methods=['PUT'])
 @login_required
 def put_stop(stop_id):
     data = request.data
@@ -75,7 +75,7 @@ def put_stop(stop_id):
 
 
 # DELETE a specific stop
-@stop_routes.route('/stops/<int:stop_id', methods=['DELETE'])
+@stop_routes.route('/stops/<int:stop_id>', methods=['DELETE'])
 @login_required
 def delete_stop(stop_id):
     stop = Stop.query.get(stop_id)

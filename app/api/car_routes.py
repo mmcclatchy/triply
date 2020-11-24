@@ -7,7 +7,7 @@ car_routes = Blueprint('cars', __name__, url_prefix='/api')
 
 
 # GET all cars owned by the specific user
-@car_routes.route('/<int:user_id>/cars', methods=['GET'])
+@car_routes.route('/users/<int:user_id>/cars', methods=['GET'])
 @login_required
 def get_cars(user_id):
     try:
@@ -34,10 +34,10 @@ def get_car(car_id):
 
 
 # POST a new car for a specific user
-@car_routes.route('/<int:user_id>/cars', methods=['POST'])
+@car_routes.route('/users/<int:user_id>/cars', methods=['POST'])
 @login_required
 def post_car(user_id):
-    car = Car(user_id=user_id, vehicle_id=request.data.carId)
+    car = Car(user_id=user_id, car_id=request.data.carId)
     try:
         db.session.add(car)
         db.session.commit()
