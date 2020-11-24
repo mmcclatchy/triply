@@ -1,7 +1,7 @@
 """updated models
 
 Revision ID: f29ff29b7670
-Revises: 
+Revises:
 Create Date: 2020-11-24 12:54:14.655519
 
 """
@@ -54,7 +54,7 @@ def upgrade():
     op.create_table('cars',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('user_id', sa.Integer(), nullable=False),
-    sa.Column('car_id', sa.Integer(), nullable=False),
+    sa.Column('api_id', sa.Integer(), nullable=False),
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
