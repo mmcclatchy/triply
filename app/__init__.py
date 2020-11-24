@@ -6,8 +6,15 @@ from flask_wtf.csrf import CSRFProtect, generate_csrf
 from flask_login import LoginManager
 
 from .models import db, User
-from .api.user_routes import user_routes
 from .api.auth_routes import auth_routes
+from .api.car_routes import car_routes
+from .api.cuisine_routes import cuisine_routes
+from .api.gas_station_routes import gas_station_routes
+from .api.hotel_routes import hotel_routes
+from .api.restaurant_routes import restaurant_routes
+from .api.stop_routes import stop_routes
+from .api.trip_routes import trip_routes
+from .api.user_routes import user_routes
 
 from .seeds import seed_commands
 
@@ -29,8 +36,15 @@ def load_user(id):
 app.cli.add_command(seed_commands)
 
 app.config.from_object(Config)
-app.register_blueprint(user_routes, url_prefix='/api/users')
 app.register_blueprint(auth_routes, url_prefix='/api/auth')
+app.register_blueprint(car_routes, url_prefix='/api')
+app.register_blueprint(cuisine_routes, url_prefix='/api')
+app.register_blueprint(gas_station_routes, url_prefix='/api')
+app.register_blueprint(hotel_routes, url_prefix='/api')
+app.register_blueprint(restaurant_routes, url_prefix='/api')
+app.register_blueprint(stop_routes, url_prefix='/api')
+app.register_blueprint(trip_routes, url_prefix='/api')
+app.register_blueprint(user_routes, url_prefix='/api/users')
 db.init_app(app)
 Migrate(app, db)
 

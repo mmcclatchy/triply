@@ -12,7 +12,7 @@ trip_routes = Blueprint('trips', __name__, url_prefix='/api')
 def get_trips(user_id):
     try:
         trips = Trip.query.filter(Trip.user_id == user_id).all()
-        trips_json = jsonify('trips': normalize(trips))
+        trips_json = jsonify({'trips': normalize(trips)})
         return trips_json
     except SQLAlchemyError as e:
         error = str(e.__dict__['orig'])
@@ -53,7 +53,7 @@ def post_trip(user_id):
     try:
         db.session.add(trip)
         db.session.commit()
-        trip_json = jsonify('trips': normalize(trip))
+        trip_json = jsonify({'trips': normalize(trip)})
         return trip_json
     except SQLAlchemyError as e:
         error = str(e.__dict__['orig'])
@@ -72,7 +72,7 @@ def modify_trip(trip_id):
         for key in data:
             trip[snake_case(key)] = data[key]
         db.session.commit()
-        return {'trips': normalize(trip)}
+        return {{'trips': normalize(trip)}}
     except SQLAlchemyError as e:
         error = str(e.__dict__['orig'])
         print(error)
