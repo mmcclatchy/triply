@@ -6,4 +6,4 @@ class Car(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
-    vehicle_id = db.Column(db.Integer, nullable=False)
+    car_id = db.Column(db.Integer, nullable=False)
