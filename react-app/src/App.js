@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { BrowserRouter, Route } from "react-router-dom";
 import LoginForm from "./Login/LoginForm";
 import SignUpForm from "./Signup/SignUpForm";
+import Map from "./Map/Map"
 import ProtectedRoute from "./authorization/ProtectedRoute";
 import UsersList from "./old_components/UsersList";
 import User from "./old_components/User";
@@ -40,6 +41,9 @@ function App() {
           setAuthenticated={setAuthenticated}
         />
       </Route>
+      <Route path="/map" exact={true}>
+        <Map />
+      </Route>
       <ProtectedRoute path="/users" exact={true} authenticated={authenticated}>
         <UsersList />
       </ProtectedRoute>
@@ -50,9 +54,9 @@ function App() {
       >
         <User />
       </ProtectedRoute>
-      <ProtectedRoute path="/" exact={true} authenticated={authenticated}>
+      {/* <ProtectedRoute path="/" exact={true} authenticated={authenticated}>
         <Homepage setAuthenticated={setAuthenticated} />
-      </ProtectedRoute>
+      </ProtectedRoute> */}
     </BrowserRouter>
   );
 }
