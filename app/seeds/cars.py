@@ -1,12 +1,12 @@
 from werkzeug.security import generate_password_hash
-from app.models import db, User
+from app.models import db, Car
 
 # Adds a demo user, you can add other users here if you want
 
 
-def seed_users():
+def seed_cars():
 
-    demo = User(username='Demo', email='demo@aa.io', password='password')
+    demo = Car(user_id=1, car_id=19720, make="BMW", model="525I", year=2004, mpg=)
     mark = User(username='Mark', email="mark@aa.io", password='password')
     ryan = User(username='Ryan', email="ryan@aa.io", password='password')
     brandon = User(username='Brandon', email="brandon@aa.io", password='password')  # noqa
@@ -26,6 +26,6 @@ def seed_users():
 # the auto incrementing primary key
 
 
-def undo_users():
-    db.session.execute('TRUNCATE users;')
+def undo_cars():
+    db.session.execute('TRUNCATE cars;')
     db.session.commit()
