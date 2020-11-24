@@ -10,24 +10,30 @@ trip_routes = Blueprint('trips', __name__)
 @trip_routes.route('/<int:user_id>/trips', methods=['GET'])
 @login_required
 def get_trips(user_id):
-    trips = Trip.query.filter(Trip.user_id == user_id).all()
-    if trips:
+    try:
+        trips = Trip.query.filter(Trip.user_id == user_id).all()
         trips_json = jsonify('trips': normalize(trips))
         return trips_json
-    else:
-        return {'errors': [f'No trips found for User Id: {user_id}']}
+    except SQLAlchemyError as e:
+        error = str(e.__dict__['orig'])
+        print(error)
+        db.session.rollback()
+        return {'errors': ['An error occurred while retrieving the data']}, 500
 
 
 # GET a specific trip associated for a user
 @trip_routes.route('/<int:trip_id>', methods=['GET'])
 @login_required
 def get_trip(trip_id):
-    trip = Trip.query.filter(Trip.id == trip_id).first()
-    if trip:
+    try:
+        trip = Trip.query.filter(Trip.id == trip_id).first()
         trip_json = jsonify({'trips': normalize(trip)})
         return trip_json
-    else:
-        return {'errors': [f'Trip Id: {trip_id} was not found']}, 404
+    except SQLAlchemyError as e:
+        error = str(e.__dict__['orig'])
+        print(error)
+        db.session.rollback()
+        return {'errors': ['An error occurred while retrieving the data']}, 500
 
 
 # POST a trip associated with a user
@@ -51,9 +57,11 @@ def post_trip(user_id):
         db.session.commit()
         trip_json = jsonify('trips': normalize(trip))
         return trip_json
-    except TripCreationError:
-        print(TripCreationError)
-        return {'errors': ['Trip data was not valid']}, 400
+    except SQLAlchemyError as e:
+        error = str(e.__dict__['orig'])
+        print(error)
+        db.session.rollback()
+        return {'errors': ['An error occurred while retrieving the data']}, 500
 
 
 # PUT (Modify) an existing trip
@@ -61,14 +69,17 @@ def post_trip(user_id):
 @login_required
 def modify_trip(trip_id):
     data = request.data
-    trip = Trip.query.get(trip_id)
-    if trip:
+    try:
+        trip = Trip.query.get(trip_id)
         for key in data:
             trip[key] = data[key]
         db.session.commit()
         return {'trips': normalize(trip)}
-    else:
-        return {'errors': [f'Trip Id: {trip_id} was not found']}, 404
+    except SQLAlchemyError as e:
+        error = str(e.__dict__['orig'])
+        print(error)
+        db.session.rollback()
+        return {'errors': ['An error occurred while retrieving the data']}, 500
 
 
 # DELETE a specific trip

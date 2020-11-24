@@ -10,23 +10,29 @@ car_routes = Blueprint('cars', __name__)
 @car_routes.route('/<int:user_id>/cars', methods=['GET'])
 @login_required
 def get_cars(user_id):
-    cars = Car.query.filter(Car.user_id == user_id).all()
-    if cars:
+    try:
+        cars = Car.query.filter(Car.user_id == user_id).all()
         return {'cars': normalize(cars)}
-    else:
-        return {'errors': [f'No cars found for User Id: {user_id}']}, 404
+    except SQLAlchemyError as e:
+        error = str(e.__dict__['orig'])
+        print(error)
+        db.session.rollback()
+        return {'errors': ['An error occurred while retrieving the data']}, 500
 
 
 # GET a specific car
 @car_routes.route('/cars/<int:car_id>', methods=['GET'])
 @login_required
 def get_car(car_id):
-    car = Car.query.filter(Car.query.get(car_id))
-    if car:
+    try:
+        car = Car.query.filter(Car.query.get(car_id))
         car_json = jsonify({'cars': normalize(car)})
         return car_json
-    else:
-        return {'errors': [f'Car Id: {car_id} was not found']}, 404
+    except SQLAlchemyError as e:
+        error = str(e.__dict__['orig'])
+        print(error)
+        db.session.rollback()
+        return {'errors': ['An error occurred while retrieving the data']}, 500
 
 
 # POST a new car for a specific user
@@ -39,9 +45,11 @@ def post_car(user_id):
         db.session.commit()
         car_json = jsonify({'cars': normalize(car)})
         return car_json
-    except CarCreationError:
-        print(CarCreationError)
-        return {'errors': ['The car was not created']}, 500
+    except SQLAlchemyError as e:
+        error = str(e.__dict__['orig'])
+        print(error)
+        db.session.rollback()
+        return {'errors': ['An error occurred while creating data']}, 500
 
 
 # DELETE a car
