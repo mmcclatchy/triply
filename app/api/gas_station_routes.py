@@ -2,6 +2,7 @@ from flask import Blueprint, jsonify, request
 from flask_login import login_required
 from app.models import Stop, GasStation, db
 from app.utils import normalize, snake_case
+from sqlalchemy.exc import SQLAlchemyError
 
 gas_station_routes = Blueprint('gas_stations', __name__, url_prefix='/api')
 

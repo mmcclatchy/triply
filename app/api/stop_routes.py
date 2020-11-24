@@ -2,6 +2,7 @@ from flask import Blueprint, jsonify, request
 from flask_login import login_required
 from app.models import Trip, Stop, db
 from app.utils import normalize, snake_case
+from sqlalchemy.exc import SQLAlchemyError
 
 stop_routes = Blueprint('stops', __name__, url_prefix='/api')
 

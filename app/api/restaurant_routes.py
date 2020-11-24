@@ -2,6 +2,7 @@ from flask import Blueprint, jsonify, request
 from flask_login import login_required
 from app.models import Stop, Restaurant, db
 from app.utils import normalize, snake_case
+from sqlalchemy.exc import SQLAlchemyError
 
 restaurant_routes = Blueprint('restaurants', __name__, url_prefix='/api')
 

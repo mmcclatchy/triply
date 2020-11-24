@@ -14,7 +14,7 @@ def camelCase(string):
 
 
 def normalize(lst):
-    if isinstance(lst, dict):
+    if not isinstance(lst, list):
         lst = [lst]
     normalized = {}
     for x in lst:
@@ -38,3 +38,12 @@ def snake_case(string):
             new_str += string[i]
             i += 1
     return new_str
+
+
+def to_dict(inst):
+    inst_dict = {}
+    for col in inst.__table__.columns:
+        i = col.index('.')
+        key = col[i+1:]
+        inst_dict[key] = inst[key]
+    return inst_dict

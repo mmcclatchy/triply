@@ -2,6 +2,8 @@ from flask import Blueprint, jsonify, request
 from flask_login import login_required
 from app.models import Car, User, db
 from app.utils import normalize
+from sqlalchemy.exc import SQLAlchemyError
+
 
 car_routes = Blueprint('cars', __name__, url_prefix='/api')
 
@@ -13,7 +15,6 @@ def get_cars(user_id):
     try:
         cars = Car.query.filter(Car.user_id == user_id).all()
         car_json = jsonify({'cars': normalize(cars)})
-        print('**************\n\nCAR JSON: ', car_json)
         return car_json
     except SQLAlchemyError as e:
         error = str(e.__dict__['orig'])
@@ -26,8 +27,9 @@ def get_cars(user_id):
 @login_required
 def get_car(car_id):
     try:
-        car = Car.query.filter(Car.query.get(car_id))
-        car_json = jsonify({'cars': normalize(car)})
+        car = Car.query.filter(Car.id == car_id).first()
+        car_json = jsonify({'cars': normalize(car.to_dict())})
+        print('**************\n\nCar JSON: ', car_json)
         return car_json
     except SQLAlchemyError as e:
         error = str(e.__dict__['orig'])
