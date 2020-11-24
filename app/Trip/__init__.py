@@ -10,15 +10,25 @@ class Trip:
 
     ##todo: add method that converts to things that can easily save
     ##      add static method to give id from database and builds a trip
-    def __init__(self, startCor, endCor, travelPerDay, travelPerIncrement, foodTypes, car):
-        self.startCor = startCor
-        self.endCor = endCor
-        self.travelPerDay = travelPerDay
-        self.travelPerIncrement = travelPerIncrement
-        self.foodType = foodTypes
-        self.car = car
+    def __init__(self, **kwargs):
+        self.startCor = kwargs.get('startCor')
+        self.endCor = kwargs.get('endCor')
+        self.travelPerDay = kwargs.get('travelPerDay')
+        self.travelPerIncrement = kwargs.get('travelPerIncrement')
+        self.foodType = kwargs.get('foodTypes')
+        self.car = kwargs.get('car')
         
         self.stops = []
+
+        self.checkCorAndSetDirections()
+
+    def setStartCor(self, startCor):
+        self.startCor = startCor
+        self.checkCorAndSetDirections()
+
+    def setEndCor(self, endCor):
+        self.endCor = endCor
+        self.checkCorAndSetDirections()
 
     def decodePolyline(self, encoded):
         return decodePolyline(encoded)
