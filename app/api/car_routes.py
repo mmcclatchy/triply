@@ -3,7 +3,7 @@ from flask_login import login_required
 from app.models import Car, User, db
 from app.utils import normalize
 
-car_routes = Blueprint('cars', __name__)
+car_routes = Blueprint('cars', __name__, url_prefix='/api')
 
 
 # GET all cars owned by the specific user
@@ -16,7 +16,6 @@ def get_cars(user_id):
     except SQLAlchemyError as e:
         error = str(e.__dict__['orig'])
         print(error)
-        db.session.rollback()
         return {'errors': ['An error occurred while retrieving the data']}, 500
 
 
@@ -31,7 +30,6 @@ def get_car(car_id):
     except SQLAlchemyError as e:
         error = str(e.__dict__['orig'])
         print(error)
-        db.session.rollback()
         return {'errors': ['An error occurred while retrieving the data']}, 500
 
 

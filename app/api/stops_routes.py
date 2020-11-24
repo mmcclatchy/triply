@@ -3,7 +3,7 @@ from flask_login import login_required
 from app.models import Trip, Stop, db
 from app.utils import normalize, snake_case
 
-stop_routes = Blueprint('stops', __name__)
+stop_routes = Blueprint('stops', __name__, url_prefix='/api')
 
 
 # GET all stops associated with a trip
@@ -16,7 +16,6 @@ def get_stops(trip_id):
     except SQLAlchemyError as e:
         error = str(e.__dict__['orig'])
         print(error)
-        db.session.rollback()
         return {'errors': ['An error occurred while retrieving the data']}, 500
 
 
@@ -30,7 +29,6 @@ def get_stop(stop_id):
     except SQLAlchemyError as e:
         error = str(e.__dict__['orig'])
         print(error)
-        db.session.rollback()
         return {'errors': ['An error occurred while retrieving the data']}, 500
 
 
@@ -66,7 +64,7 @@ def put_stop(stop_id):
     try:
         stop = Stop.query.get(stop_id)
         for key in data:
-            stop[key] = data[key]
+            stop[snake_case(key)] = data[key]
         db.session.commit()
         return {'stops': normalize(stop)}
     except SQLAlchemyError as e:
