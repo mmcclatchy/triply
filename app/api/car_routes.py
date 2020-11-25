@@ -45,7 +45,7 @@ def post_car(user_id):
 
     car = Car(
         user_id=user_id,
-        api_id=data['api_id'],
+        api_id=data['apiId'],
         make=data['make'],
         model=data['model'],
         year=data['year'],
