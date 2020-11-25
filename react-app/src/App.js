@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { BrowserRouter, Route } from "react-router-dom";
 import LoginForm from "./Login/LoginForm";
@@ -8,6 +9,7 @@ import UsersList from "./Profile/UsersList";
 import User from "./Profile/User";
 import Homepage from "./Homepage/Homepage";
 import { authenticate } from "./services/auth";
+
 
 function App() {
   const [authenticated, setAuthenticated] = useState(false);
@@ -43,12 +45,14 @@ function App() {
           setAuthenticated={setAuthenticated}
         />
       </Route>
+
       <Route path="/map" exact={true}>
         <Map />
       </Route>
       <ProtectedRoute path="/users" exact={true} authenticated={authenticated}>
         <UsersList />
       </ProtectedRoute>
+
       <ProtectedRoute
         path='/profile/:userId'
         exact={true}
