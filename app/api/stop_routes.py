@@ -37,18 +37,18 @@ def get_stop(stop_id):
 @stop_routes.route('/trips/<int:trip_id>/stops/', methods=['POST'])
 @login_required
 def post_stop(trip_id):
-    data = request.data
+    data = request.json
     try:
         stop = Stop(
-            trip_id=data.tripId,
-            trip_stop_num=data.tripStopNum,
-            restaurant_id=data.restaurantId,
-            hotel_id=data.hotelId,
-            gas_id=data.gasId,
-            coordinates=data.coordinates)
+            trip_id=data['tripId'],
+            trip_stop_num=data['tripStopNum'],
+            restaurant_id=data['restaurantId'],
+            hotel_id=data['hotelId'],
+            gas_station_id=data['gasStationId'],
+            coordinates=data['coordinates'])
         db.session.add(stop)
-        db.session.create()
-        stop_json = jsonify({'stops': normalize(stop)})
+        db.session.commit()
+        stop_json = jsonify({'stops': normalize(stop.to_dict())})
         return stop_json
     except SQLAlchemyError as e:
         error = str(e.__dict__['orig'])
