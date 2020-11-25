@@ -21,14 +21,16 @@ function User() {
     })();
   }, [userId]);
 
-  // useEffect(() => {
-  //   const getCars = async () => {
-  //     const response = await fetch(`/api/users/${userId}/cars`);
-  //     const cars = await response.json();
-  //     setCars(cars);
-  //   };
-  //   getCars();
-  // });
+
+//   useEffect(() => {
+//     const getCars = async () => {
+//       const response = await fetch(`/api/users/${userId}/cars`);
+//       const cars = await response.json();
+//       setCars(cars);
+//     };
+//     getCars();
+//   });
+
 
   if (!user) {
     return null;
@@ -50,8 +52,10 @@ function User() {
           <strong>Email</strong> {user.email}
         </li>
       </ul>
+
       <button>Add a New Car</button>
       <CarForm />
+
     </div>
   );
 }
