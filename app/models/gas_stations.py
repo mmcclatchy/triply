@@ -14,6 +14,6 @@ class GasStation(db.Model):
         return {
             'id': self.id,
             'name': self.name,
-            'place_id': self.place_id
-            # 'stops': self.stops.to_dict()
+            'place_id': self.place_id,
+            'stops': [stop.id for stop in self.stops]
         }

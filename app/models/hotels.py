@@ -17,5 +17,5 @@ class Hotel(db.Model):
             'name': self.name,
             'stars': self.stars,
             'place_id': self.place_id,
-            # 'stops': 
+            'stops': [stop.id for stop in self.stops]
         }

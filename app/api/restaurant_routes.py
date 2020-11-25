@@ -57,14 +57,15 @@ def post_restaurant():
 
 
 # DELETE a specific restaurant
-@restaurant_routes.route('/restaurants/<int:restaurant_id>',
+@restaurant_routes.route('/restaurants/<int:rest_id>',
                          methods=['DELETE'])
 @login_required
-def delete_restaurant(restaurant_id):
-    restaurant = Restaurant.query.get(restaurant_id)
+def delete_restaurant(rest_id):
+    restaurant = Restaurant.query.get(rest_id)
     if restaurant:
         db.session.delete(restaurant)
         db.session.commit()
-        return {'message': f'Restaurant Id: {restaurant_id} was successfully deleted'}
+        return {
+            'message': f'Restaurant Id: {rest_id} was successfully deleted'}
     else:
-        return {'errors': [f'Restaurant Id: {restaurant_id} was not found']}
+        return {'errors': [f'Restaurant Id: {rest_id} was not found']}
