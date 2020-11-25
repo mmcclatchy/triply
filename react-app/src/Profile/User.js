@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import './User.css';
-import CarForm from './CarForm';
+import CarForm from '../Car/CarForm';
 
 function User() {
   const [user, setUser] = useState({});
@@ -68,7 +68,7 @@ function User() {
       </div>
 
       <button>Add a New Car</button>
-      <CarForm />
+      <CarForm userId={userId} />
     </div>
   );
 }

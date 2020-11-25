@@ -44,3 +44,16 @@ export const getMakes = async year => {
   const data = await xmlToJson(xml).menuItems.menuItem;
   return data;
 };
+
+export const getModels = async (year, make) => {
+  const xmlResponse = await fetch(
+    `https://www.fueleconomy.gov/ws/rest/vehicle/menu/model?year=${year}&make=${make}`
+  );
+  const xmlText = await xmlResponse.text();
+  const xml = await new window.DOMParser().parseFromString(
+    xmlText,
+    'text/xml'
+  );
+  const data = await xmlToJson(xml).menuItems.menuItem;
+  return data;
+};
