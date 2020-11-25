@@ -14,7 +14,8 @@ car_routes = Blueprint('cars', __name__, url_prefix='/api')
 def get_cars(user_id):
     try:
         cars = Car.query.filter(Car.user_id == user_id).all()
-        car_json = jsonify({'cars': normalize(cars)})
+        car_dicts = [car.to_dict() for car in cars]
+        car_json = jsonify({'cars': normalize(car_dicts)})
         return car_json
     except SQLAlchemyError as e:
         error = str(e.__dict__['orig'])
@@ -29,7 +30,6 @@ def get_car(car_id):
     try:
         car = Car.query.filter(Car.id == car_id).first()
         car_json = jsonify({'cars': normalize(car.to_dict())})
-        print('**************\n\nCar JSON: ', car_json)
         return car_json
     except SQLAlchemyError as e:
         error = str(e.__dict__['orig'])
@@ -41,18 +41,19 @@ def get_car(car_id):
 @car_routes.route('/users/<int:user_id>/cars', methods=['POST'])
 @login_required
 def post_car(user_id):
-    data = request.data
+    data = request.json
+
     car = Car(
         user_id=user_id,
-        api_id=data.apiId,
-        make=data.make,
-        model=data.model,
-        year=data.year,
-        mpg=data.mpg)
+        api_id=data['api_id'],
+        make=data['make'],
+        model=data['model'],
+        year=data['year'],
+        mpg=data['mpg'])
     try:
         db.session.add(car)
         db.session.commit()
-        car_json = jsonify({'cars': normalize(car)})
+        car_json = jsonify({'cars': normalize(car.to_dict())})
         return car_json
     except SQLAlchemyError as e:
         error = str(e.__dict__['orig'])
@@ -66,8 +67,9 @@ def post_car(user_id):
 @login_required
 def car(car_id):
     delete_car = Car.query.get(car_id)
-    if car:
-        db.session.delete(car)
+    if delete_car:
+        db.session.delete(delete_car)
+        print('INSIDE CONDITIONAL\n\n ***************')
         db.session.commit()
         return {'message': 'Car was successfully deleted'}
     else:

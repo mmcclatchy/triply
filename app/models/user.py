@@ -27,7 +27,7 @@ class User(db.Model, UserMixin):
 
     def cars_to_dict(self):
         if not isinstance(self.cars, list):
-            return cars.to_dict()
+            return self.cars.to_dict()
         return [car.to_dict() for car in self.cars]
 
     def to_dict(self):
@@ -35,5 +35,5 @@ class User(db.Model, UserMixin):
             "id": self.id,
             "username": self.username,
             "email": self.email,
-            "cars": normalize(self.cars_to_dict()),
+            "cars": [car.id for car in self.cars]
         }
