@@ -11,3 +11,17 @@ class Car(db.Model):
     model = db.Column(db.String(100), nullable=False)
     year = db.Column(db.Integer, nullable=False)
     mpg = db.Column(db.Integer, nullable=False)
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'user_id': self.user_id,
+            'api_id': self.api_id,
+            'make': self.make,
+            'model': self.model,
+            'year': self.year,
+            'mpg': self.mpg
+        }
+
+
+
