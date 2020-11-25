@@ -1,6 +1,7 @@
 from .db import db
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
+from ..utils import normalize
 
 
 class User(db.Model, UserMixin):
@@ -24,10 +25,15 @@ class User(db.Model, UserMixin):
     def check_password(self, password):
         return check_password_hash(self.password, password)
 
+    def cars_to_dict(self):
+        if not isinstance(self.cars, list):
+            return self.cars.to_dict()
+        return [car.to_dict() for car in self.cars]
+
     def to_dict(self):
         return {
             "id": self.id,
             "username": self.username,
             "email": self.email,
-            "cars": self.cars,
+            "cars": [car.id for car in self.cars]
         }

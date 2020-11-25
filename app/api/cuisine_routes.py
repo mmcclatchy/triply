@@ -2,8 +2,9 @@ from flask import Blueprint, jsonify, request
 from flask_login import login_required
 from app.models import Stop, Cuisine, db
 from app.utils import normalize, snake_case
+from sqlalchemy.exc import SQLAlchemyError
 
-cuisine_routes = Blueprint('cuisines', __name__, url_prefix='/api')
+cuisine_routes = Blueprint('cuisines', __name__)
 
 
 # GET cuisine associated with a specific stop

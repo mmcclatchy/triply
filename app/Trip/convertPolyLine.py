@@ -1,4 +1,4 @@
-def decodePolyline(encoded):
+ßdef decodePolyline(encoded):
     if not encoded:
         return []
 
@@ -17,13 +17,13 @@ def decodePolyline(encoded):
         index = index + 1
         result = result | ((b & 0x1f) << shift)
         shift += 5
-        
+
         while b >= 32:
             b = ord(encoded[index]) - 63
             index = index + 1
             result = result | ((b & 0x1f) << shift)
             shift += 5
-        
+
         dlng = ~(result >> 1) if (result & 1) != 0  else (result >> 1)
         lat += dlng
 
@@ -34,13 +34,13 @@ def decodePolyline(encoded):
         index = index + 1
         result = result | ((b & 0x1f) << shift)
         shift += 5
-        
+
         while b >= 32:
             b = ord(encoded[index]) - 63
             index = index + 1
             result = result | ((b & 0x1f) << shift)
             shift += 5
-        
+
         dlng = ~(result >> 1) if (result & 1) != 0  else (result >> 1)
         lng += dlng
 

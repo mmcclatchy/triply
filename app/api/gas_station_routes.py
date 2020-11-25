@@ -2,38 +2,53 @@ from flask import Blueprint, jsonify, request
 from flask_login import login_required
 from app.models import Stop, GasStation, db
 from app.utils import normalize, snake_case
+from sqlalchemy.exc import SQLAlchemyError
 
-gas_station_routes = Blueprint('gas_stations', __name__, url_prefix='/api')
+gas_station_routes = Blueprint('gas_stations', __name__)
+
+
+# GET all gas_stations
+@gas_station_routes.route('/gas_stations', methods=['GET'])
+@login_required
+def get_gas_stations():
+    gas_stations = GasStation.query.all()
+    if not gas_stations:
+        return {}, 404
+    gas_list = [gas_station.to_dict() for gas_station in gas_stations]
+    return {'gasStations': normalize(gas_list)}
 
 
 # GET gas_station associated with a specific stop
 @gas_station_routes.route('/stops/<int:stop_id>/gas_station', methods=['GET'])
 @login_required
 def get_gas_station(stop_id):
-    try:
-        gas_station = GasStation.query.\
-            filter(GasStation.id == Stop.gas_station_id).\
-            filter(Stop.id == stop_id).first()
-        gas_station_json = jsonify({'gas_stations': normalize(gas_station)})
-        return gas_station_json
-    except SQLAlchemyError as e:
-        error = str(e.__dict__['orig'])
-        print(error)
-        return {'errors': ['An error occurred while retrieving the data']}, 500
+    gas_station = GasStation.query.\
+        filter(GasStation.id == Stop.gas_station_id).\
+        filter(Stop.id == stop_id).first()
+    if not gas_station:
+        return {}, 404
+    gas_station_json = jsonify({
+        'gasStations': normalize(gas_station.to_dict())
+    })
+    return gas_station_json
 
 
 # POST a specific gas_station
 @gas_station_routes.route('/gas_stations', methods=['POST'])
 @login_required
 def post_gas_station():
-    data = request.data
+    data = request.json
+
+    # exists = GasStation.query.\
+    #     filter(GasStation.place_id == data['placeId']).first()
+    # if isinstance(exists, GasStation):
+    #     return {'gasStations': normalize(exists.to_dict())}
+
     try:
-        gas_station = GasStation(
-            name=data.name,
-            place_id=data.placeId)
+        gas_station = GasStation(name=data['name'], place_id=data['placeId'])
         db.session.add(gas_station)
         db.session.commit()
-        return {'gasStations': normalize(gas_station)}
+        return {'gasStations': normalize(gas_station.to_dict())}
     except SQLAlchemyError as e:
         error = str(e.__dict__['orig'])
         print(error)

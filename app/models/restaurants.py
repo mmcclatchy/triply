@@ -13,3 +13,12 @@ class Restaurant(db.Model):
     cuisines = db.relationship("Cuisine", secondary=restaurant_cuisines,
                                lazy="joined",
                                backref=db.backref("restaurant", lazy=True))
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'place_id': self.place_id,
+            'stops': [stop.id for stop in self.stops],
+            'cuisines': [cuisine.id for cuisine in self.cuisines]
+        }
