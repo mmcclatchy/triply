@@ -16,6 +16,7 @@ class Trip:
 
 
         self.basicDirectionUrl = "https://maps.googleapis.com/maps/api/directions/json?key=AIzaSyBmKKKPntFx-1yFUAIgXjWQU3wykVlBt3Y"
+        self.basicRoadsUrl = "https://roads.googleapis.com/v1/speedLimits?key=AIzaSyBmKKKPntFx-1yFUAIgXjWQU3wykVlBt3Y&units=MPH&path="
         self.startCor = kwargs.get('startCor')
         self.endCor = kwargs.get('endCor')
         self.travelPerDay = kwargs.get('travelPerDay')
@@ -120,26 +121,44 @@ class Trip:
 
     def setTravelPerIncrement(self, tup):
         self.travelPerIncrement = tup
+
+    def getSpeedBetweenTwoDirections(self, di1):
+        duration = di1["duration"]["value"] * 1000
+        distance = di1["distance"]['value'] * 0.000621371
+        return distance / duration
+        
     
     def getLocationsOfNextStop(self):
-        print(self.stops)
         if self.travelPerIncrement[0] < ((self.stops[-1].time - self.stops[-2].time) + self.endBuffer):
             lastStopTime = self.stops[-2].time
             current = 0
+            print(self.stepTimeIndex)
             for i in range(len(self.stepTimeIndex)):
-                print("....................", self.stepTimeIndex[i][1] - self.stops[-2].time)
                 if self.travelPerIncrement[0] < (self.stepTimeIndex[i][1] - self.stops[-2].time):
                     break
             cordinates = self.decodePolyline(self.directions[i-1]["polyline"]["points"])
-
             currentTime = self.stepTimeIndex[i - 1][1]
+
+            print(currentTime)
+            speedLimitOfRoad = self.getSpeedBetweenTwoDirections(self.directions[i-1]) #in miles per milliseconds
+            print("SPEEEEDDD", speedLimitOfRoad)
+            currentDistance = 0
             for j in range(len(cordinates)):
                 if j == (len(cordinates) - 1):
+                    print(cordinates)
+                    # print(self.directions[27])
                     #Handle edge case
                     return "It was the last jabroni"
                 else:
-                    !!!!!!currentTime += self.getDistanceBetweenTwoPoints(cordinates[j], cordinates[j+1])!!!!!!!! #current time needs to be added with speedlimit
-                    print(currentTime)
+                    print("distance between points:", self.getDistanceBetweenTwoPoints(cordinates[j], cordinates[j+1]))
+                    currentDistance = currentDistance + self.getDistanceBetweenTwoPoints(cordinates[j], cordinates[j+1])
+                    print("Total as of now:")
+
+                    toadd = (self.getDistanceBetweenTwoPoints(cordinates[j], cordinates[j+1]) / speedLimitOfRoad)
+                    currentTime += toadd
+                    # print(self.getDistanceBetweenTwoPoints(cordinates[j], cordinates[j+1]) / speedLimitOfRoad)
+                    print(toadd)
+                    # print(currentTime - lastStopTime, self.travelPerIncrement[0])
                     if currentTime - lastStopTime > self.travelPerIncrement[0]:
                         return cordinates[j]
 
