@@ -12,7 +12,9 @@ class Trip:
     ##todo: add method that converts to things that can easily save
     ##      add static method to give id from database and builds a trip
     def __init__(self, **kwargs):
-        self.endBuffer = 0
+        self.endBuffer = 1800
+        self.searchDistanceAlongRoad = 16093
+        self.searchDistanceAwayFromRoad = 1609
 
 
         self.basicDirectionUrl = "https://maps.googleapis.com/maps/api/directions/json?key=AIzaSyBmKKKPntFx-1yFUAIgXjWQU3wykVlBt3Y"
@@ -42,10 +44,9 @@ class Trip:
 
     def checkCorAndSetDirections(self):
         if self.startCor and self.endCor:
-            origin = str(self.startCor["lat"]) + "," + str(self.startCor["lgn"])
-            destination = str(self.endCor["lat"]) + "," + str(self.endCor["lgn"])
+            origin = str(self.startCor["lat"]) + "," + str(self.startCor["lng"])
+            destination = str(self.endCor["lat"]) + "," + str(self.endCor["lng"])
             url = self.makeUrl(origin=origin, destination=destination)
-            print(url)
             r = requests.get(url)
             r = r.json()
 
@@ -61,8 +62,8 @@ class Trip:
             for leg in legs:
                 distance += leg["distance"]["value"]
                 time += leg["duration"]["value"]
-            self.totalTravelDistance = round(distance * 0.000621371)
-            self.totalTravelTime = time * 1000
+            self.totalTravelDistance = distance
+            self.totalTravelTime = time
 
             start = Stop(self.startCor, 0)
             end = Stop(self.endCor, self.totalTravelTime)
@@ -75,7 +76,7 @@ class Trip:
         index = []
         current = 0
         for i in range(len(self.directions)):
-            current += (self.directions[i]["duration"]["value"] * 1000)
+            current += (self.directions[i]["duration"]["value"])
             index.append((i, current))
         self.stepTimeIndex = index
 
@@ -91,13 +92,13 @@ class Trip:
         return decodePolyline(encoded)
 
     def getDistanceBetweenTwoPoints(self, c1, c2):
-        # approximate radius of earth in km
-        R = 3963.2
+        # approximate radius of earth in meters
+        R = 6378137 
 
         lat1 = radians(c1["lat"])
-        lon1 = radians(c1["lgn"])
+        lon1 = radians(c1["lng"])
         lat2 = radians(c2["lat"])
-        lon2 = radians(c2["lgn"])
+        lon2 = radians(c2["lng"])
 
         dlon = lon2 - lon1
         dlat = lat2 - lat1
@@ -123,13 +124,13 @@ class Trip:
         self.travelPerIncrement = tup
 
     def getSpeedBetweenTwoDirections(self, di1):
-        duration = di1["duration"]["value"] * 1000
-        distance = di1["distance"]['value'] * 0.000621371
+        duration = di1["duration"]["value"]
+        distance = di1["distance"]['value']
         return distance / duration
         
-    
-    def getLocationsOfNextStop(self):
-        if self.travelPerIncrement[0] < ((self.stops[-1].time - self.stops[-2].time) + self.endBuffer):
+
+    def getPolyLineVertex(self):    
+        if self.travelPerIncrement[0] < ((self.stops[-1].time - self.stops[-2].time) - self.endBuffer):
             lastStopTime = self.stops[-2].time
             current = 0
             print(self.stepTimeIndex)
@@ -139,50 +140,115 @@ class Trip:
             cordinates = self.decodePolyline(self.directions[i-1]["polyline"]["points"])
             currentTime = self.stepTimeIndex[i - 1][1]
 
-            print(currentTime)
-            speedLimitOfRoad = self.getSpeedBetweenTwoDirections(self.directions[i-1]) #in miles per milliseconds
-            print("SPEEEEDDD", speedLimitOfRoad)
+            speedLimitOfRoad = self.getSpeedBetweenTwoDirections(self.directions[i-1]) #in miles per milliseconds)
             currentDistance = 0
             for j in range(len(cordinates)):
                 if j == (len(cordinates) - 1):
-                    print(cordinates)
-                    # print(self.directions[27])
-                    #Handle edge case
-                    return "It was the last jabroni"
+                    #Handling
+                    #  edge case
+                    return {"cords": cordinates, "index": j, "stepIndex": i - 1}
                 else:
-                    print("distance between points:", self.getDistanceBetweenTwoPoints(cordinates[j], cordinates[j+1]))
+
                     currentDistance = currentDistance + self.getDistanceBetweenTwoPoints(cordinates[j], cordinates[j+1])
-                    print("Total as of now:")
 
                     toadd = (self.getDistanceBetweenTwoPoints(cordinates[j], cordinates[j+1]) / speedLimitOfRoad)
                     currentTime += toadd
-                    # print(self.getDistanceBetweenTwoPoints(cordinates[j], cordinates[j+1]) / speedLimitOfRoad)
-                    print(toadd)
-                    # print(currentTime - lastStopTime, self.travelPerIncrement[0])
                     if currentTime - lastStopTime > self.travelPerIncrement[0]:
-                        return cordinates[j]
+                        return {"cords": cordinates, "index": j, "stepIndex": i - 1}
 
 
         else:
             return None
 
+    def getLocationsOfNextStop(self):
+        rectPoints = self.getCordinatesForSearch()
+
+    def getCordinatesForSearch(self):
+        cords = self.getTopAndBottomVertices()
+        if not cords:
+            return None
+    
+    def calculateSlopeBetweenCords(self, c1, c2):
+        rise = c1.lat - c2.lat
+        run = c1.lng - c2.lng
+
+
+    def getTopAndBottomVertices(self):
+        #find the base of our rectange
+        vertexInfo = self.getPolyLineVertex()
+        if not vertexInfo:
+            return None
+        #counter for going foward
+        forwardTotal = 0
+        i = vertexInfo["index"]
+        #interate through the rest of the polyline that the base of the rectangle is in
+        while (i < (len(vertexInfo["cords"]) - 1)) and (forwardTotal < self.searchDistanceAlongRoad):
+            forwardTotal += self.getDistanceBetweenTwoPoints(vertexInfo["cords"][i], vertexInfo["cords"][i+1])
+            i += 1
+        #checking to see if we have reached the "top" of the rectangle
+        if (forwardTotal > self.searchDistanceAlongRoad):
+            print("Found in first polyline. Use the following as your index:", i - 1)
+            return {"base": vertexInfo["cords"][vertexInfo["index"]], "top": vertexInfo["cords"][i]}
+        
+        #adding the final segment of the original polyline to the start of the next polyline
+        forwardTotal += self.getDistanceBetweenTwoPoints(vertexInfo["cords"][i], self.directions[vertexInfo["stepIndex"] + 1]["start_location"])
+        #checking to see if we have reached the "top" of the rectangle
+        if (forwardTotal > self.searchDistanceAlongRoad):
+            print("Found at the last jabroni in the first polyline")
+            return {"base": vertexInfo["cords"][vertexInfo["index"]], "top": vertexInfo["cords"][len(vertexInfo["cords"]) - 1]}
+
+        #find the step that will contain the "top" of the polyline
+        j = vertexInfo["stepIndex"] + 1
+        while forwardTotal < self.searchDistanceAlongRoad:
+            print(forwardTotal, self.searchDistanceAlongRoad)
+            forwardTotal += self.directions[j]["distance"]["value"]
+            print(forwardTotal, self.searchDistanceAlongRoad)
+            j += 1
+        #reset total to point before the step that would exceed our search value
+        print(forwardTotal, self.searchDistanceAlongRoad)
+        j -= 1
+        forwardTotal -= self.directions[j]["distance"]["value"]
+        print(forwardTotal, self.searchDistanceAlongRoad)
+        
+        #get all the points within the polyline that contains the top of the rectangle
+        finalCords = self.decodePolyline(self.directions[j]["polyline"]["points"])
+        i = 0
+        #go through all the verticies in the polyline to find where we reach the "top"
+        while (i < (len(finalCords) - 1)) and (forwardTotal < self.searchDistanceAlongRoad):
+            forwardTotal += self.getDistanceBetweenTwoPoints(finalCords[i], finalCords[i+1])
+            i += 1
+        if (forwardTotal > self.searchDistanceAlongRoad):
+            print("Vertex found in another step. The step index and then the polyline index:", j, i)
+            return {"base": vertexInfo["cords"][vertexInfo["index"]], "top": finalCords[i]}
+        #if it was none of those, then it is the last one!
+        else:
+            print("Last jabroni on a new step:", j, i)
+            return {"base": vertexInfo["cords"][vertexInfo["index"]], "top": finalCords[len(finalCords) - 1]}
+        
+
+
+        
 
 
 
 
 t = Trip()
 # print(t.getDistance("cwoiGvvacNGAEAECUK_@QuAm@]OyB}@u@]C?ECmBy@OGSIWKo@Y[KgAe@oAg@sAi@m@[OGg@]USIIMKi@m@W[i@k@IKMQQOIKa@g@MMqA_Bo@}@s@w@g@o@SU_CoCiBuB{AiBa@i@MSIQKOIOGSIMQa@Sc@IWMYQo@yAwEgAmD[iAc@mA[gAIYG]AECQEYOkAo@}FK{@O{@qAsISuA{@qGy@yFIc@Gk@Ew@QeGAUAa@C{@Ci@EkBIiCMeDCk@QyEAIQ_EAYOqDA[SsDGqACo@Gs@Mu@G]Mm@I_@[{AWoAGWqAoEsAuEMi@]cAKWWm@Q]Uc@U_@k@_AeAcB_@k@gAiBWc@aA}Ao@cAiAiBu@mAmB_DeAcBYg@OWmCwEiBsCeEmHa@q@w@uAU]c@y@i@eAO[Q]MY[o@O_@kBaEyC{GMYYk@q@wAKSGOIMe@{@g@}@aAyAWa@S[W]_@k@a@k@OUm@y@e@o@_@i@?E?E?AAAACGIi@w@q@aAaAwA_@k@wCiE[c@i@u@OSSWCEOOMMMO]]][UUKIWWMKKKA?]Yg@_@MKCCIG[Og@YOIo@[kAo@gE{B_CmAi@[_Ag@s@_@yAw@mAq@ECECCCE?E?G?ECkCaBMIo@]]QgAo@]OwEiCWMcAi@_@OcAi@e@U[SgBaAg@We@Wc@UOIMGq@]cAk@IEOG_Ai@g@WOGmAq@}A{@WMUMWQ_CyAGE]S{@q@AAg@a@a@]EEo@k@UWY[MMGI_AgAcAkAWYw@aAg@m@QSkAsAwAcBOSwAeBg@m@cAmAc@i@kByB_CmCs@}@]a@sA}AoA{A{AiBeD_EiC}CiAsAUY_AiA]a@EEqA_B]_@SYKKi@o@w@_A_AkAuAaBsA_BcBsBaAiAiAuAg@m@[]cBuBaAkAW[e@i@_AiAGIm@u@a@c@k@s@Y][_@_AiAu@}@gC{CwBkCkBwBY]s@{@i@m@y@_AKKy@_A_@c@aAgAw@{@SW_BiBi@m@i@o@oB{BkAuAGG{@_Ak@s@gE}EEG{@aAg@k@qCaDkC{CkAsAACw@}@k@m@m@q@w@aAOSY]s@y@gAmAmAqAe@i@_BgBs@y@q@u@cBmB{AcBkC{Cg@k@cAkAiAoAOQgBqBi@k@SSk@m@i@k@QQe@a@EEGECCCAKIYWm@k@SSGIGGsAmAwBmBMOy@q@CCC?CAAC[YUUSUWWaA{@g@e@eB}Aw@s@y@w@WSeB{Aq@i@a@]qAgAcA{@_@Y]Y]Yy@o@{@s@cBsAq@k@u@o@_Au@yAqAKIaA_A[Yi@g@WWg@i@QQ}@w@i@i@e@i@WUc@a@m@i@wAmAyCgCoCcCqAiAiEyD}CsCg@c@kCaC[Yk@g@cA}@qAmAcA}@uEcEWS{@w@US}@y@MKg@e@q@m@o@i@i@e@gAaAMMs@m@OOi@e@a@_@GGKIw@q@_@[Y[k@e@g@c@aA_Ay@q@uCiC}AuAUSSQUUSSWSUSMMIGkAeAyAqA][}CoCQD[Wc@c@Ma@ACCCSUa@a@QYYe@We@O[O_@IUMi@"))
-# print(t.getDistanceBetweenTwoPoints({"lat":43.6672211, "lgn":-79.3125987}, {"lat": 43.7739717, "lgn": -79.1830736}))
+# print(t.getDistanceBetweenTwoPoints({"lat":43.6672211, "lng":-79.3125987}, {"lat": 43.7739717, "lng": -79.1830736}))
 # t.addStop(123, food=1, gas=2)
 # print(t.stops[0].food)
 # print("NEW STUFFFFFF!!!!!!!!!!")
-t.setEndCor({"lat": 40.712776, "lgn": -74.005974})
-t.setStartCor({"lat":42.789379, "lgn":-86.107201})
+t.setEndCor({"lat": 40.712776, "lng": -74.005974})
+t.setStartCor({"lat":42.789379, "lng":-86.107201})
 # print(t.stops)
 # print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
 # print(t.directions)
 # print(t.totalTravelTime)
 # print(t.totalTravelDistance)
+# t.setStartCor({"lat": 40.365232, "lng": -98.109069})
+# t.setEndCor({"lat":40.524798, "lng": -98.108422})
 print(t.stepTimeIndex)
-t.setTravelPerIncrement((21600000, 21600000))
+# t.setTravelPerIncrement((34710, 36296))
+t.setTravelPerIncrement((39825, 20189))
+
 print(t.getLocationsOfNextStop())
