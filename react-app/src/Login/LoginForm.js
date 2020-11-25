@@ -1,15 +1,15 @@
-import React, { useState } from "react";
-import { Redirect } from "react-router-dom";
-import { login } from "../services/auth";
-import { Button } from "@material-ui/core";
-import "./LoginForm.css";
+import React, { useState } from 'react';
+import { Redirect } from 'react-router-dom';
+import { login } from '../services/auth';
+import { Button } from '@material-ui/core';
+import './LoginForm.css';
 
 const LoginForm = ({ authenticated, setAuthenticated }) => {
   const [errors, setErrors] = useState([]);
-  const [email, setEmail] = useState("demo@aa.io");
-  const [password, setPassword] = useState("password");
+  const [email, setEmail] = useState('demo@aa.io');
+  const [password, setPassword] = useState('password');
 
-  const onLogin = async (e) => {
+  const onLogin = async e => {
     e.preventDefault();
     const user = await login(email, password);
     if (!user.errors) {
@@ -19,49 +19,49 @@ const LoginForm = ({ authenticated, setAuthenticated }) => {
     }
   };
 
-  const updateEmail = (e) => {
+  const updateEmail = e => {
     setEmail(e.target.value);
   };
 
-  const updatePassword = (e) => {
+  const updatePassword = e => {
     setPassword(e.target.value);
   };
 
   if (authenticated) {
-    return <Redirect to="/" />;
+    return <Redirect to='/' />;
   }
 
   return (
-    <div className="login__container">
-      <div className="login__logo" />
+    <div className='login__container'>
+      <div className='login__logo' />
       <h1>Coming Soon!</h1>
       <form onSubmit={onLogin}>
         <div>
-          {errors.map((error) => (
+          {errors.map(error => (
             <div>{error}</div>
           ))}
         </div>
         <div>
-          <label htmlFor="email">Email</label>
+          <label htmlFor='email'>Email</label>
           <input
-            name="email"
-            type="text"
-            placeholder="Email"
+            name='email'
+            type='text'
+            placeholder='Email'
             value={email}
             onChange={updateEmail}
           />
         </div>
         <div>
-          <label htmlFor="password">Password</label>
+          <label htmlFor='password'>Password</label>
           <input
-            name="password"
-            type="password"
-            placeholder="Password"
+            name='password'
+            type='password'
+            placeholder='Password'
             value={password}
             onChange={updatePassword}
           />
           <div></div>
-          <button type="submit">Login</button>
+          <button type='submit'>Login</button>
         </div>
       </form>
     </div>
