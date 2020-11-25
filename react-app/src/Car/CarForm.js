@@ -4,13 +4,14 @@ import './CarForm.css';
 import CarMakes from './CarMakes';
 import CarYears from './CarYears';
 import CarModels from './CarModels';
+import { getVehicleId, getMPG } from '../services/fueleconomyAPI';
 
 const CarForm = ({ userId }) => {
   const [year, setYear] = useState();
   const [make, setMake] = useState();
   const [model, setModel] = useState();
   const [mpg, setMPG] = useState();
-  const [apiId, setapiId] = useState();
+  const [apiId, setApiID] = useState();
 
   const submitHandler = e => {
     e.preventDefault();
@@ -25,9 +26,20 @@ const CarForm = ({ userId }) => {
     console.log(new_car);
   };
 
-  const calculateMPG = e => {
+  const calculateMPG = async e => {
     e.preventDefault();
-    console.log(year, make, model);
+
+    const data = await getVehicleId(year, make, model);
+    let id;
+
+    if (data.length > 1) {
+      id = data[0].value['#text'];
+    } else {
+      id = data.value['#text'];
+    }
+    const mpg_data = await getMPG(id);
+    setMPG(mpg_data);
+    setApiID(id);
   };
 
   const updateYear = e => {
@@ -44,6 +56,10 @@ const CarForm = ({ userId }) => {
 
   const updateItem = cb => e => {
     return cb(e.target.value);
+  };
+
+  const updateMPG = e => {
+    setMPG(e.target.value);
   };
 
   return (
@@ -77,7 +93,17 @@ const CarForm = ({ userId }) => {
         </div>
         <div>
           <h3>MPG Estimate*</h3>
-          <TextField type='text' variant='outlined' />
+          <p>
+            * If this estimate seems inaccurate, click here to manually edit
+            your MPG.
+          </p>
+          <TextField
+            value={mpg}
+            type='text'
+            variant='outlined'
+            onChange={updateMPG}>
+            {mpg}
+          </TextField>
           <Button type='submit' variant='outlined' color='primary'>
             Submit
           </Button>
