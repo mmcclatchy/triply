@@ -30,5 +30,5 @@ class Stop(db.Model):
             'restaurant_id': self.restaurant_id,
             'star_min': self.star_min,
             'star_max': self.star_max,
-            'cuisines': [cuisine.id for cuisine in cuisines]
+            'cuisines': [cuisine.id for cuisine in self.cuisines]
         }

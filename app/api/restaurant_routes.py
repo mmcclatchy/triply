@@ -4,7 +4,7 @@ from app.models import Stop, Restaurant, Cuisine, restaurant_cuisines, db
 from app.utils import normalize, snake_case
 from sqlalchemy.exc import SQLAlchemyError
 
-restaurant_routes = Blueprint('restaurants', __name__, url_prefix='/api')
+restaurant_routes = Blueprint('restaurants', __name__)
 
 
 # GET all restaurants
@@ -36,6 +36,12 @@ def get_restaurant(stop_id):
 @login_required
 def post_restaurant():
     data = request.json
+
+    # exists = Restaurant.query.\
+    #     filter(Restaurant.place_id == data['placeId']).first()
+    # if isinstance(exists, Restaurant):
+    #     return {'restaurants': normalize(exists.to_dict())}
+
     try:
         restaurant = Restaurant(name=data['name'], place_id=data['placeId'])
 
@@ -50,6 +56,7 @@ def post_restaurant():
         db.session.add(restaurant)
         db.session.commit()
         return {'restaurants': normalize(restaurant.to_dict())}
+
     except SQLAlchemyError as e:
         error = str(e.__dict__['orig'])
         print(error)

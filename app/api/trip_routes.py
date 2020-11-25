@@ -4,7 +4,7 @@ from app.models import Trip, User, db
 from app.utils import normalize, snake_case
 from sqlalchemy.exc import SQLAlchemyError
 
-trip_routes = Blueprint('trips', __name__, url_prefix='/api')
+trip_routes = Blueprint('trips', __name__)
 
 
 # GET all trips associated with a specific user

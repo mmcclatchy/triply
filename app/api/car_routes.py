@@ -5,7 +5,7 @@ from app.utils import normalize
 from sqlalchemy.exc import SQLAlchemyError
 
 
-car_routes = Blueprint('cars', __name__, url_prefix='/api')
+car_routes = Blueprint('cars', __name__)
 
 
 # GET all cars owned by the specific user

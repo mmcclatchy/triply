@@ -4,7 +4,7 @@ from app.models import Stop, GasStation, db
 from app.utils import normalize, snake_case
 from sqlalchemy.exc import SQLAlchemyError
 
-gas_station_routes = Blueprint('gas_stations', __name__, url_prefix='/api')
+gas_station_routes = Blueprint('gas_stations', __name__)
 
 
 # GET all gas_stations
@@ -15,7 +15,7 @@ def get_gas_stations():
     if not gas_stations:
         return {}, 404
     gas_list = [gas_station.to_dict() for gas_station in gas_stations]
-    return {'gas_stations': normalize(gas_list)}
+    return {'gasStations': normalize(gas_list)}
 
 
 # GET gas_station associated with a specific stop
@@ -28,7 +28,7 @@ def get_gas_station(stop_id):
     if not gas_station:
         return {}, 404
     gas_station_json = jsonify({
-        'gas_stations': normalize(gas_station.to_dict())
+        'gasStations': normalize(gas_station.to_dict())
     })
     return gas_station_json
 
@@ -38,6 +38,12 @@ def get_gas_station(stop_id):
 @login_required
 def post_gas_station():
     data = request.json
+
+    # exists = GasStation.query.\
+    #     filter(GasStation.place_id == data['placeId']).first()
+    # if isinstance(exists, GasStation):
+    #     return {'gasStations': normalize(exists.to_dict())}
+
     try:
         gas_station = GasStation(name=data['name'], place_id=data['placeId'])
         db.session.add(gas_station)
