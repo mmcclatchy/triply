@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import './User.css';
+import CarForm from './CarForm';
 
 function User() {
   const [user, setUser] = useState({});
@@ -8,8 +9,6 @@ function User() {
   // Notice we use useParams here instead of getting the params
   // From props.
   const { userId } = useParams();
-
-  console.log(cars);
 
   useEffect(() => {
     if (!userId) {
@@ -22,14 +21,14 @@ function User() {
     })();
   }, [userId]);
 
-  useEffect(() => {
-    const getCars = async () => {
-      const response = await fetch(`/api/users/${userId}/cars`);
-      const cars = await response.json();
-      setCars(cars);
-    };
-    getCars();
-  });
+  // useEffect(() => {
+  //   const getCars = async () => {
+  //     const response = await fetch(`/api/users/${userId}/cars`);
+  //     const cars = await response.json();
+  //     setCars(cars);
+  //   };
+  //   getCars();
+  // });
 
   if (!user) {
     return null;
@@ -51,6 +50,8 @@ function User() {
           <strong>Email</strong> {user.email}
         </li>
       </ul>
+      <button>Add a New Car</button>
+      <CarForm />
     </div>
   );
 }
