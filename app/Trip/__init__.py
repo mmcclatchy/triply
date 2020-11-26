@@ -4,6 +4,7 @@ from math import sin, cos, sqrt, atan2, radians
 from .Stop import Stop
 import requests
 import copy
+import json
 # How to use the trip:
 #  To get the distance of a polyline, pass the hashed value to the "getDistance" function
 
@@ -30,8 +31,9 @@ class Trip:
         self.travelPerDay = kwargs.get('travelPerDay')
         self.travelPerIncrement = kwargs.get('travelPerIncrement')
         self.foodType = kwargs.get('foodTypes')
-        self.car = kwargs.get('car')
+        self.milesTillFuelNeeded = kwargs.get("milesTillFuelNeeded")
 
+        self.directionsFromGoogle = None
         self.stops = []
         self.directions = []
         self.stepTimeIndex = []
@@ -55,6 +57,7 @@ class Trip:
             url = self.makeUrl(origin=origin, destination=destination)
             r = requests.get(url)
             r = r.json()
+            self.directionsFromGoogle = r
 
             legs = [i for i in r["routes"][0]["legs"]]
             directions = []
@@ -271,8 +274,33 @@ class Trip:
         #do this with all results to get the ranking
         #send to frontend to present to user
         #profit
-        
 
+    def toDict(self):
+        {"directions": json.dump(self.directionsFromGoogle)}
+    
+    def constructFromDirections(self, directionsAsJson):
+        directionsFromGoogle = json.loads(directionsAsJson)
+        self.directionsFromGoogle = directionsFromGoogle
+        legs = [i for i in r["routes"][0]["legs"]]
+        directions = []
+        for i in range(len(legs)):
+            for j in range(len(legs[i]["steps"])):
+                directions.append(legs[i]["steps"][j])
+        self.directions = directions
+
+        distance = 0
+        time = 0
+        for leg in legs:
+            distance += leg["distance"]["value"]
+            time += leg["duration"]["value"]
+        self.totalTravelDistance = distance
+        self.totalTravelTime = time
+
+        start = Stop(self.startCor, 0)
+        end = Stop(self.endCor, self.totalTravelTime)
+        self.stops = [start, end]
+
+        self.indexSteps()
 
         
 
