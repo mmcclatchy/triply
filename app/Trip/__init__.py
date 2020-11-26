@@ -2,6 +2,7 @@ from .convertPolyLine import decodePolyline
 from math import sin, cos, sqrt, atan2, radians
 from .Stop import Stop
 import requests
+import copy
 # How to use the trip:
 #  To get the distance of a polyline, pass the hashed value to the "getDistance" function
 
@@ -17,6 +18,8 @@ class Trip:
         self.searchDistanceAwayFromRoad = 1609
 
 
+        # photos, opening_hours,rating
+        self.basicLocalSearch = "https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=fast%20food&inputtype=textquery&fields=formatted_address,name&key=AIzaSyBmKKKPntFx-1yFUAIgXjWQU3wykVlBt3Y&locationbias=rectangle:"
         self.basicDirectionUrl = "https://maps.googleapis.com/maps/api/directions/json?key=AIzaSyBmKKKPntFx-1yFUAIgXjWQU3wykVlBt3Y"
         self.basicRoadsUrl = "https://roads.googleapis.com/v1/speedLimits?key=AIzaSyBmKKKPntFx-1yFUAIgXjWQU3wykVlBt3Y&units=MPH&path="
         self.startCor = kwargs.get('startCor')
@@ -133,7 +136,6 @@ class Trip:
         if self.travelPerIncrement[0] < ((self.stops[-1].time - self.stops[-2].time) - self.endBuffer):
             lastStopTime = self.stops[-2].time
             current = 0
-            print(self.stepTimeIndex)
             for i in range(len(self.stepTimeIndex)):
                 if self.travelPerIncrement[0] < (self.stepTimeIndex[i][1] - self.stops[-2].time):
                     break
@@ -159,20 +161,8 @@ class Trip:
 
         else:
             return None
-
-    def getLocationsOfNextStop(self):
-        rectPoints = self.getCordinatesForSearch()
-
-    def getCordinatesForSearch(self):
-        cords = self.getTopAndBottomVertices()
-        if not cords:
-            return None
-    
-    def calculateSlopeBetweenCords(self, c1, c2):
-        rise = c1.lat - c2.lat
-        run = c1.lng - c2.lng
-
-
+       
+        
     def getTopAndBottomVertices(self):
         #find the base of our rectange
         vertexInfo = self.getPolyLineVertex()
@@ -187,28 +177,22 @@ class Trip:
             i += 1
         #checking to see if we have reached the "top" of the rectangle
         if (forwardTotal > self.searchDistanceAlongRoad):
-            print("Found in first polyline. Use the following as your index:", i - 1)
             return {"base": vertexInfo["cords"][vertexInfo["index"]], "top": vertexInfo["cords"][i]}
         
         #adding the final segment of the original polyline to the start of the next polyline
         forwardTotal += self.getDistanceBetweenTwoPoints(vertexInfo["cords"][i], self.directions[vertexInfo["stepIndex"] + 1]["start_location"])
         #checking to see if we have reached the "top" of the rectangle
         if (forwardTotal > self.searchDistanceAlongRoad):
-            print("Found at the last jabroni in the first polyline")
             return {"base": vertexInfo["cords"][vertexInfo["index"]], "top": vertexInfo["cords"][len(vertexInfo["cords"]) - 1]}
 
         #find the step that will contain the "top" of the polyline
         j = vertexInfo["stepIndex"] + 1
         while forwardTotal < self.searchDistanceAlongRoad:
-            print(forwardTotal, self.searchDistanceAlongRoad)
             forwardTotal += self.directions[j]["distance"]["value"]
-            print(forwardTotal, self.searchDistanceAlongRoad)
             j += 1
         #reset total to point before the step that would exceed our search value
-        print(forwardTotal, self.searchDistanceAlongRoad)
         j -= 1
         forwardTotal -= self.directions[j]["distance"]["value"]
-        print(forwardTotal, self.searchDistanceAlongRoad)
         
         #get all the points within the polyline that contains the top of the rectangle
         finalCords = self.decodePolyline(self.directions[j]["polyline"]["points"])
@@ -218,12 +202,24 @@ class Trip:
             forwardTotal += self.getDistanceBetweenTwoPoints(finalCords[i], finalCords[i+1])
             i += 1
         if (forwardTotal > self.searchDistanceAlongRoad):
-            print("Vertex found in another step. The step index and then the polyline index:", j, i)
             return {"base": vertexInfo["cords"][vertexInfo["index"]], "top": finalCords[i]}
         #if it was none of those, then it is the last one!
         else:
-            print("Last jabroni on a new step:", j, i)
             return {"base": vertexInfo["cords"][vertexInfo["index"]], "top": finalCords[len(finalCords) - 1]}
+
+    def getLocationsOfNextStop(self):
+        cords = self.getTopAndBottomVertices()
+        #use the top and bottom function to get where we are searching
+        #change the function so that the top is not as far into the road (maybe 7 mins?)
+        #use it one more time so that we have 3 points
+        #do a radius search from the middle
+        #depending on the results, hit again using the third as the middle...etc
+
+        #once we have all the stuff, use the directions api setting the options as waypoints
+        #get the directions from last step to future step (far enough away) and use that to compare extra driving time
+        #do this with all results to get the ranking
+        #send to frontend to present to user
+        #profit
         
 
 
