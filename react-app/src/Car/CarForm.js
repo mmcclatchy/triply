@@ -4,6 +4,7 @@ import './CarForm.css';
 import CarMakes from './CarMakes';
 import CarYears from './CarYears';
 import CarModels from './CarModels';
+import { registerCar } from '../services/car';
 import { getVehicleId, getMPG } from '../services/fueleconomyAPI';
 
 const CarForm = ({ userId }) => {
@@ -13,17 +14,17 @@ const CarForm = ({ userId }) => {
   const [mpg, setMPG] = useState();
   const [apiId, setApiID] = useState();
 
-  const submitHandler = e => {
+  const submitHandler = async e => {
     e.preventDefault();
     const new_car = {
-      user_id: userId,
-      api_id: apiId,
+      userId: userId,
+      apiId: apiId,
       year: year,
       make: make,
       model: model,
       mpg: mpg
     };
-    console.log(new_car);
+    await registerCar(new_car, userId);
   };
 
   const calculateMPG = async e => {
