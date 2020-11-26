@@ -1,68 +1,89 @@
 /* global google */
-import React from "react";
-import { makeStyles } from '@material-ui/core/styles';
+import React, {useState, useEffect } from "react";
+import { GoogleMap, withScriptjs, withGoogleMap, DirectionsRenderer } from "react-google-maps"
 import { TextField, Button } from '@material-ui/core';
-const{
-withScriptjs,
-withGoogleMap,
-GoogleMap,
-DirectionsRenderer,
-} = require("react-google-maps");
-const { compose, withProps, lifecycle } = require ("recompose");
-//  use withScriptjs to wrap the map in order to get the map to load correctly
+//  use withScriptjs and withGoogleMap to wrap the map in order to get the map to load correctly
 
-const MapWithADirectionsRenderer = compose(
-  withProps({
-    googleMapURL: `https://maps.googleapis.com/maps/api/js?key=${process.env.REACT_APP_GOOGLE_KEY}&v=3.exp&libraries=geometry,drawing,places`,
-    loadingElement: <div style={{ height: `100%` }} />,
-    containerElement: <div style={{ height: `400px`, marginLeft: `500px`, width: `500px`}} />,
-    mapElement: <div style={{ height: `100%` }} />,
-  }),
-  withScriptjs,
-  withGoogleMap,
-  lifecycle({
-    componentDidMount() {
-      const DirectionsService = new google.maps.DirectionsService();
 
-      DirectionsService.route({
-        origin: new google.maps.LatLng(40.991360, -72.534203),
-        destination: new google.maps.LatLng(36.099861, -80.244217),
-        travelMode: google.maps.TravelMode.DRIVING,
-      }, (result, status) => {
-        if (status === google.maps.DirectionsStatus.OK) {
-          this.setState({
-            directions: result,
-          });
-        } else {
-          console.error(`error fetching directions ${result}`);
-        }
-      });
+function InitMap() {
+  const [origin, setOrigin] = useState("")
+  const [destination, setDestination] = useState("")
+  const [originFormContent, setOriginFormContent] = useState("")
+  const [destinationFormContent, setDestinationFormContent] = useState("")
+  const [directions, setDirections] = useState(false)
+  const directionsService = new google.maps.DirectionsService();
+  const handleClick = () => {
+      setOrigin(originFormContent)
+      setDestination(destinationFormContent)
+  }
+  const updateOriginFormContent = (e) => {
+    setOriginFormContent(e.target.value)
+  }
+  const updateDestinationFormContent = (e) => {
+    setDestinationFormContent(e.target.value)
+  }
+  // const directionsRenderer = new google.maps.DirectionsRenderer();
+  useEffect(() => {
+    if (!origin && !destination) {
+      return
     }
-  })
-)(props =>
-  <GoogleMap
-    defaultZoom={7}
-    defaultCenter={new google.maps.LatLng(41.8507300, -87.6512600)}
-  >
-    {props.directions && <DirectionsRenderer directions={props.directions} />}
-  </GoogleMap>
-);
-
-
-export default function Map() {
-  return (
-        <>
-          <div style ={{width: '50vw', height: '70vh'}}>
-          <MapWithADirectionsRenderer />
-          </div>
-
-          <div>
-            <TextField id="origin" label="Origin" variant="filled" />
-            <TextField id="origin" label="Destination" variant="filled" />
-          </div>
-          <Button variant="contained">
-          Submit
-           </Button>
-        </>
+    const setRoute = () => {
+      directionsService.route(
+        {
+          origin: {
+            query: origin
+          },
+          destination: {
+            query: destination
+          },
+          travelMode: google.maps.TravelMode.DRIVING,
+        },
+        (response, status) => {
+          if (status === "OK") {
+            console.log("hiii")
+            setDirections(response)
+          } else {
+            window.alert("Directions request failed due to " + status);
+          }
+        }
       );
-   }
+    }
+  setRoute()
+  }, [origin,destination])
+
+
+  return (
+    <>
+    <GoogleMap
+      defaultZoom={10}
+      defaultCenter={{ lat: 40.991360, lng: -72.534203 }}
+      >
+        {directions ? <DirectionsRenderer directions={directions} /> : null}
+    </GoogleMap>
+      <TextField id="origin" label="Origin" variant="filled" value={originFormContent} onChange={updateOriginFormContent} />
+      <TextField id="destination" label="Destination" variant="filled" value={destinationFormContent} onChange={updateDestinationFormContent} />
+      <Button variant="contained" onClick={handleClick}>
+        Submit
+      </Button>
+    </>
+  )
+}
+
+
+const WrappedMap = withScriptjs(withGoogleMap(InitMap));
+
+//make sure to create .env.local file with REACT_APP_GOOGLE_KEY ="apikey"
+export default function Map() {
+
+  return (
+    <div style={{ width: '50vw', height: '70vh' }}>
+      <WrappedMap
+        id="map"
+        googleMapURL={`https://maps.googleapis.com/maps/api/js?key=${process.env.REACT_APP_GOOGLE_KEY}&v=3.exp&libraries=geometry,drawing,places`}
+        loadingElement={<div style={{ height: "100% " }} />}
+        containerElement={<div style={{ height: "100% ", marginLeft: `500px`, width: `500px` }} />}
+        mapElement={<div style={{ height: "100% " }} />}
+      />
+    </div>
+  );
+}
