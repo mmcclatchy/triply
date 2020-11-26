@@ -1,3 +1,4 @@
+from urllib import parse
 from .convertPolyLine import decodePolyline
 from math import sin, cos, sqrt, atan2, radians
 from .Stop import Stop
@@ -16,10 +17,12 @@ class Trip:
         self.endBuffer = 1800
         self.searchDistanceAlongRoad = 16093
         self.searchDistanceAwayFromRoad = 1609
+        self.searchRadius = 11265 #meters
 
 
         # photos, opening_hours,rating
-        self.basicLocalSearch = "https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=fast%20food&inputtype=textquery&fields=formatted_address,name&key=AIzaSyBmKKKPntFx-1yFUAIgXjWQU3wykVlBt3Y&locationbias=rectangle:"
+        # locationbias=rectangle:
+        self.basicLocalSearch = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?type=restaurant&key=AIzaSyBmKKKPntFx-1yFUAIgXjWQU3wykVlBt3Y"
         self.basicDirectionUrl = "https://maps.googleapis.com/maps/api/directions/json?key=AIzaSyBmKKKPntFx-1yFUAIgXjWQU3wykVlBt3Y"
         self.basicRoadsUrl = "https://roads.googleapis.com/v1/speedLimits?key=AIzaSyBmKKKPntFx-1yFUAIgXjWQU3wykVlBt3Y&units=MPH&path="
         self.startCor = kwargs.get('startCor')
@@ -163,7 +166,7 @@ class Trip:
             return None
        
         
-    def getTopAndBottomVertices(self):
+    def getPairForBuffer(self, mod=1):
         #find the base of our rectange
         vertexInfo = self.getPolyLineVertex()
         if not vertexInfo:
@@ -172,22 +175,22 @@ class Trip:
         forwardTotal = 0
         i = vertexInfo["index"]
         #interate through the rest of the polyline that the base of the rectangle is in
-        while (i < (len(vertexInfo["cords"]) - 1)) and (forwardTotal < self.searchDistanceAlongRoad):
+        while (i < (len(vertexInfo["cords"]) - 1)) and (forwardTotal < self.searchRadius * mod):
             forwardTotal += self.getDistanceBetweenTwoPoints(vertexInfo["cords"][i], vertexInfo["cords"][i+1])
             i += 1
         #checking to see if we have reached the "top" of the rectangle
-        if (forwardTotal > self.searchDistanceAlongRoad):
-            return {"base": vertexInfo["cords"][vertexInfo["index"]], "top": vertexInfo["cords"][i]}
+        if (forwardTotal > self.searchRadius * mod):
+            return [vertexInfo["cords"][vertexInfo["index"]], vertexInfo["cords"][i]]
         
         #adding the final segment of the original polyline to the start of the next polyline
         forwardTotal += self.getDistanceBetweenTwoPoints(vertexInfo["cords"][i], self.directions[vertexInfo["stepIndex"] + 1]["start_location"])
         #checking to see if we have reached the "top" of the rectangle
-        if (forwardTotal > self.searchDistanceAlongRoad):
-            return {"base": vertexInfo["cords"][vertexInfo["index"]], "top": vertexInfo["cords"][len(vertexInfo["cords"]) - 1]}
+        if (forwardTotal > self.searchRadius * mod):
+            return [vertexInfo["cords"][vertexInfo["index"]], vertexInfo["cords"][len(vertexInfo["cords"]) - 1]]
 
         #find the step that will contain the "top" of the polyline
         j = vertexInfo["stepIndex"] + 1
-        while forwardTotal < self.searchDistanceAlongRoad:
+        while forwardTotal < self.searchRadius * mod:
             forwardTotal += self.directions[j]["distance"]["value"]
             j += 1
         #reset total to point before the step that would exceed our search value
@@ -198,17 +201,65 @@ class Trip:
         finalCords = self.decodePolyline(self.directions[j]["polyline"]["points"])
         i = 0
         #go through all the verticies in the polyline to find where we reach the "top"
-        while (i < (len(finalCords) - 1)) and (forwardTotal < self.searchDistanceAlongRoad):
+        while (i < (len(finalCords) - 1)) and (forwardTotal < self.searchRadius * mod):
             forwardTotal += self.getDistanceBetweenTwoPoints(finalCords[i], finalCords[i+1])
             i += 1
-        if (forwardTotal > self.searchDistanceAlongRoad):
-            return {"base": vertexInfo["cords"][vertexInfo["index"]], "top": finalCords[i]}
+        if (forwardTotal > self.searchRadius * mod):
+            return [vertexInfo["cords"][vertexInfo["index"]], finalCords[i]]
         #if it was none of those, then it is the last one!
         else:
-            return {"base": vertexInfo["cords"][vertexInfo["index"]], "top": finalCords[len(finalCords) - 1]}
+            return [vertexInfo["cords"][vertexInfo["index"]], finalCords[len(finalCords) - 1]]
+
+
+    def getFirstWayPoint(self, searchBuffer):
+        #this can be improved for speed at a later date
+        return self.startCor
+
+    def getSecondWayPoint(self, searchBuffer):
+        #this can be improved for speed at a later date
+        return self.endCor
+
+    def getSearchQuery(self):
+        #user input and sort user input
+        return parse.quote("fast food")
+
+    def placeSearchUrlGenerator(self, searchQuery, searchCord):
+        url = self.basicLocalSearch
+        url = url + "&location="
+        url = url + str(searchCord["lat"]) + "," + str(searchCord["lng"])
+        url = url + "&keyword=" + searchQuery
+        url = url + "&rankby=distance"
+        return url
+        
+
 
     def getLocationsOfNextStop(self):
-        cords = self.getTopAndBottomVertices()
+        searchBuffer = [x for x in self.getPairForBuffer()]
+        firstWayPoint = self.getFirstWayPoint(searchBuffer)
+        endWayPoint = self.getSecondWayPoint(searchBuffer)
+        searchQuery = self.getSearchQuery()
+
+        listOfFoundSpots = []
+        numberOfCheckedSpots = 0
+        while len(listOfFoundSpots) < 3 and numberOfCheckedSpots < 3:
+            numberOfCheckedSpots += 1
+            searchQuery = self.getSearchQuery()
+            url = self.placeSearchUrlGenerator(searchQuery, searchBuffer[len(searchBuffer) - 1])
+            r = requests.get(url)
+            r = r.json()
+            for option in r["results"]:
+                listOfFoundSpots.append(option)
+                if len(listOfFoundSpots) >= 3:
+                    break
+            #appends the next point to search buffer
+            searchBuffer.append(self.getPairForBuffer(((len(searchBuffer) - 1) * 2) + 1)[1])
+            print(searchBuffer)
+        
+        return listOfFoundSpots
+
+
+
+        
         #use the top and bottom function to get where we are searching
         #change the function so that the top is not as far into the road (maybe 7 mins?)
         #use it one more time so that we have 3 points
