@@ -44,3 +44,50 @@ export const getMakes = async year => {
   const data = await xmlToJson(xml).menuItems.menuItem;
   return data;
 };
+
+export const getModels = async (year, make) => {
+  const xmlResponse = await fetch(
+    `https://www.fueleconomy.gov/ws/rest/vehicle/menu/model?year=${year}&make=${make}`
+  );
+  const xmlText = await xmlResponse.text();
+  const xml = await new window.DOMParser().parseFromString(
+    xmlText,
+    'text/xml'
+  );
+  const data = await xmlToJson(xml).menuItems.menuItem;
+  return data;
+};
+
+export const getVehicleId = async (year, make, model) => {
+  const xmlResponse = await fetch(
+    `https://www.fueleconomy.gov/ws/rest/vehicle/menu/options?year=${year}&make=${make}&model=${model}`
+  );
+  const xmlText = await xmlResponse.text();
+  const xml = await new window.DOMParser().parseFromString(
+    xmlText,
+    'text/xml'
+  );
+  const data = await xmlToJson(xml).menuItems.menuItem;
+  if (data) {
+    return data;
+  } else {
+    console.error('Something went wrong...');
+  }
+};
+
+export const getMPG = async vehicleID => {
+  const xmlResponse = await fetch(
+    `https://www.fueleconomy.gov/ws/rest/vehicle/${vehicleID}`
+  );
+  const xmlText = await xmlResponse.text();
+  const xml = await new window.DOMParser().parseFromString(
+    xmlText,
+    'text/xml'
+  );
+  const data = await xmlToJson(xml).vehicle['comb08']['#text'];
+  if (data) {
+    return data;
+  } else {
+    console.error('Something went wrong...');
+  }
+};
