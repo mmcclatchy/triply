@@ -15,6 +15,7 @@ class Trip(db.Model):
     start_location = db.Column(db.String(255), nullable=False)
     end_time = db.Column(db.DateTime, nullable=False)
     end_location = db.Column(db.String(255), nullable=False)
+    directions = db.Column(db.Text)
 
     stops = db.relationship('Stop', backref='trip', lazy='joined')
 
@@ -31,5 +32,6 @@ class Trip(db.Model):
             'start_location': self.start_location,
             'end_time': self.end_time,
             'end_location': self.end_location,
+            'directions': self.directions,
             'stops': [stop.id for stop in self.stops]
         }
