@@ -8,6 +8,8 @@ import json
 
 
 #todo:
+    #determine if gas is needed
+    #determine if hotel is needed
     #tailor the hotel search to stars!!!
 
 
