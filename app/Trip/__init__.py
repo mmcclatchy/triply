@@ -28,10 +28,14 @@ class Trip:
         self.basicRoadsUrl = "https://roads.googleapis.com/v1/speedLimits?key=AIzaSyBmKKKPntFx-1yFUAIgXjWQU3wykVlBt3Y&units=MPH&path="
         self.startCor = kwargs.get('startCor')
         self.endCor = kwargs.get('endCor')
-        self.travelPerDay = kwargs.get('travelPerDay')
-        self.travelPerIncrement = kwargs.get('travelPerIncrement')
+        self.travelPerDay = kwargs.get('dailyTimeLimit')
+        self.travelPerIncrement = kwargs.get('dailyTstopTimeLimitimeLimit')
         self.foodType = kwargs.get('foodTypes')
-        self.milesTillFuelNeeded = kwargs.get("milesTillFuelNeeded")
+        self.milesToRefuel = kwargs.get("milesToRefuel")
+        self.tolls = kwargs.get("tolls")
+        if self.tolls is None:
+            self.tolls = True
+        
 
         self.directionsFromGoogle = None
         self.stops = []
@@ -40,24 +44,25 @@ class Trip:
         self.totalTravelTime = None
         self.totalTravelDistance = None
         
-        self.checkCorAndSetDirections()
 
     def setStartCor(self, startCor):
         self.startCor = startCor
-        self.checkCorAndSetDirections()
 
     def setEndCor(self, endCor):
         self.endCor = endCor
-        self.checkCorAndSetDirections()
 
-    def checkCorAndSetDirections(self):
+    def createDirection(self, **kwargs):
         if self.startCor and self.endCor:
             origin = str(self.startCor["lat"]) + "," + str(self.startCor["lng"])
             destination = str(self.endCor["lat"]) + "," + str(self.endCor["lng"])
             url = self.makeUrl(origin=origin, destination=destination)
+            if kwargs.get("waypoints"):
+                url += kwargs.get("waypoints")
+            print("!!!!!!!!!!!!!!!!", url)
             r = requests.get(url)
-            r = r.json()
             self.directionsFromGoogle = r
+            r = r.json()
+            
 
             legs = [i for i in r["routes"][0]["legs"]]
             directions = []
@@ -74,9 +79,13 @@ class Trip:
             self.totalTravelDistance = distance
             self.totalTravelTime = time
 
-            start = Stop(self.startCor, 0)
-            end = Stop(self.endCor, self.totalTravelTime)
-            self.stops = [start, end]
+            for waypointsInclusive in range(len(r["geocoded_waypoints"])):
+                if waypointsInclusive == 0:
+                    continue
+                if waypointsInclusive == len(r["geocoded_waypoints"]) - 1:
+                    break
+                wp = r["geocoded_waypoints"][waypointsInclusive]
+                self.stops.append(wp["place_id"])
 
             self.indexSteps()
 
@@ -95,7 +104,6 @@ class Trip:
         for i in kwargs:
             url = url + "&" + i + "=" + kwargs[i]
         return url
-
 
     def decodePolyline(self, encoded):
         return decodePolyline(encoded)
@@ -126,8 +134,15 @@ class Trip:
             d += self.getDistanceBetweenTwoPoints(cords[i], cords[i+1])
         return d
 
-    def addStop(self, cord, **kwargs):
-        self.stops.append(Stop(cord, **kwargs))
+    def addStop(self, newStops):
+        string = "&waypoints"
+        for stop in newStops:
+            self.stops.append(stop)
+        for stop in self.stops:
+            string = string+"place_id:"+stop+"|"
+        string = string[:-1]
+        self.createDirection(waypoints=string)
+
 
     def setTravelPerIncrement(self, tup):
         self.travelPerIncrement = tup
@@ -222,10 +237,6 @@ class Trip:
         #this can be improved for speed at a later date
         return self.endCor
 
-    def getSearchQuery(self):
-        #user input and sort user input
-        return parse.quote("fast food")
-
     def placeSearchUrlGenerator(self, searchQuery, searchCord):
         url = self.basicLocalSearch
         url = url + "&location="
@@ -234,19 +245,30 @@ class Trip:
         url = url + "&rankby=distance"
         return url
         
+    def checkIfGasIsNeeded(self):
+        pass
 
+    def getNextStopDetails(self, **kwargs):
+        foodQuery = kwargs.get("foodQuery")
+        if not foodQuery:
+            foodQuery = "restaurant"
+        hotel = kwargs.get("hotel")
+        gas = kwargs.get("gas")
+        if not gas:
+            gas = self.checkIfGasIsNeeded()
+        if not hotel:
+            hotel = self.checkIfHotelIsNeeded()
+        
 
-    def getLocationsOfNextStop(self):
         searchBuffer = [x for x in self.getPairForBuffer()]
         firstWayPoint = self.getFirstWayPoint(searchBuffer)
         endWayPoint = self.getSecondWayPoint(searchBuffer)
-        searchQuery = self.getSearchQuery()
 
         listOfFoundSpots = []
         numberOfCheckedSpots = 0
         while len(listOfFoundSpots) < 3 and numberOfCheckedSpots < 3:
             numberOfCheckedSpots += 1
-            searchQuery = self.getSearchQuery()
+            searchQuery = foodQuery
             url = self.placeSearchUrlGenerator(searchQuery, searchBuffer[len(searchBuffer) - 1])
             r = requests.get(url)
             r = r.json()
@@ -275,12 +297,19 @@ class Trip:
         #send to frontend to present to user
         #profit
 
-    def toDict(self):
-        {"directions": json.dump(self.directionsFromGoogle)}
+    def checkIfGasIsNeeded(self):
+        return False
+    
+    def checkIfHotelIsNeeded(self):
+        return False
+
+    def getDirections(self):
+        return self.directionsFromGoogle
     
     def constructFromDirections(self, directionsAsJson):
-        directionsFromGoogle = json.loads(directionsAsJson)
+        directionsFromGoogle = directionsAsJson
         self.directionsFromGoogle = directionsFromGoogle
+        d = json.load(directionsFromGoogle)
         legs = [i for i in r["routes"][0]["legs"]]
         directions = []
         for i in range(len(legs)):
@@ -296,9 +325,13 @@ class Trip:
         self.totalTravelDistance = distance
         self.totalTravelTime = time
 
-        start = Stop(self.startCor, 0)
-        end = Stop(self.endCor, self.totalTravelTime)
-        self.stops = [start, end]
+        for waypointsInclusive in range(len(directionsFromGoogle["geocoded_waypoints"])):
+            if waypointsInclusive == 0:
+                continue
+            if waypointsInclusive == len(directionsFromGoogle["geocoded_waypoints"]) - 1:
+                break
+            wp = directionsFromGoogle["geocoded_waypoints"][waypointsInclusive]
+            self.stops.append(wp["place_id"])
 
         self.indexSteps()
 
@@ -315,6 +348,7 @@ t = Trip()
 # print("NEW STUFFFFFF!!!!!!!!!!")
 t.setEndCor({"lat": 40.712776, "lng": -74.005974})
 t.setStartCor({"lat":42.789379, "lng":-86.107201})
+t.createDirection()
 # print(t.stops)
 # print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
 # print(t.directions)
@@ -326,4 +360,4 @@ print(t.stepTimeIndex)
 # t.setTravelPerIncrement((34710, 36296))
 t.setTravelPerIncrement((39825, 20189))
 
-print(t.getLocationsOfNextStop())
+print(t.getNextStopDetails())
