@@ -35,6 +35,7 @@ class Trip:
         self.tolls = kwargs.get("tolls")
         if self.tolls is None:
             self.tolls = True
+        self.stopKey = kwargs.get("stopKey")
         
 
         self.directionsFromGoogle = None
@@ -134,7 +135,7 @@ class Trip:
             d += self.getDistanceBetweenTwoPoints(cords[i], cords[i+1])
         return d
 
-    def addStop(self, newStops):
+    def addStop(self, newStops, stopKey):
         string = "&waypoints"
         for stop in newStops:
             self.stops.append(stop)
@@ -142,6 +143,7 @@ class Trip:
             string = string+"place_id:"+stop+"|"
         string = string[:-1]
         self.createDirection(waypoints=string)
+        self.stopKey = stopKey
 
 
     def setTravelPerIncrement(self, tup):
