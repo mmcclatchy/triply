@@ -4,7 +4,7 @@ import cover from '../assets/triply_cover.jpeg';
 import NavBar from './NavBar';
 import './Header.css';
 
-const Header = ({ setAuthenticated, userId }) => {
+const Header = ({ authenticated, setAuthenticated, userId }) => {
   return (
     <div>
       <AppBar
@@ -18,7 +18,11 @@ const Header = ({ setAuthenticated, userId }) => {
         <div className='header__content'>
           <div className='logo'></div>
           <h1>Welcome to Triply!</h1>
-          <NavBar setAuthenticated={setAuthenticated} userId={userId} />
+          <NavBar
+            authenticated={authenticated}
+            setAuthenticated={setAuthenticated}
+            userId={userId}
+          />
         </div>
       </AppBar>
     </div>

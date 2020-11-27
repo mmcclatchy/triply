@@ -1,10 +1,17 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { authenticate } from '../services/auth';
 import Header from '../shared_components/Header';
 
-const Homepage = ({ setAuthenticated, userId }) => {
+const Homepage = ({ authenticated, setAuthenticated, userId }) => {
+  useEffect(() => {}, []);
+
   return (
     <div>
-      <Header setAuthenticated={setAuthenticated} userId={userId} />
+      <Header
+        authenticated={authenticated}
+        setAuthenticated={setAuthenticated}
+        userId={userId}
+      />
       <h1>Welcome to Triply!</h1>
     </div>
   );

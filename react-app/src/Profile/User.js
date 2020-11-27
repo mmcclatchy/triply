@@ -1,25 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import './User.css';
 import CarForm from '../Car/CarForm';
 
 function User() {
   const [user, setUser] = useState({});
   const [cars, setCars] = useState([]);
-  // Notice we use useParams here instead of getting the params
-  // From props.
   const { userId } = useParams();
 
   useEffect(() => {
-    if (!userId) {
-      return;
-    }
     (async () => {
       const response = await fetch(`/api/users/${userId}`);
       const user = await response.json();
       setUser(user);
     })();
-  }, [userId]);
+  }, []);
 
   useEffect(() => {
     const getCars = async () => {
