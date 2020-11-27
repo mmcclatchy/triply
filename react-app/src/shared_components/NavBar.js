@@ -8,6 +8,7 @@ import { useSelector } from 'react-redux';
 const NavBar = ({ authenticated, setAuthenticated }) => {
   const history = useHistory();
   const userId = useSelector(state => state.authentication.userId);
+  const userName = useSelector(state => state.authentication.userName);
 
   const login_form = () => {
     history.push('/login');
@@ -20,11 +21,14 @@ const NavBar = ({ authenticated, setAuthenticated }) => {
   return (
     <div className='NavBar'>
       {authenticated ? (
-        <DropDown
-          authenticated={authenticated}
-          setAuthenticated={setAuthenticated}
-          userId={userId}
-        />
+        <>
+          <div>Good Afternoon {userName}</div>
+          <DropDown
+            authenticated={authenticated}
+            setAuthenticated={setAuthenticated}
+            userId={userId}
+          />
+        </>
       ) : (
         <>
           <Button variant='contained' onClick={login_form}>

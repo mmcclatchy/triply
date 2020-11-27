@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Redirect } from 'react-router-dom';
 import { login } from '../services/auth';
 import { useDispatch } from 'react-redux';
-import { setId } from '../store/actions/authentication';
+import { setId, setName } from '../store/actions/authentication';
 import './LoginForm.css';
 
 const LoginForm = ({ authenticated, setAuthenticated }) => {
@@ -16,6 +16,7 @@ const LoginForm = ({ authenticated, setAuthenticated }) => {
     const user = await login(email, password);
     if (!user.errors) {
       dispatch(setId(user.id));
+      dispatch(setName(user.username));
       setAuthenticated(true);
     } else {
       setErrors(user.errors);

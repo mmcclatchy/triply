@@ -3,8 +3,8 @@ import { BrowserRouter, Route } from 'react-router-dom';
 import LoginForm from './Login/LoginForm';
 import SignUpForm from './Signup/SignUpForm';
 import Map from './Map/Map';
-import { setId } from './store/actions/authentication';
-import { useDispatch, useSelector } from 'react-redux';
+import { setId, setName } from './store/actions/authentication';
+import { useDispatch } from 'react-redux';
 import ProtectedRoute from './authorization/ProtectedRoute';
 import User from './Profile/User';
 import Homepage from './Homepage/Homepage';
@@ -20,6 +20,7 @@ function App() {
       if (!user.errors) {
         setAuthenticated(true);
         dispatch(setId(user.id));
+        dispatch(setName(user.username));
       }
       setLoaded(true);
     });

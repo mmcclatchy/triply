@@ -1,9 +1,12 @@
-import { SET_ID } from '../actions/authentication';
+import { SET_ID, SET_NAME } from '../actions/authentication';
 
 export default function reducer(state = {}, action) {
   switch (action.type) {
     case SET_ID: {
       return { ...state, userId: action.userId };
+    }
+    case SET_NAME: {
+      return { ...state, userName: action.name };
     }
     default:
       return state;
