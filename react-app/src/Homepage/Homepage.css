@@ -1,0 +1,44 @@
+@import url('https://fonts.googleapis.com/css2?family=Anton&display=swap');
+
+.homepage_body {
+  background-image: url('../assets/triply_cover.jpeg');
+  background-size: 100% auto;
+  background-repeat: no-repeat;
+  background-position: center 62%;
+  height: 100vh;
+}
+
+.logo {
+  background-image: url('../assets/triply_logo_black.png');
+  background-size: 65%;
+  background-repeat: no-repeat;
+  margin-top: 10px;
+  margin-left: 20px;
+  width: 300px;
+  height: 231px;
+}
+
+.header__content {
+  display: flex;
+  justify-content: space-between;
+}
+
+.homepage__tagline {
+  font-family: 'Anton', sans-serif;
+  font-size: 70px;
+  color: rgb(253, 210, 0);
+  letter-spacing: 0.2px;
+  -webkit-text-stroke: 3px rgb(34, 34, 30);
+  font-weight: 400;
+  text-decoration: none;
+  font-style: normal;
+  font-variant: normal;
+  text-transform: uppercase;
+  margin: -25px;
+}
+
+.tag_container {
+  margin-top: 320px;
+  margin-right: 60px;
+  text-align-last: right;
+}
