@@ -7,6 +7,5 @@ export const registerCar = async (data, id) => {
     body: JSON.stringify(data)
   });
   const res = await response.json();
-  console.log(data);
   return res;
 };
