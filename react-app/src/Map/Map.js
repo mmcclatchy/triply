@@ -2,39 +2,38 @@
 import React, {useState, useEffect } from "react";
 import { GoogleMap, withScriptjs, withGoogleMap, DirectionsRenderer } from "react-google-maps"
 import { TextField, Button } from '@material-ui/core';
+import { useDispatch, useSelector } from 'react-redux';
 //  use withScriptjs and withGoogleMap to wrap the map in order to get the map to load correctly
 
 
-function InitMap() {
+const InitMap = ({ }) => {
+  const dispatch = useDispatch()
+  const reduxOrigin = useSelector((state) => state.directionsRedux.origin)
+  const reduxDestination = useSelector((state) => state.directionsRedux.destination)
   const [origin, setOrigin] = useState("")
   const [destination, setDestination] = useState("")
   const [originFormContent, setOriginFormContent] = useState("")
   const [destinationFormContent, setDestinationFormContent] = useState("")
   const [directions, setDirections] = useState(false)
   const directionsService = new google.maps.DirectionsService();
-  const handleClick = () => {
-      setOrigin(originFormContent)
-      setDestination(destinationFormContent)
-  }
-  const updateOriginFormContent = (e) => {
-    setOriginFormContent(e.target.value)
-  }
-  const updateDestinationFormContent = (e) => {
-    setDestinationFormContent(e.target.value)
-  }
-  // const directionsRenderer = new google.maps.DirectionsRenderer();
+  const originField = document.getElementById("origin")
+  const destinationField = document.getElementById("destination")
+  const autoOrigin = new google.maps.places.Autocomplete(originField);
+  const autoOrigin2 = new google.maps.places.Autocomplete(destinationField);
+
   useEffect(() => {
-    if (!origin && !destination) {
+
+    if (!reduxOrigin && !reduxDestination) {
       return
     }
     const setRoute = () => {
       directionsService.route(
         {
           origin: {
-            query: origin
+            query: reduxOrigin
           },
           destination: {
-            query: destination
+            query: reduxDestination
           },
           travelMode: google.maps.TravelMode.DRIVING,
         },
@@ -49,7 +48,7 @@ function InitMap() {
       );
     }
   setRoute()
-  }, [origin,destination])
+  }, [origin,destination,dispatch])
 
 
   return (
@@ -60,11 +59,6 @@ function InitMap() {
       >
         {directions ? <DirectionsRenderer directions={directions} /> : null}
     </GoogleMap>
-      <TextField id="origin" label="Origin" variant="filled" value={originFormContent} onChange={updateOriginFormContent} />
-      <TextField id="destination" label="Destination" variant="filled" value={destinationFormContent} onChange={updateDestinationFormContent} />
-      <Button variant="contained" onClick={handleClick}>
-        Submit
-      </Button>
     </>
   )
 }
