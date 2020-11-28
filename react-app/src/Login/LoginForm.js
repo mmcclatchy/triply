@@ -1,18 +1,22 @@
 import React, { useState } from 'react';
 import { Redirect } from 'react-router-dom';
 import { login } from '../services/auth';
-import { Button } from '@material-ui/core';
+import { useDispatch } from 'react-redux';
+import { setId, setName } from '../store/actions/authentication';
 import './LoginForm.css';
 
 const LoginForm = ({ authenticated, setAuthenticated }) => {
   const [errors, setErrors] = useState([]);
   const [email, setEmail] = useState('demo@aa.io');
   const [password, setPassword] = useState('password');
+  const dispatch = useDispatch();
 
   const onLogin = async e => {
     e.preventDefault();
     const user = await login(email, password);
     if (!user.errors) {
+      dispatch(setId(user.id));
+      dispatch(setName(user.username));
       setAuthenticated(true);
     } else {
       setErrors(user.errors);
