@@ -37,7 +37,7 @@ def get_trip(trip_id):
 
 
 # POST a trip associated with a user
-@trip_routes.route('/users/<int:user_id>/trips/', methods=['POST'])
+@trip_routes.route('/users/<int:user_id>/trips', methods=['POST'])
 @login_required
 def post_trip(user_id):
     data = request.json
