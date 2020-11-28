@@ -4,10 +4,9 @@ import { useSelector } from 'react-redux';
 import './User.css';
 import CarForm from '../Car/CarForm';
 
-function User() {
+function User({ userId }) {
   const [user, setUser] = useState({});
   const [cars, setCars] = useState([]);
-  const { userId } = useParams();
 
   useEffect(() => {
     (async () => {
