@@ -78,20 +78,6 @@ const RouteForm = ({}) => {
   //   setDestinationFormContent(address)
   // })
   const handleClick = () => {
-<<<<<<< HEAD
-    setOrigin(originFormContent)
-    setDestination(destinationFormContent)
-    dispatch(setOriginAction(originFormContent))
-    dispatch(setDestinationAction(destinationFormContent))
-    return history.push(`/map`);
-  }
-  const updateOriginFormContent = (e) => {
-    setOriginFormContent(e.target.value)
-  }
-  const updateDestinationFormContent = (e) => {
-    setDestinationFormContent(e.target.value)
-  }
-=======
     setOrigin(originFormContent);
     setDestination(destinationFormContent);
     dispatch(setOriginAction(originFormContent));
@@ -104,7 +90,6 @@ const RouteForm = ({}) => {
   const updateDestinationFormContent = e => {
     setDestinationFormContent(e.target.value);
   };
->>>>>>> main
 
   return (
     <>
@@ -125,9 +110,7 @@ const RouteForm = ({}) => {
       <Button variant='contained' onClick={handleClick}>
         Submit
       </Button>
-      <NavLink to='/create-trip'>
         <Button variant='contained'>Access Without API Call</Button>
-      </NavLink>
     </>
   );
 };
