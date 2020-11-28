@@ -2,13 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { BrowserRouter, Route } from 'react-router-dom';
 import LoginForm from './Login/LoginForm';
 import SignUpForm from './Signup/SignUpForm';
-import Map from './Map/Map';
-import { setId } from './store/actions/authentication';
-import { useDispatch, useSelector } from 'react-redux';
+import { setId, setName } from './store/actions/authentication';
+import { useDispatch } from 'react-redux';
 import ProtectedRoute from './authorization/ProtectedRoute';
-import User from './Profile/User';
+import View from './shared_components/Drawer';
 import Homepage from './Homepage/Homepage';
 import { authenticate } from './services/auth';
+import TripPage from './Map/TripPage';
 
 function App() {
   const [authenticated, setAuthenticated] = useState(false);
@@ -20,6 +20,7 @@ function App() {
       if (!user.errors) {
         setAuthenticated(true);
         dispatch(setId(user.id));
+        dispatch(setName(user.username));
       }
       setLoaded(true);
     });
@@ -44,15 +45,12 @@ function App() {
         />
       </Route>
 
-      <Route path='/map' exact={true}>
-        <Map />
+      <Route path='/create-trip' exact={true}>
+        <TripPage />
       </Route>
 
-      <Route
-        path='/profile/:userId'
-        exact={true}
-        authenticated={authenticated}>
-        <User />
+      <Route path='/profile/:userId' authenticated={authenticated}>
+        <View />
       </Route>
 
       <Route path='/' exact={true} authenticated={authenticated}>
