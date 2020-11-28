@@ -1,8 +1,8 @@
-/* global google */
+
 import React, { useState, useEffect } from "react";
-import { NavLink, useHistory } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 import { useDispatch } from 'react-redux';
-import { GoogleMap, withScriptjs, withGoogleMap, DirectionsRenderer } from "react-google-maps"
+// import {makeStyles} from '@material-ui/core/styles'
 import { TextField, Button } from '@material-ui/core';
 import { setOriginAction, setDestinationAction } from '../store/actions/directions';
 //  use withScriptjs and withGoogleMap to wrap the map in order to get the map to load correctly
@@ -76,7 +76,7 @@ const RouteForm = ({}) => {
     //   setDestinationFormContent(address)
     // })
   const handleClick = () => {
-      setOrigin(originFormContent)
+    setOrigin(originFormContent)
     setDestination(destinationFormContent)
     dispatch(setOriginAction(originFormContent))
     dispatch(setDestinationAction(destinationFormContent))
