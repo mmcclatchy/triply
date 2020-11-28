@@ -3,6 +3,10 @@ import React, {useState, useEffect } from "react";
 import { GoogleMap, withScriptjs, withGoogleMap, DirectionsRenderer } from "react-google-maps"
 import { TextField, Button } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
+import {
+  setDurationAction,
+  setDistanceAction
+} from '../store/actions/directions';
 //  use withScriptjs and withGoogleMap to wrap the map in order to get the map to load correctly
 
 
@@ -43,9 +47,9 @@ const InitMap = ({ }) => {
         },
         (response, status) => {
           if (status === "OK") {
-            console.log(response.routes[0].legs[0].duration.text)
-            console.log(response.routes[0].legs[0].distance.text)
             setDirections(response)
+            dispatch(setDurationAction(response.routes[0].legs[0].duration.text))
+            dispatch(setDistanceAction(response.routes[0].legs[0].distance.text))
           } else {
             window.alert("Directions request failed due to " + status);
           }
