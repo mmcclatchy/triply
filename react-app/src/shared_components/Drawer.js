@@ -4,7 +4,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
-import User from './User';
+import User from '../Profile/User';
 import LoginForm from '../Login/LoginForm';
 import SignUp from '../Signup/SignUpForm';
 import { Button } from '@material-ui/core';

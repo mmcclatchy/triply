@@ -4,7 +4,7 @@ import { logout } from '../services/auth';
 import { Button } from '@material-ui/core';
 import { useHistory } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import View from '../Profile/Drawer';
+import View from '../shared_components/Drawer';
 
 const NavBar = ({ authenticated, setAuthenticated }) => {
   const history = useHistory();
