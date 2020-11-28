@@ -1,5 +1,5 @@
-export const SHOW_FORM = 'triply/utilities/SHOW_FORM';
-export const HIDE_FORM = 'triply/utilities/HIDE_FORM';
+import { HIDE_FORM, SHOW_FORM } from '../constants/constants';
+
 
 export const showForm = () => ({ type: SHOW_FORM });
 export const hideForm = () => ({ type: HIDE_FORM });
