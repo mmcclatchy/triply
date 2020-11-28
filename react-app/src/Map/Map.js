@@ -10,6 +10,7 @@ const InitMap = ({ }) => {
   const dispatch = useDispatch()
   const reduxOrigin = useSelector((state) => state.directionsRedux.origin)
   const reduxDestination = useSelector((state) => state.directionsRedux.destination)
+  const reduxStartTime = useSelector((state) => state.directionsRedux.startTime)
   const [origin, setOrigin] = useState("")
   const [destination, setDestination] = useState("")
   const [originFormContent, setOriginFormContent] = useState("")
@@ -35,11 +36,15 @@ const InitMap = ({ }) => {
           destination: {
             query: reduxDestination
           },
+          drivingOptions: {
+            departureTime: new Date(reduxStartTime),
+          },
           travelMode: google.maps.TravelMode.DRIVING,
         },
         (response, status) => {
           if (status === "OK") {
-            console.log("hiii")
+            console.log(response.routes[0].legs[0].duration.text)
+            console.log(response.routes[0].legs[0].distance.text)
             setDirections(response)
           } else {
             window.alert("Directions request failed due to " + status);

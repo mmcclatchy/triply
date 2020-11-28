@@ -1,4 +1,4 @@
-import { SET_DESTINATION, SET_ORIGIN} from '../actions/directions';
+import { SET_DESTINATION, SET_ORIGIN, SET_START_TIME} from '../actions/directions';
 
 export default function reducer(state = {}, action) {
   switch (action.type) {
@@ -7,6 +7,9 @@ export default function reducer(state = {}, action) {
     }
     case SET_DESTINATION: {
       return{...state, destination: action.destination}
+    }
+    case SET_START_TIME: {
+      return{...state, startTime: action.startTime}
     }
     default:
       return state;
