@@ -6,7 +6,7 @@ import Map from './Map/Map';
 import { setId, setName } from './store/actions/authentication';
 import { useDispatch } from 'react-redux';
 import ProtectedRoute from './authorization/ProtectedRoute';
-import User from './Profile/User';
+import View from './Profile/Drawer';
 import Homepage from './Homepage/Homepage';
 import { authenticate } from './services/auth';
 
@@ -49,11 +49,8 @@ function App() {
         <Map />
       </Route>
 
-      <Route
-        path='/profile/:userId'
-        exact={true}
-        authenticated={authenticated}>
-        <User />
+      <Route path='/profile/:userId' authenticated={authenticated}>
+        <View />
       </Route>
 
       <Route path='/' exact={true} authenticated={authenticated}>
