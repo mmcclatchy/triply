@@ -19,7 +19,7 @@
 
 ## Creating a Car
 
-- Necessary info for signup
+- Necessary info for signup                 `backtick not nullable values`
 
   - userId
   - apiId
@@ -77,3 +77,12 @@
     // Delete a Trip
     deleteTrip(tripId)
     ```
+
+## Creating a Stop
+
+- Info for Stop Endpoint
+
+  - foodQuery = string
+  - gas = boolean
+  - hotel = boolean
+  
