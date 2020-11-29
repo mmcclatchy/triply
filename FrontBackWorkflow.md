@@ -1,41 +1,79 @@
 # Front End / Back End Workflow
 
+- All endpoints begin with `/api`, so it's best to add that to the end of `REACT_APP_BASE_URL`
+- PUT requests are structured so that all you need to send is what is being modified
+
+## General Workflow
+
+1. FE - Post User's Car details
+2. FE - Post Initial Trip details
+
+    - POST: /users/{userId}/trip
+
+3. BE - Returns a Trip Object and Directions
+4. FE - Prompts user for Stop Details
+
+    - POST: /trips/{tripId}/stops
+
+5. BE - 
+
+## Creating a Car
+
+- Necessary info for signup
+
+  - userId
+  - apiId
+  - make
+  - model
+  - year
+  - mpg
+  - tankSize
+
+- Car dispatch actions:
+
+    ```js
+    // Get all Cars associated with a User
+    getCars(userId)
+
+    // Get a specific Car
+    getCar(carId)
+
+    // Create a new Car for a User
+    postCar(car, userId)
+
+    // Delete a Car
+    deleteCar(carId)
+    ```
+
 ## Creating a Trip
 
-1. Frontend API Actions:
+- Necessary info for Trip endpoint
 
-    - Necessary info for Trip endpoint
+  - userId
+  - name
+  - carId
+  - toll
+  - dailyTimeLimit
+  - stopTimeLimit
+  - startLocation
+  - endLocation
+  - startTime || endTime
 
-    - All endpoints begin with `/api`, so it's best to add that to the end of `REACT_APP_BASE_URL`
-
-    ```js
-    const returningAction = payload => ({ type: ACTION_NAME, payload })
-
-    // add id to parameters if the endpoint url necessitates
-    const action = payload => ({
-        type: API,
-        // import API from constants/constants.js
-        method: 'GET/POST/PUT/DELETE',
-        // add ${id} if the endpoint requires one
-        endpoint: `/the/correct/endpoint`,
-        // The action to take place when the fetch data is returned
-        altAction: (data) => returningAction(data)
-    })
-    ```
-
-    - Example:
+- Trip dispatch actions:
 
     ```js
-    const setTrip = trip => ({ type: SET_TRIP, trip })
+    // Get all Trips associated with a User
+    getTrips(userId)
 
-    export const postTrip = (trip, userId) => ({
-        type: API,
-        payload: {
-        method: 'POST',
-        endpoint: `/users/${userId}/trips`,
-        body: trip,
-        action: trip => setTrip(trip),
-        },
-    });
+    // Get a specific Trip
+    getTrip(tripId)
+
+    // Create a new Trip for a User
+    postTrip(trip, userId)
+
+    // Modify a Trip
+    putTrip(trip, tripId)
+
+    // Delete a Trip
+    deleteTrip(tripId)
     ```
-

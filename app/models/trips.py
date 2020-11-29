@@ -32,6 +32,8 @@ class Trip(db.Model):
             'start_location': self.start_location,
             'end_time': self.end_time,
             'end_location': self.end_location,
-            'directions': self.directions,
             'stops': [stop.id for stop in self.stops]
         }
+
+    def directions_to_dict(self):
+        return {'id': self.id, directions}

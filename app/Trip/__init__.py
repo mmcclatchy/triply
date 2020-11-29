@@ -9,7 +9,7 @@ import json
 #  To get the distance of a polyline, pass the hashed value to the "getDistance" function
 
 
-class Trip:
+class TripClass:
 
 
     ##todo: add method that converts to things that can easily save

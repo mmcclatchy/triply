@@ -48,7 +48,7 @@ def post_car(user_id):
         make=data['make'],
         model=data['model'],
         year=data['year'],
-        mpg=data['mpg'])
+        miles_to_refuel=data['mpg'] * data['tankSize'])
     try:
         db.session.add(car)
         db.session.commit()

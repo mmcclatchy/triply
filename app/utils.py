@@ -1,3 +1,11 @@
+from urllib import parse
+import requests
+import os
+
+
+api_key = os.environ.get(REACT_APP_GOOGLE_KEY)
+
+
 def camelCase(string):
     if not isinstance(string, str):
         return string
@@ -47,3 +55,25 @@ def to_dict(inst):
         key = col[i+1:]
         inst_dict[key] = inst[key]
     return inst_dict
+
+
+def get_place_coords(place):
+    formatted_place = parse.quote(place)
+    url = f'https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input={formatted_place}&inputtype=textquery&fields=formatted_address,name,geometry,place_id&key={api_key}'
+    res = requests.get(url)
+    res = res.json()
+    lat = res['geometry']['location']['lat']
+    lng = res['geometry']['location']['lng']
+    return {'lat': lat, 'lng': lng}
+
+
+def coords_to_str(coords):
+    return f'{coords[0]},{coords[1]}'
+
+
+def coords_from_str(coords):
+    return coords.split(',')
+
+
+def check_previous_cuisines(tripId):
+    pass
