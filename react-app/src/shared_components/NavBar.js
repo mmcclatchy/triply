@@ -1,41 +1,43 @@
 import React from 'react';
-import DropDown from './DropDown';
 import './NavBar.css';
+import { logout } from '../services/auth';
 import { Button } from '@material-ui/core';
 import { useHistory } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import View from '../shared_components/Drawer';
 
 const NavBar = ({ authenticated, setAuthenticated }) => {
   const history = useHistory();
   const userId = useSelector(state => state.authentication.userId);
   const userName = useSelector(state => state.authentication.userName);
-
-  const login_form = () => {
-    history.push('/login');
-  };
-
-  const signup_form = () => {
-    history.push('/sign-up');
+  const onLogout = async e => {
+    await logout();
+    setAuthenticated(false);
   };
 
   return (
     <div className='NavBar'>
       {authenticated ? (
         <>
-          <div>Good Afternoon {userName}</div>
-          <DropDown
-            authenticated={authenticated}
-            setAuthenticated={setAuthenticated}
-            userId={userId}
-          />
+          <div>Welcome {userName}</div>
+
+          <View anchor='My Profile' variant='outlined' color='primary' />
+
+          <Button
+            variant='outlined'
+            color='secondary'
+            onClick={onLogout}
+            className='homepage__button'>
+            Sign Out
+          </Button>
         </>
       ) : (
         <>
-          <Button variant='contained' onClick={login_form}>
-            Log In
+          <Button variant='outlined' className='homepage__button'>
+            <View anchor='Login' setAuthenticated={setAuthenticated} />
           </Button>
-          <Button variant='contained' onClick={signup_form}>
-            Sign Up
+          <Button variant='outlined' className='homepage__button'>
+            <View anchor='Sign Up' />
           </Button>
         </>
       )}

@@ -42,3 +42,8 @@
   margin-right: 60px;
   text-align-last: right;
 }
+
+.homepage__button {
+  height: 40px;
+  width: 100px;
+}

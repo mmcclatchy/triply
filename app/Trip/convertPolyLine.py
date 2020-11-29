@@ -1,4 +1,4 @@
-ßdef decodePolyline(encoded):
+def decodePolyline(encoded):
     if not encoded:
         return []
 
