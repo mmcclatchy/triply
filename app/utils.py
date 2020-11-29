@@ -3,7 +3,7 @@ import requests
 import os
 
 
-api_key = os.environ.get(REACT_APP_GOOGLE_KEY)
+api_key = os.environ['FRONTEND_API_KEY']
 
 
 def camelCase(string):

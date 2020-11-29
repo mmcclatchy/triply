@@ -72,7 +72,7 @@ def post_trip(user_id):
         start_time=data['startTime'],
         start_location=coords_to_str(origin),
         end_time=data['endTime'],
-        end_location=coords_to_str(destination)
+        end_location=coords_to_str(destination),
         directions=directions)
 
     try:
