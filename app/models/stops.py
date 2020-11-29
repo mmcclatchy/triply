@@ -9,6 +9,7 @@ class Stop(db.Model):
     trip_id = db.Column(db.Integer, db.ForeignKey('trips.id'), nullable=False)
     trip_stop_num = db.Column(db.Integer, nullable=False)
     coordinates = db.Column(db.String(255), nullable=False)
+    time = db.Column(db.DateTime)
     gas_station_id = db.Column(db.Integer, db.ForeignKey('gas_stations.id'))
     hotel_id = db.Column(db.Integer, db.ForeignKey('hotels.id'))
     restaurant_id = db.Column(db.Integer, db.ForeignKey('restaurants.id'))
@@ -25,9 +26,10 @@ class Stop(db.Model):
             'trip_id': self.trip_id,
             'trip_stop_num': self.trip_stop_num,
             'coordinates': self.coordinates,
-            'gas_station_id': self.gas_station_id,
-            'hotel_id': self.hotel_id,
-            'restaurant_id': self.restaurant_id,
+            'time': self.time,
+            'gas_station': self.gas_station,
+            'hotel': self.hotel,
+            'restaurant': self.restaurant,
             'star_min': self.star_min,
             'star_max': self.star_max,
             'cuisines': [cuisine.id for cuisine in self.cuisines]

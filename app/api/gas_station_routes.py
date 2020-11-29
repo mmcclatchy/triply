@@ -39,13 +39,16 @@ def get_gas_station(stop_id):
 def post_gas_station():
     data = request.json
 
-    # exists = GasStation.query.\
-    #     filter(GasStation.place_id == data['placeId']).first()
-    # if isinstance(exists, GasStation):
-    #     return {'gasStations': normalize(exists.to_dict())}
-
     try:
-        gas_station = GasStation(name=data['name'], place_id=data['placeId'])
+        gas_station = GasStation(
+            name=data['name'],
+            phone_num=data['phoneNum'],
+            street_address=data['streetAddress'],
+            city=data['city'],
+            state=data['state'],
+            zip_code=data['zipCode'],
+            img_url=data['imgUrl'],
+            place_id=data['placeId'])
         db.session.add(gas_station)
         db.session.commit()
         return {'gasStations': normalize(gas_station.to_dict())}

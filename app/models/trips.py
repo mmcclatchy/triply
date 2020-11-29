@@ -11,9 +11,9 @@ class Trip(db.Model):
     daily_time_limit = db.Column(db.Integer, nullable=False)
     stop_time_limit = db.Column(db.Integer, nullable=False)
     toll = db.Column(db.Boolean, nullable=False)
-    start_time = db.Column(db.DateTime, nullable=False)
+    start_time = db.Column(db.DateTime)
     start_location = db.Column(db.String(255), nullable=False)
-    end_time = db.Column(db.DateTime, nullable=False)
+    end_time = db.Column(db.DateTime)
     end_location = db.Column(db.String(255), nullable=False)
     directions = db.Column(db.Text)
 
@@ -32,6 +32,11 @@ class Trip(db.Model):
             'start_location': self.start_location,
             'end_time': self.end_time,
             'end_location': self.end_location,
-            'directions': self.directions,
             'stops': [stop.id for stop in self.stops]
         }
+
+    def directions_to_dict(self):
+        if self.directions:
+            return {'id': self.id, 'directions': self.directions}
+        else:
+            return {}
