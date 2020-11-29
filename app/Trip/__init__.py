@@ -275,7 +275,33 @@ class TripClass:
             return False
         
     def checkIfHotelIsNeeded(self, cords):
-        pass
+        averageMetersPerSecond = self.totalTravelDistance / self.totalTravelTime
+        lastWas = 0
+        for i in range(len(self.stopKey)):
+            j = len(self.stopKey) - 1 - i
+            if self.stopKey[j] == "h":
+                lastWas = j
+        dictOfGoogle = json.loads(self.directionsFromGoogle)
+        wp = dictOfGoogle["routes"][0]["legs"][lastWas]
+        legs = dictOfGoogle["routes"][0]["legs"]
+        timeSinceLastSleep = 0
+        j = lastWas
+        while j < len(legs) - 2:
+            timeSinceLastSleep += legs[j]["duration"]["value"]
+            j += 1
+        timeSinceLastSleep += (self.getDistanceBetweenTwoPoints(cords, wp["start_location"]) / averageMetersPerSecond) * 2
+        if timeSinceLastSleep > self.travelPerDay:
+            print("Hotel is needed!!")
+            return True
+        else:
+            print("hotel is not needed")
+            return False
+        
+        
+
+        
+
+        
 
     def getFoodAndGasNearLocation(self, searchQuery, cords):
         food = self.placeSearchUrlGenerator(searchQuery, cords)
@@ -320,9 +346,10 @@ class TripClass:
         while len(listOfFoundSpots) < 3*mod and numberOfCheckedSpots < 3:
             numberOfCheckedSpots += 1
             searchQuery = foodQuery
+            url = self.placeSearchUrlGenerator(searchQuery, searchBuffer[len(searchBuffer) - 1])
             if hotel:
                 searchQuery = "hotel"
-            url = self.placeSearchUrlGenerator(searchQuery, searchBuffer[len(searchBuffer) - 1])
+                url = self.placeSearchUrlGenerator(searchQuery, searchBuffer[len(searchBuffer) - 1], type="lodging")
             r = requests.get(url)
             r = r.json()
             for option in r["results"]:
@@ -331,12 +358,12 @@ class TripClass:
                     break
             #appends the next point to search buffer
             searchBuffer.append(self.getPairForBuffer(((len(searchBuffer)) * 2) + 1)[1])
-        if gas:
+        if gas and not hotel:
             gasOptions = self.getGasNearLocation(listOfFoundSpots[0]["geometry"]["location"])
-            print("THIS IS A GAS THING!!!!")
-            print(gasOptions)
+            # print("THIS IS A GAS THING!!!!")
+            # print(gasOptions)
             listOfFoundSpots = {"food": listOfFoundSpots, "gas": gasOptions}
-        # print(listOfFoundSpots)
+        print(listOfFoundSpots)
         return listOfFoundSpots
 
 
@@ -413,9 +440,10 @@ class TripClass:
 # # print(t.stepTimeIndex)
 # t.setTravelPerIncrement((34710, 36296))
 t.setTravelPerIncrement((7200, 20189))
+t.travelPerDay = 7200 * 2
 
 t.getNextStopDetails()
-t.addStop(["ChIJ_yI7V3BFI4gR4K98PVlIEiQ", "ChIJ0XXQUFE-OogR2w6dkGjqhu0", "ChIJ7wHa54k-OogRdXZAth3Jz7M", "ChIJo0BrfAxSI4gR0XjDWhB5Ne8", "ChIJ0XXQUFE-OogR2w6dkGjqhu0"], ["f", "f", "f", "f", "f"])
+# t.addStop(["ChIJ_yI7V3BFI4gR4K98PVlIEiQ", "ChIJ0XXQUFE-OogR2w6dkGjqhu0", "ChIJ7wHa54k-OogRdXZAth3Jz7M", "ChIJo0BrfAxSI4gR0XjDWhB5Ne8", "ChIJ0XXQUFE-OogR2w6dkGjqhu0"], ["f", "f", "f", "f", "f"])
 t.addStop(["ChIJ_yI7V3BFI4gR4K98PVlIEiQ"], ['f'])
 t.getNextStopDetails()
 
