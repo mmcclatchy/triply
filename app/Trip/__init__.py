@@ -405,6 +405,17 @@ class TripClass:
             self.stops.append(wp["place_id"])
 
         self.indexSteps()
+    
+    def toDictForDatabase(self):
+        result = {
+            "daily_timelimit": self.travelPerDay,
+            "stop_timelimit": self.travelPerIncrement,
+            "toll": self.tolls,
+            "start_location": self.startCor,
+            "end_location": self.endCor,
+            "directions": self.getDirections()
+        }
+        return result
 
         
 
