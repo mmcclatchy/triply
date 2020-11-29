@@ -249,13 +249,14 @@ class TripClass:
         #this can be improved for speed at a later date
         return self.endCor
 
-    def placeSearchUrlGenerator(self, searchQuery, searchCord):
+    def placeSearchUrlGenerator(self, searchQuery, searchCord, **kwargs):
         url = self.basicLocalSearch
         url = url + "&location="
         url = url + str(searchCord["lat"]) + "," + str(searchCord["lng"])
         url = url + "&keyword=" + searchQuery
         url = url + "&rankby=distance"
-        print(url, "THIS IS THE SEARCH URL!!!!")
+        if kwargs.get("type"):
+            url = url + "&type=" + kwargs.get("type")
         return url
 
     def checkIfGasIsNeeded(self, cords):
@@ -268,10 +269,7 @@ class TripClass:
         dictOfGoogle = json.loads(self.directionsFromGoogle)
         wp = dictOfGoogle["routes"][0]["legs"][lastWas]
         aproxDistance = self.getDistanceBetweenTwoPoints(cords, wp["start_location"])
-        # print(cords, wp["start_location"])
-        # print(aproxDistance)
-        # print(self.milesToRefuel)
-        if aproxDistance * 2 >= self.milesToRefuel:
+        if aproxDistance * 2 >= self.milesToRefuel * 1609.34:
             return True
         else:
             return False
@@ -291,7 +289,9 @@ class TripClass:
 
     def getGasNearLocation(self, cords):
         print("we need gas!!!!!!!!!!!!!!!")
-        return self.placeSearchUrlGenerator("gas station", cords)
+        r = requests.get(self.placeSearchUrlGenerator("gas station", cords, type="gas_station"))
+        r = r.json()
+        return r
 
 
     def getNextStopDetails(self, **kwargs):
@@ -310,9 +310,9 @@ class TripClass:
         gas = kwargs.get("gas")
         mod = 1
         if not gas:
-            gas = self.checkIfGasIsNeeded(firstWayPoint)
+            gas = self.checkIfGasIsNeeded(searchBuffer[0])
         if not hotel:
-            hotel = self.checkIfHotelIsNeeded(firstWayPoint)
+            hotel = self.checkIfHotelIsNeeded(searchBuffer[0])
             mod = 3
 
         listOfFoundSpots = []
@@ -331,6 +331,12 @@ class TripClass:
                     break
             #appends the next point to search buffer
             searchBuffer.append(self.getPairForBuffer(((len(searchBuffer)) * 2) + 1)[1])
+        if gas:
+            gasOptions = self.getGasNearLocation(listOfFoundSpots[0]["geometry"]["location"])
+            print("THIS IS A GAS THING!!!!")
+            print(gasOptions)
+            listOfFoundSpots = {"food": listOfFoundSpots, "gas": gasOptions}
+        # print(listOfFoundSpots)
         return listOfFoundSpots
 
 
@@ -406,7 +412,12 @@ class TripClass:
 # t.createDirection()
 # # print(t.stepTimeIndex)
 # t.setTravelPerIncrement((34710, 36296))
-# t.setTravelPerIncrement((7200, 20189))
+t.setTravelPerIncrement((7200, 20189))
+
+t.getNextStopDetails()
+t.addStop(["ChIJ_yI7V3BFI4gR4K98PVlIEiQ", "ChIJ0XXQUFE-OogR2w6dkGjqhu0", "ChIJ7wHa54k-OogRdXZAth3Jz7M", "ChIJo0BrfAxSI4gR0XjDWhB5Ne8", "ChIJ0XXQUFE-OogR2w6dkGjqhu0"], ["f", "f", "f", "f", "f"])
+t.addStop(["ChIJ_yI7V3BFI4gR4K98PVlIEiQ"], ['f'])
+t.getNextStopDetails()
 
 # t.getNextStopDetails()
 # t.addStop(["ChIJ_yI7V3BFI4gR4K98PVlIEiQ", "ChIJ0XXQUFE-OogR2w6dkGjqhu0", "ChIJ7wHa54k-OogRdXZAth3Jz7M", "ChIJo0BrfAxSI4gR0XjDWhB5Ne8", "ChIJ0XXQUFE-OogR2w6dkGjqhu0"], ["f", "f", "f", "f", "f"])
