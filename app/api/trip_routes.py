@@ -90,6 +90,6 @@ def delete_trip(trip_id):
     if trip:
         db.session.delete(trip)
         db.session.commit()
-        return {'message': f'Trip Id: {trip_id} was successfully deleted'}
+        return {'id': trip_id}
     else:
         return {'errors': [f'Trip Id: {trip_id} was not found']}, 404

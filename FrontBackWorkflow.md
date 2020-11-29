@@ -4,6 +4,8 @@
 
 1. Frontend API Actions:
 
+    - Necessary info for Trip endpoint
+
     - All endpoints begin with `/api`, so it's best to add that to the end of `REACT_APP_BASE_URL`
 
     ```js
@@ -17,7 +19,7 @@
         // add ${id} if the endpoint requires one
         endpoint: `/the/correct/endpoint`,
         // The action to take place when the fetch data is returned
-        action: (data) => returningAction(data)
+        altAction: (data) => returningAction(data)
     })
     ```
 
@@ -31,7 +33,7 @@
         payload: {
         method: 'POST',
         endpoint: `/users/${userId}/trips`,
-        body: trip
+        body: trip,
         action: trip => setTrip(trip),
         },
     });
