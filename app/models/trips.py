@@ -11,9 +11,9 @@ class Trip(db.Model):
     daily_time_limit = db.Column(db.Integer, nullable=False)
     stop_time_limit = db.Column(db.Integer, nullable=False)
     toll = db.Column(db.Boolean, nullable=False)
-    start_time = db.Column(db.DateTime, nullable=False)
+    start_time = db.Column(db.DateTime)
     start_location = db.Column(db.String(255), nullable=False)
-    end_time = db.Column(db.DateTime, nullable=False)
+    end_time = db.Column(db.DateTime)
     end_location = db.Column(db.String(255), nullable=False)
     directions = db.Column(db.Text)
 
