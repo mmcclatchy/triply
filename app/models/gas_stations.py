@@ -14,7 +14,7 @@ class GasStation(db.Model):
     img_url = db.Column(db.String(255))
     place_id = db.Column(db.String(255), nullable=False)
 
-    stops = db.relationship('Stop', backref='gas_station', lazy='joined')
+    stops = db.relationship('Stop', back_populates='gas_station', lazy='joined')
 
     def to_dict(self):
         return {
@@ -27,5 +27,5 @@ class GasStation(db.Model):
             'zip_code': self.zip_code,
             'img_url': self.img_url,
             'place_id': self.place_id,
-            'stops': [stop.id for stop in self.stops]
+            # 'stops': [stop.id for stop in self.stops]
         }

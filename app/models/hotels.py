@@ -15,7 +15,7 @@ class Hotel(db.Model):
     stars = db.Column(db.Float, nullable=False)
     place_id = db.Column(db.String(255), nullable=False)
 
-    stops = db.relationship('Stop', backref='hotel', lazy='joined')
+    stops = db.relationship('Stop', back_populates='hotel', lazy='joined')
 
     def to_dict(self):
         return {
@@ -29,5 +29,5 @@ class Hotel(db.Model):
             'img_url': self.img_url,
             'stars': self.stars,
             'place_id': self.place_id,
-            'stops': [stop.id for stop in self.stops]
+            # 'stops': [stop.id for stop in self.stops]
         }

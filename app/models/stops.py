@@ -19,6 +19,9 @@ class Stop(db.Model):
     cuisines = db.relationship("Cuisine", secondary=stop_cuisines,
                                lazy="joined",
                                backref=db.backref("stop", lazy=True))
+    gas_station = db.relationship('GasStation', back_populates='stops', lazy='joined')
+    restaurant = db.relationship('Restaurant', back_populates='stops', lazy='joined')
+    hotel = db.relationship('Hotel', back_populates='stops', lazy='joined')
 
     def to_dict(self):
         return {
@@ -27,10 +30,10 @@ class Stop(db.Model):
             'trip_stop_num': self.trip_stop_num,
             'coordinates': self.coordinates,
             'time': self.time,
-            'gas_station': self.gas_station,
-            'hotel': self.hotel,
-            'restaurant': self.restaurant,
+            'gas_station': self.gas_station.to_dict(),
+            'hotel': self.hotel.to_dict(),
+            'restaurant': self.restaurant.to_dict(),
             'star_min': self.star_min,
             'star_max': self.star_max,
-            'cuisines': [cuisine.id for cuisine in self.cuisines]
+            'stop_cuisines': [cuisine.id for cuisine in self.cuisines]
         }

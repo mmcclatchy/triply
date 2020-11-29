@@ -15,10 +15,10 @@ class Restaurant(db.Model):
     img_url = db.Column(db.String(255))
     place_id = db.Column(db.String(255), nullable=False)
 
-    stops = db.relationship("Stop", backref="restaurant", lazy="joined")
     cuisines = db.relationship("Cuisine", secondary=restaurant_cuisines,
                                lazy="joined",
                                backref=db.backref("restaurant", lazy=True))
+    stops = db.relationship('Stop', back_populates='restaurant', lazy='joined')
 
     def to_dict(self):
         return {
@@ -31,6 +31,7 @@ class Restaurant(db.Model):
             'zip_code': self.zip_code,
             'img_url': self.img_url,
             'place_id': self.place_id,
-            'stops': [stop.id for stop in self.stops],
-            'cuisines': [cuisine.id for cuisine in self.cuisines]
+            # 'stops': [stop.id for stop in self.stops],
+            'restaurant_cuisines':
+                [cuisine.to_dict() for cuisine in self.cuisines]
         }
