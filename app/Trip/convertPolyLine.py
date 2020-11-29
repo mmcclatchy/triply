@@ -1,4 +1,4 @@
-ßdef decodePolyline(encoded):
+def decodePolyline(encoded):
     if not encoded:
         return []
 
@@ -46,7 +46,7 @@
 
         p = {
             "lat": lat / 100000,
-            "lgn": lng / 100000,
+            "lng": lng / 100000,
         }
         poly.append(p)
     return poly

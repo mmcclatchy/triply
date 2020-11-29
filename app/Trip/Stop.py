@@ -1,7 +1,8 @@
 class Stop:
-    def __init__(self, cord, **kwargs):
+    def __init__(self, cord, time, **kwargs):
         self.cord = cord
-        
+        self.time = time
+
         self.food = kwargs.get("food")
         self.gas = kwargs.get("gas") 
         self.hotel = kwargs.get("hotel") 
