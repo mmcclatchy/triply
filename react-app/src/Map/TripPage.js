@@ -1,6 +1,6 @@
 import React from 'react';
 import Map from './Map';
-import TripSummary from './TripSummary'
+import TripSummary from './TripSummary';
 import { NavLink } from 'react-router-dom';
 import './TripPage.css';
 
