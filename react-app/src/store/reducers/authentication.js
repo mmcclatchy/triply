@@ -1,4 +1,4 @@
-import { SET_ID, SET_NAME } from '../constants/constants';
+import { SET_AUTH, SET_ID, SET_NAME } from '../constants/constants';
 
 export default function reducer(state = {}, action) {
   switch (action.type) {
@@ -7,6 +7,9 @@ export default function reducer(state = {}, action) {
     }
     case SET_NAME: {
       return { ...state, userName: action.name };
+    }
+    case SET_AUTH: {
+      return { ...state, auth: action.auth };
     }
     default:
       return state;
