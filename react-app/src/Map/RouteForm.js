@@ -109,8 +109,11 @@ const RouteForm = ({}) => {
       <Button variant='contained' onClick={handleClick}>
         Submit
       </Button>
-      <NavLink to='create-trip'>
+      <NavLink to='/create-trip'>
         <Button variant='contained'>Access Without API Call</Button>
+      </NavLink>
+      <NavLink to='/timeline'>
+        <Button variant='contained'>Access Timeline</Button>
       </NavLink>
     </>
   );

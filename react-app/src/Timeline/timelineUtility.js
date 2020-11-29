@@ -32,9 +32,11 @@ export const getIcon = type => {
 };
 
 export const meal = time => {
-  if (time.includes('am')) {
+  const idx = time.indexOf(':');
+  const hour = time.slice(0, idx);
+  if (time.includes('am') && parseInt(hour) >= 5) {
     return 'Breakfast';
-  } else if (parseInt(time[0]) < 6) {
+  } else if (time.includes('pm') && parseInt(hour) < 6) {
     return 'Lunch';
   } else {
     return 'Dinner';
