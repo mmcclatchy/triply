@@ -19,13 +19,16 @@ const NavBar = ({ authenticated, setAuthenticated }) => {
     <div className='NavBar'>
       {authenticated ? (
         <>
-          <div>Welcome {userName}</div>
+          <div className="header_logo">Welcome {userName}</div>
 
-          <View anchor='My Profile' variant='outlined' color='primary' />
+          <View anchor='My Profile'
+            className="profile_button"
+            variant='contained'
+            style={{backgroundColor: "yellow"}}/>
 
           <Button
             variant='outlined'
-            color='secondary'
+            style={{backgroundColor: "yellow", marginRight:"2em"}}
             onClick={onLogout}
             className='homepage__button'>
             Sign Out
@@ -33,10 +36,16 @@ const NavBar = ({ authenticated, setAuthenticated }) => {
         </>
       ) : (
         <>
-          <Button variant='outlined' className='homepage__button'>
+            <Button
+              variant='outlined'
+              style={{backgroundColor: "yellow"}}
+              className='homepage__button'>
             <View anchor='Login' setAuthenticated={setAuthenticated} />
           </Button>
-          <Button variant='outlined' className='homepage__button'>
+            <Button
+              variant='outlined'
+              className='homepage__button'
+              style={{backgroundColor: "yellow"}}>
             <View anchor='Sign Up' />
           </Button>
         </>

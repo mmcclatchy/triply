@@ -21,7 +21,9 @@
   display: flex
 }
 
-
+.MuiButton-root{
+  background-color: yellow;
+}
 
 .MuiInputBase-input {
   text-align: center;

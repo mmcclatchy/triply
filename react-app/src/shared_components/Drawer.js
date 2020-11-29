@@ -61,6 +61,7 @@ export default function TemporaryDrawer({
     <>
       <Button
         variant={variant}
+        style={{backgroundColor: "yellow"}}
         color={color}
         onClick={toggleDrawer(anchor, true)}
         className='homepage__button'>

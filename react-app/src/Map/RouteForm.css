@@ -7,13 +7,13 @@
 }
 
 .route_form_input {
-  display: flex;
-  justify-content: center;
+  /* display: flex; */
+  /* justify-content: center; */
   width: 30vw;
-  text-align: "center";
+  /* text-align: "center"; */
   background-color: white;
   outline-color: white;
-  height: 3em;
+  /* height: 3em; */
   border-radius: .75em;
 }
 
@@ -23,7 +23,7 @@
   width: 8em;
   margin-right: 8em;
   height: 3.4em;
-  background-color: white;
+  color: blue;
 }
 
 .api_button {

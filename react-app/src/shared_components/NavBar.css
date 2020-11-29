@@ -3,3 +3,8 @@
   height: 3em;
   justify-content: flex-end;
 }
+
+.homepage__button {
+  margin-right: 2em;
+}
+
