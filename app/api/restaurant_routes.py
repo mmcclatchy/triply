@@ -37,13 +37,16 @@ def get_restaurant(stop_id):
 def post_restaurant():
     data = request.json
 
-    # exists = Restaurant.query.\
-    #     filter(Restaurant.place_id == data['placeId']).first()
-    # if isinstance(exists, Restaurant):
-    #     return {'restaurants': normalize(exists.to_dict())}
-
     try:
-        restaurant = Restaurant(name=data['name'], place_id=data['placeId'])
+        restaurant = Restaurant(
+            name=data['name'],
+            phone_num=data['phoneNum'],
+            street_address=data['streetAddress'],
+            city=data['city'],
+            state=data['state'],
+            zip_code=data['zipCode'],
+            img_url=data['imgUrl'],
+            place_id=data['placeId'])
 
         for cuisine in data['cuisines']:
             c = Cuisine.query.filter(Cuisine.name == cuisine).first()

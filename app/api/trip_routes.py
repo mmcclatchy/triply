@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, request
 from flask_login import login_required
-from app.models import Trip, User, db
+from app.models import Trip, User, Car, db
 from app.utils import normalize, snake_case, get_place_coords, coords_to_str
 from sqlalchemy.exc import SQLAlchemyError
 from ..Trip import TripClass
@@ -49,18 +49,27 @@ def post_trip(user_id):
     data = request.json
     origin = get_place_coords(data['startLocation'])
     destination = get_place_coords(data['endLocation'])
-    car = Car.query.get(data['carId'])
+    print(f"""
+        ********************************
+        Origin:  {origin}
+        
+        Destination: {destination}
+        ********************************
+    """)
+    car = Car.query.filter(Car.id == data['carId']).first()
+    print('*****************\n\nCar: ', car.id)
 
     trip_instance = TripClass(
         startCor=origin,
         endCor=destination,
         travelPerDay=data['dailyTimeLimit'],
         travelPerIncrement=data['stopTimeLimit'],
-        milesTillFuelNeeded=car['miles_to_refuel'],
+        milesTillFuelNeeded=car.miles_to_refuel,
     )
 
-    trip_instance.createDirections()
+    trip_instance.createDirection()
     directions = trip_instance.getDirections()
+    print('*************\n\nDirections: ', directions, '\n\n***************')
 
     trip = Trip(
         user_id=data['userId'],
@@ -73,7 +82,8 @@ def post_trip(user_id):
         start_location=coords_to_str(origin),
         end_time=data['endTime'],
         end_location=coords_to_str(destination),
-        directions=directions)
+        directions=directions
+        )
 
     try:
         db.session.add(trip)
@@ -107,7 +117,7 @@ def modify_trip(trip_id):
                 startCor=origin,
                 endCor=destination,
             )
-            trip_instance.createDirections()
+            trip_instance.createDirection()
 
         trip_instance.getDirections()
         trip['directions'] = trip_instance['directions']

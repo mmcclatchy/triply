@@ -36,4 +36,7 @@ class Trip(db.Model):
         }
 
     def directions_to_dict(self):
-        return {'id': self.id, 'directions': directions}
+        if self.directions:
+            return {'id': self.id, 'directions': self.directions}
+        else:
+            return {}

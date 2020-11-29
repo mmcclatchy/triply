@@ -6,11 +6,11 @@ from app.models import db, Car
 
 def seed_cars():
 
-    demo = Car(user_id=1, api_id=21374, make="Chevrolet", model="Equinox AWD", year=2005, mpg=18)  # noqa
-    mark = Car(user_id=2, api_id=29658, make="Honda", model="Accord", year=2010, mpg=24)  # noqa
-    ryan = Car(user_id=3, api_id=29823, make="BMW", model="128ci Convertible", year=2010, mpg=16)  # noqa
-    brandon = Car(user_id=4, api_id=38911, make="Volkswagen", model="Beetle", year=2018, mpg=22)  # noqa
-    alycia = Car(user_id=5, api_id=39506, make="Buick", model="Regal", year=2018, mpg=26)  # noqa
+    demo = Car(user_id=1, api_id=21374, make="Chevrolet", model="Equinox AWD", year=2005, miles_to_refuel=350)  # noqa
+    mark = Car(user_id=2, api_id=29658, make="Honda", model="Accord", year=2010, miles_to_refuel=350)  # noqa
+    ryan = Car(user_id=3, api_id=29823, make="BMW", model="128ci Convertible", year=2010, miles_to_refuel=350)  # noqa
+    brandon = Car(user_id=4, api_id=38911, make="Volkswagen", model="Beetle", year=2018, miles_to_refuel=350)  # noqa
+    alycia = Car(user_id=5, api_id=39506, make="Buick", model="Regal", year=2018, miles_to_refuel=350)  # noqa
 
     db.session.add(demo)
     db.session.add(mark)
