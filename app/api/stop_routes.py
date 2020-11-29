@@ -23,6 +23,7 @@ def get_stops(trip_id):
 @login_required
 def get_stop(stop_id):
     stop = Stop.query.get(stop_id)
+    print('**************\n\nGAS STATION: ', stop.gas_station, '\n\n*************')
     if stop:
         return {'stops': normalize(stop.to_dict())}
     else:
@@ -41,7 +42,12 @@ def post_stop(trip_id):
             restaurant_id=data['restaurantId'],
             hotel_id=data['hotelId'],
             gas_station_id=data['gasStationId'],
-            coordinates=data['coordinates'])
+            coordinates=data['coordinates'],
+            time=data['time'],
+            star_min=data['starMin'],
+            star_max=data['starMax'])
+        
+        print('**************\n\nGAS STATION: ', stop.gas_station, '\n\n*************')
 
         for cuisine in data['cuisines']:
             c = Cuisine.query.filter(Cuisine.name == cuisine).first()
