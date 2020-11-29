@@ -1,3 +1,5 @@
 .NavBar {
   display: flex;
+  height: 3em;
+  justify-content: flex-end;
 }

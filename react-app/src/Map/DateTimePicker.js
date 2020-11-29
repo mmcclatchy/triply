@@ -8,11 +8,17 @@ const useStyles = makeStyles((theme) => ({
   container: {
     display: 'flex',
     flexWrap: 'wrap',
+    justifyContent: 'flex-end',
+    width: '100vw',
+    marginTop: '.5em',
+    borderRadius: '.75em'
   },
   textField: {
     marginLeft: theme.spacing(1),
-    marginRight: theme.spacing(1),
-    width: 250,
+    marginRight: '2vw',
+    width: 275,
+    background: 'white',
+    borderRadius: '.8em'
   },
 }));
 
@@ -28,7 +34,8 @@ export default function DateAndTimePickers() {
   }
   console.log(startTimeContent)
   return (
-    <form className={classes.container} noValidate>
+    <div className="picker_container">
+      <form className={classes.container} noValidate>
       <TextField
         id="datetime"
         label="Start Time"
@@ -42,5 +49,6 @@ export default function DateAndTimePickers() {
         }}
       />
     </form>
+    </div>
   );
 }

@@ -1,0 +1,40 @@
+.route_form {
+  display: flex;
+  width:100dw;
+  height: 3.5em;
+  margin-left: 2em;
+  justify-content: flex-end;
+}
+
+.route_form_input {
+  display: flex;
+  justify-content: center;
+  width: 30vw;
+  text-align: "center";
+  background-color: white;
+  outline-color: white;
+  height: 3em;
+  border-radius: .75em;
+}
+
+.submit_route {
+  display: flex;
+  justify-content: flex-end;
+  width: 5em;
+  height: 3.75em;
+  background-color: white;
+}
+
+.api_button {
+  display: flex;
+  width: 2em;
+  height: 3.75em;
+}
+
+
+.buttons {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1em;
+  margin-right: 1em;
+}
