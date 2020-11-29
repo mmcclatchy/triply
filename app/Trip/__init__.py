@@ -8,8 +8,6 @@ import json
 
 
 #todo:
-    #determine if gas is needed
-    #determine if hotel is needed
     #tailor the hotel search to stars!!!
 
 
@@ -350,6 +348,7 @@ class TripClass:
             if hotel:
                 searchQuery = "hotel"
                 url = self.placeSearchUrlGenerator(searchQuery, searchBuffer[len(searchBuffer) - 1], type="lodging")
+                print(url, "This is the hotel one for checking")
             r = requests.get(url)
             r = r.json()
             for option in r["results"]:
