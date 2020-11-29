@@ -37,14 +37,15 @@ def get_hotel(stop_id):
 def post_hotel():
     data = request.json
 
-    # exists = Hotel.query.filter_by(place_id=16394).first()
-    # print('********\n\nEXISTS: ', exists, '\n\n**********')
-    # if isinstance(exists, Hotel):
-    #     return {'hotels': normalize(exists.to_dict())}
-
     try:
         hotel = Hotel(
             name=data['name'],
+            phone_num=data['phoneNum'],
+            street_address=data['streetAddress'],
+            city=data['city'],
+            state=data['state'],
+            zip_code=data['zipCode'],
+            img_url=data['imgUrl'],
             stars=data['stars'],
             place_id=data['placeId'])
         db.session.add(hotel)

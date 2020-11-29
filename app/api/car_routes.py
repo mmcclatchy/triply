@@ -48,7 +48,7 @@ def post_car(user_id):
         make=data['make'],
         model=data['model'],
         year=data['year'],
-        mpg=data['mpg'])
+        miles_to_refuel=data['mpg'] * data['tankSize'])
     try:
         db.session.add(car)
         db.session.commit()
@@ -68,7 +68,6 @@ def car(car_id):
     delete_car = Car.query.get(car_id)
     if delete_car:
         db.session.delete(delete_car)
-        print('INSIDE CONDITIONAL\n\n ***************')
         db.session.commit()
         return {'message': 'Car was successfully deleted'}
     else:

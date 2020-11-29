@@ -1,6 +1,5 @@
-
-import React, { useState, useEffect } from "react";
-import { useHistory } from 'react-router-dom'
+import React, { useState, useEffect } from 'react';
+import { NavLink, useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 // import {makeStyles} from '@material-ui/core/styles'
 import { TextField, Button } from '@material-ui/core';
@@ -127,11 +126,9 @@ const RouteForm = ({}) => {
               Set Route
           </Button>
         </div>
-        <Button
-          className='api_button'
-          variant='contained'>
-          W/O API Call
-        </Button>
+      <NavLink to='create-trip'>
+        <Button className='api_button' variant='contained'>Access Without API Call</Button>
+      </NavLink>
       </div>
     </>
   );

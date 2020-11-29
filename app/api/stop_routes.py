@@ -41,7 +41,10 @@ def post_stop(trip_id):
             restaurant_id=data['restaurantId'],
             hotel_id=data['hotelId'],
             gas_station_id=data['gasStationId'],
-            coordinates=data['coordinates'])
+            coordinates=data['coordinates'],
+            time=data['time'],
+            star_min=data['starMin'],
+            star_max=data['starMax'])
 
         for cuisine in data['cuisines']:
             c = Cuisine.query.filter(Cuisine.name == cuisine).first()

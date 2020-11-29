@@ -1,4 +1,4 @@
-import { SET_ID, SET_NAME } from '../actions/authentication';
+import { SET_ID, SET_NAME } from '../constants/constants';
 
 export default function reducer(state = {}, action) {
   switch (action.type) {
