@@ -9,6 +9,7 @@ import View from './shared_components/Drawer';
 import Homepage from './Homepage/Homepage';
 import { authenticate } from './services/auth';
 import TripPage from './Map/TripPage';
+import TripTimeline from './Timeline/TripTimeline';
 
 function App() {
   const [authenticated, setAuthenticated] = useState(false);
@@ -47,6 +48,10 @@ function App() {
 
       <Route path='/create-trip' exact={true}>
         <TripPage />
+      </Route>
+
+      <Route path='/timeline'>
+        <TripTimeline />
       </Route>
 
       <Route path='/profile/:userId' authenticated={authenticated}>
