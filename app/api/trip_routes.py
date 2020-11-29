@@ -140,3 +140,9 @@ def delete_trip(trip_id):
 
     else:
         return {'errors': [f'Trip Id: {trip_id} was not found']}, 404
+
+
+@trip_routes.route('/trips/test', methods=['POST'])
+@login_required
+def test_route():
+    
