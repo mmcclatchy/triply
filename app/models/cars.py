@@ -22,6 +22,3 @@ class Car(db.Model):
             'year': self.year,
             'miles_to_refuel': self.miles_to_refuel
         }
-
-
-
