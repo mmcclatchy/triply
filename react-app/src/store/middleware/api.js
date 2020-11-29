@@ -1,4 +1,4 @@
-import { API } from '../constants/constants';
+import { API, SET_DIRECTIONS } from '../constants/constants';
 const baseUrl = process.env.REACT_APP_BASE_URL
 
 
@@ -19,7 +19,9 @@ const api = dispatch => next => async action => {
   
   
   if (response.ok) {
-    const payload = await response.json();
+    const { payload, directions } = await response.json();
+    
+    if (directions) dispatch({ type: SET_DIRECTIONS, directions })
     
     dispatch({ type: actionConst, payload })
   }
