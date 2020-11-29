@@ -8,17 +8,24 @@ const useStyles = makeStyles((theme) => ({
   container: {
     display: 'flex',
     flexWrap: 'wrap',
-    justifyContent: 'flex-end',
-    width: '100vw',
+    justifyContent: 'center',
+    width: '30vw',
     marginTop: '.5em',
     borderRadius: '.75em'
   },
   textField: {
-    marginLeft: theme.spacing(1),
-    marginRight: '2vw',
+    "& .MuiInputLabel-formControl": {
+      position: "unset",
+      background:"white",
+    }
+  },
+  textField: {
+    // marginLeft: theme.spacing(1),
+    // marginRight: '2vw',
     width: 275,
     background: 'white',
-    borderRadius: '.8em'
+    borderRadius: '.8em',
+    position: "",
   },
 }));
 
@@ -42,7 +49,6 @@ export default function DateAndTimePickers() {
         type="datetime-local"
         value={startTimeContent}
         onChange = {updateStartTime}
-
         className={classes.textField}
         InputLabelProps={{
           shrink: true,

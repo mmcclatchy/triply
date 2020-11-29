@@ -19,16 +19,18 @@
 
 .submit_route {
   display: flex;
-  justify-content: flex-end;
-  width: 5em;
-  height: 3.75em;
+  align-items: center;
+  width: 8em;
+  margin-right: 8em;
+  height: 3.4em;
   background-color: white;
 }
 
 .api_button {
   display: flex;
-  width: 2em;
-  height: 3.75em;
+  width: 8em;
+  height: 3.4em;
+  margin-left: 1em;
 }
 
 
@@ -36,5 +38,12 @@
   display: flex;
   justify-content: flex-end;
   margin-top: 1em;
+  margin-right: 8em;
+  align-items: center;
+
+}
+
+.submit_container {
+  display: flex;
   margin-right: 1em;
 }

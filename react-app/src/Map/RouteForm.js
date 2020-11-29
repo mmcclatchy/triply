@@ -118,13 +118,15 @@ const RouteForm = ({}) => {
         />
       </div>
       <div className="buttons">
-      <TimePicker />
-        <Button
-          className='submit_route'
-          variant='contained'
-          onClick={handleClick}>
-          Set Route
-        </Button>
+        <TimePicker />
+        <div className="submit_container">
+          <Button
+            className='submit_route'
+            variant='contained'
+            onClick={handleClick}>
+              Set Route
+          </Button>
+        </div>
         <Button
           className='api_button'
           variant='contained'>

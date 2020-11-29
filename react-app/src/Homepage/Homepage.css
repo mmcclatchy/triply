@@ -15,11 +15,19 @@
   background-size: 65%;
   background-repeat: no-repeat;
   margin-top: 10vh;
-  margin-left: 20px;
-  width: 70vw;
-  height: 60vh;
+  margin-left: 30px;
+  width: 35vw;
+  height: 35vh;
   display: flex
 }
+
+/* .MuiInputLabel-formControl {
+  top: 0;
+  margin-top: .3em;
+  left: 0;
+  position: unset;
+  text-align: center;
+} */
 
 .header__content {
   display: flex;
