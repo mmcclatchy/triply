@@ -62,7 +62,6 @@ def get_place_coords(place):
     url = f'https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input={formatted_place}&inputtype=textquery&fields=formatted_address,name,geometry,place_id&key={api_key}'
     res = requests.get(url)
     res = res.json()
-    print('GOOGLE PLACES API RESPONCE: ', res)
     lat = res['candidates'][0]['geometry']['location']['lat']
     lng = res['candidates'][0]['geometry']['location']['lng']
     return {'lat': lat, 'lng': lng}

@@ -67,7 +67,7 @@ class TripClass:
             url = self.makeUrl(origin=origin, destination=destination)
             if kwargs.get("waypoints"):
                 url += kwargs.get("waypoints")
-            print("!!!!!!!!!!!!!!!!", url)
+            # print("!!!!!!!!!!!!!!!!", url)
             r = requests.get(url)
             self.directionsFromGoogle = r.text
             r = r.json()
@@ -267,9 +267,9 @@ class TripClass:
         dictOfGoogle = json.loads(self.directionsFromGoogle)
         wp = dictOfGoogle["routes"][0]["legs"][lastWas]
         aproxDistance = self.getDistanceBetweenTwoPoints(cords, wp["start_location"])
-        print(cords, wp["start_location"])
-        print(aproxDistance)
-        print(self.milesToRefuel)
+        # print(cords, wp["start_location"])
+        # print(aproxDistance)
+        # print(self.milesToRefuel)
         if aproxDistance * 2 >= self.milesToRefuel:
             return True
         else:

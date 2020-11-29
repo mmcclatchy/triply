@@ -68,7 +68,6 @@ def car(car_id):
     delete_car = Car.query.get(car_id)
     if delete_car:
         db.session.delete(delete_car)
-        print('INSIDE CONDITIONAL\n\n ***************')
         db.session.commit()
         return {'message': 'Car was successfully deleted'}
     else:

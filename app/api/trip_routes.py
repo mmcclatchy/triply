@@ -49,15 +49,7 @@ def post_trip(user_id):
     data = request.json
     origin = get_place_coords(data['startLocation'])
     destination = get_place_coords(data['endLocation'])
-    print(f"""
-        ********************************
-        Origin:  {origin}
-        
-        Destination: {destination}
-        ********************************
-    """)
     car = Car.query.filter(Car.id == data['carId']).first()
-    print('*****************\n\nCar: ', car.id)
 
     trip_instance = TripClass(
         startCor=origin,
@@ -69,7 +61,6 @@ def post_trip(user_id):
 
     trip_instance.createDirection()
     directions = trip_instance.getDirections()
-    print('*************\n\nDirections: ', directions, '\n\n***************')
 
     trip = Trip(
         user_id=data['userId'],
