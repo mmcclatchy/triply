@@ -65,7 +65,6 @@ class TripClass:
             url = self.makeUrl(origin=origin, destination=destination)
             if kwargs.get("waypoints"):
                 url += kwargs.get("waypoints")
-            # print("!!!!!!!!!!!!!!!!", url)
             r = requests.get(url)
             self.directionsFromGoogle = r.text
             r = r.json()
@@ -289,10 +288,8 @@ class TripClass:
             j += 1
         timeSinceLastSleep += (self.getDistanceBetweenTwoPoints(cords, wp["start_location"]) / averageMetersPerSecond) * 2
         if timeSinceLastSleep > self.travelPerDay:
-            print("Hotel is needed!!")
             return True
         else:
-            print("hotel is not needed")
             return False
         
         
@@ -312,7 +309,6 @@ class TripClass:
         return r
 
     def getGasNearLocation(self, cords):
-        print("we need gas!!!!!!!!!!!!!!!")
         r = requests.get(self.placeSearchUrlGenerator("gas station", cords, type="gas_station"))
         r = r.json()
         return r
@@ -348,7 +344,6 @@ class TripClass:
             if hotel:
                 searchQuery = "hotel"
                 url = self.placeSearchUrlGenerator(searchQuery, searchBuffer[len(searchBuffer) - 1], type="lodging")
-                print(url, "This is the hotel one for checking")
             r = requests.get(url)
             r = r.json()
             for option in r["results"]:
@@ -359,10 +354,7 @@ class TripClass:
             searchBuffer.append(self.getPairForBuffer(((len(searchBuffer)) * 2) + 1)[1])
         if gas and not hotel:
             gasOptions = self.getGasNearLocation(listOfFoundSpots[0]["geometry"]["location"])
-            # print("THIS IS A GAS THING!!!!")
-            # print(gasOptions)
             listOfFoundSpots = {"food": listOfFoundSpots, "gas": gasOptions}
-        print(listOfFoundSpots)
         return listOfFoundSpots
 
 
