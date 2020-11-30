@@ -75,5 +75,13 @@ def coords_from_str(coords):
     return coords.split(',')
 
 
-def create_stop_info(data):
-    
+def create_stop_keys(data):
+    return [place_id[0] for place_id in data['placeIds']]
+
+
+def create_place_id_list(data):
+    return [data['placeIds'][key] for key in data['placeIds']]
+
+
+test = {'placeIds': {'gas': 123, 'rest': 234, 'hotel': 345}}
+print(create_place_id_list(test))
