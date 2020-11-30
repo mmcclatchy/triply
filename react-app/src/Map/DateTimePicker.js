@@ -38,7 +38,7 @@ export default function DateAndTimePickers() {
     dispatch(setStartTimeAction(startTimeContent))
 
   }
-  console.log(startTimeContent)
+ 
   return (
     <div className="picker_container">
       <form className={classes.container} noValidate>
