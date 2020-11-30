@@ -12,7 +12,7 @@ import { Button } from '@material-ui/core';
 const useStyles = makeStyles({
   list: {
     width: 940
-  }
+  },
 });
 
 export default function TemporaryDrawer({

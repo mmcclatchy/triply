@@ -50,14 +50,23 @@ import { greeting } from '../services/utilities';
         <>
             <Button
               variant='outlined'
-              style={{backgroundColor: "yellow"}}
+              style={{
+                backgroundColor: "yellow",
+                fontWeight: "bold",
+                marginRight: "2em",
+                marginTop:"1em"}}
               className='homepage__button'>
             <View anchor='Login' />
           </Button>
             <Button
               variant='outlined'
               className='homepage__button'
-              style={{backgroundColor: "yellow"}}>
+              style={{
+                backgroundColor: "yellow",
+                fontWeight: "bold",
+                marginRight: "2em",
+                marginTop:"1em",
+              }}>
             <View anchor='Sign Up' />
           </Button>
         </>
