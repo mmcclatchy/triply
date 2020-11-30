@@ -73,6 +73,7 @@ const TestForm = () => {
 
   useEffect(() => {
     console.log('hitting here');
+    console.log(postCar(car, userId))
     dispatch(postCar(car, userId));
   }, [car]);
 
