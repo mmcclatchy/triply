@@ -1,36 +1,41 @@
 /* global google */
-import React, {useState, useEffect } from "react";
-import { GoogleMap, withScriptjs, withGoogleMap, DirectionsRenderer } from "react-google-maps"
+import React, { useState, useEffect } from 'react';
+import {
+  GoogleMap,
+  withScriptjs,
+  withGoogleMap,
+  DirectionsRenderer
+} from 'react-google-maps';
 import { TextField, Button } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   setDurationAction,
   setDistanceAction
 } from '../store/actions/directions';
-import { Route } from './route'
+import { Route } from './route';
 //  use withScriptjs and withGoogleMap to wrap the map in order to get the map to load correctly
 
-
-const InitMap = ({ }) => {
-  const dispatch = useDispatch()
-  const reduxOrigin = useSelector((state) => state.directionsRedux.origin)
-  const reduxDestination = useSelector((state) => state.directionsRedux.destination)
-  const reduxStartTime = useSelector((state) => state.directionsRedux.startTime)
-  const [origin, setOrigin] = useState("")
-  const [destination, setDestination] = useState("")
-  const [originFormContent, setOriginFormContent] = useState("")
-  const [destinationFormContent, setDestinationFormContent] = useState("")
-  const [directions, setDirections] = useState(false)
+const InitMap = ({}) => {
+  const dispatch = useDispatch();
+  const reduxOrigin = useSelector(state => state.directionsRedux.origin);
+  const reduxDestination = useSelector(
+    state => state.directionsRedux.destination
+  );
+  const reduxStartTime = useSelector(state => state.directionsRedux.startTime);
+  const [origin, setOrigin] = useState('');
+  const [destination, setDestination] = useState('');
+  const [originFormContent, setOriginFormContent] = useState('');
+  const [destinationFormContent, setDestinationFormContent] = useState('');
+  const [directions, setDirections] = useState(false);
   const directionsService = new google.maps.DirectionsService();
-  const originField = document.getElementById("origin")
-  const destinationField = document.getElementById("destination")
+  const originField = document.getElementById('origin');
+  const destinationField = document.getElementById('destination');
   const autoOrigin = new google.maps.places.Autocomplete(originField);
   const autoOrigin2 = new google.maps.places.Autocomplete(destinationField);
 
   useEffect(() => {
-
     if (!reduxOrigin && !reduxDestination) {
-      return
+      return;
     }
     const setRoute = () => {
       directionsService.route(
@@ -45,57 +50,61 @@ const InitMap = ({ }) => {
             {
               location: 'Baltimore, MD',
               stopover: true
-            },{
+            },
+            {
               location: 'Washington D.C.',
               stopover: true
-            }],
+            }
+          ],
           drivingOptions: {
-            departureTime: new Date(reduxStartTime),
+            departureTime: new Date(reduxStartTime)
           },
-          travelMode: google.maps.TravelMode.DRIVING,
+          travelMode: google.maps.TravelMode.DRIVING
         },
         (response, status) => {
-          if (status === "OK") {
-            console.log(response)
-            setDirections(response)
-            dispatch(setDurationAction(response.routes[0].legs[0].duration.text))
-            dispatch(setDistanceAction(response.routes[0].legs[0].distance.text))
+          if (status === 'OK') {
+            console.log(response);
+            setDirections(response);
+            dispatch(
+              setDurationAction(response.routes[0].legs[0].duration.text)
+            );
+            dispatch(
+              setDistanceAction(response.routes[0].legs[0].distance.text)
+            );
           } else {
-            window.alert("Directions request failed due to " + status);
+            window.alert('Directions request failed due to ' + status);
           }
         }
       );
-    }
-  setRoute()
-  }, [origin,destination,dispatch])
-
+    };
+    setRoute();
+  }, [origin, destination, dispatch]);
 
   return (
     <>
-    <GoogleMap
-      defaultZoom={10}
-      defaultCenter={{ lat: 40.991360, lng: -72.534203 }}
-      >
+      <GoogleMap
+        defaultZoom={10}
+        defaultCenter={{ lat: 40.99136, lng: -72.534203 }}>
         {directions ? <DirectionsRenderer directions={directions} /> : null}
-    </GoogleMap>
+      </GoogleMap>
     </>
-  )
-}
-
+  );
+};
 
 const WrappedMap = withScriptjs(withGoogleMap(InitMap));
 
 //make sure to create .env.local file with REACT_APP_GOOGLE_KEY ="apikey"
 export default function Map() {
-
   return (
-    <div style={{ width: '50vw', height: '70vh' }}>
+    <div>
       <WrappedMap
-        id="map"
+        id='map'
         googleMapURL={`https://maps.googleapis.com/maps/api/js?key=${process.env.REACT_APP_GOOGLE_KEY}&v=3.exp&libraries=geometry,drawing,places`}
-        loadingElement={<div style={{ height: "100% " }} />}
-        containerElement={<div style={{ height: "100% ", marginLeft: `500px`, width: `500px` }} />}
-        mapElement={<div style={{ height: "100% " }} />}
+        loadingElement={<div style={{ height: '100% ' }} />}
+        containerElement={
+          <div style={{ width: `60vw`, height: '100vh', maxHeight: 'auto' }} />
+        }
+        mapElement={<div style={{ height: '100% ' }} />}
       />
     </div>
   );
