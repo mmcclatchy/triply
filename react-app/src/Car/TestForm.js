@@ -70,13 +70,13 @@ const TestForm = () => {
       tankSize: tankSize
     };
     setCar(new_car);
-    dispatch(hideForm());
   };
-
+  
   useEffect(() => {
     if (Object.keys(car).length === 0) return
     console.log('TESTFORM: CAR: ', car)
     dispatch(postCar(car, userId));
+    dispatch(hideForm());
   }, [car]);
 
   const getStepContent = step => {
