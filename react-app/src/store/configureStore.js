@@ -7,32 +7,19 @@ import directionsRedux from './reducers/directions';
 import cars from './reducers/cars';
 import stops from './reducers/stops';
 import trips from './reducers/trips';
-<<<<<<< HEAD
-=======
-import setDuration from "./reducers/setDurations"
->>>>>>> main
+import setDuration from './reducers/setDurations';
 
 const composeEnhancers =
   window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
-<<<<<<< HEAD
 export const reducer = combineReducers({
   authentication,
   utilities,
   directionsRedux,
   trips,
   stops,
-  cars
-=======
-export const reducer = combineReducers({ 
-  authentication, 
-  utilities, 
-  directionsRedux,
-  trips,
-  stops,
   cars,
-  setDuration,
->>>>>>> main
+  setDuration
 });
 
 const configureStore = initialState => {

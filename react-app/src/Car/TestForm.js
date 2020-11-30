@@ -68,7 +68,6 @@ const TestForm = () => {
       mpg: mpg,
       tankSize: tankSize
     };
-    console.log(new_car);
     setCar(new_car);
   };
 
