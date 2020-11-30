@@ -1,3 +1,5 @@
+const key = process.env.REACT_APP_CAR_KEY;
+
 const xmlToJson = xml => {
   var obj = {};
 
@@ -90,4 +92,12 @@ export const getMPG = async vehicleID => {
   } else {
     console.error('Something went wrong...');
   }
+};
+
+export const getTankSize = async (make, model, year) => {
+  const response = await fetch(
+    `https://apis.solarialabs.com/shine/v1/vehicle-stats/specs?make=${make}&model=${model}&year=${year}&full-data=true&apikey=${key}`
+  );
+  const data = await response.json();
+  return data;
 };

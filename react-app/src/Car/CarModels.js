@@ -4,7 +4,6 @@ import { MenuItem, Select } from '@material-ui/core';
 
 const CarModels = ({ year, make, model, setModel, updateItem, resetForm }) => {
   const [models, setModels] = useState([]);
-  console.log(models);
 
   useEffect(() => {
     getModels(year, make).then(data => setModels(data));

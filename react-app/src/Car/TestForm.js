@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { getVehicleId, getMPG } from '../services/fueleconomyAPI';
+import { getVehicleId, getMPG, getTankSize } from '../services/fueleconomyAPI';
 import { registerCar } from '../services/car';
 import { makeStyles } from '@material-ui/core/styles';
+import { postCar } from '../store/actions/cars';
 import './CarForm.css';
 import CarMakes from './CarMakes';
 import CarYears from './CarYears';
@@ -49,13 +50,14 @@ const TestForm = () => {
   const [model, setModel] = useState('');
   const [mpg, setMPG] = useState('');
   const [apiId, setApiID] = useState('');
-  const [tankSize, setTankSize] = useState('');
+  const [tankSize, setTankSize] = useState(14);
+  const [car, setCar] = useState({});
   const dispatch = useDispatch();
   const classes = useStyles();
   const userId = useSelector(state => state.authentication.userId);
   const steps = getSteps();
 
-  const submitHandler = async e => {
+  const submitHandler = e => {
     e.preventDefault();
     const new_car = {
       userId: userId,
@@ -66,8 +68,14 @@ const TestForm = () => {
       mpg: mpg,
       tankSize: tankSize
     };
-    await registerCar(new_car, userId);
+    console.log(new_car);
+    setCar(new_car);
   };
+
+  useEffect(() => {
+    console.log('hitting here');
+    dispatch(postCar(car, userId));
+  }, [car]);
 
   const getStepContent = step => {
     switch (step) {
@@ -106,16 +114,27 @@ const TestForm = () => {
         );
       case 1:
         return (
-          <TextField
-            value={mpg}
-            type='text'
-            variant='outlined'
-            onChange={updateMPG}>
-            {mpg}
-          </TextField>
+          <>
+            <p>*Estimated MPG, Manually Edit to Adjust.</p>
+            <TextField
+              value={mpg}
+              type='text'
+              variant='outlined'
+              onChange={updateMPG}>
+              {mpg}
+            </TextField>
+          </>
         );
       case 2:
-        return 'something else';
+        return (
+          <>
+            <h2>Your Vehicle</h2>
+            <h4>Year: {year}</h4>
+            <h4>Model: {model}</h4>
+            <h4>Make: {make}</h4>
+            <h4>MPG: {mpg}</h4>
+          </>
+        );
       default:
         return 'Unknown Step';
     }
@@ -135,6 +154,11 @@ const TestForm = () => {
     setApiID(id);
   };
 
+  const getTank = async () => {
+    const data = await getTankSize(make, model, year);
+    console.log(data);
+  };
+
   const resetForm = () => {
     setYear('');
     setMake('');
@@ -142,7 +166,12 @@ const TestForm = () => {
   };
 
   const handleNext = () => {
-    setActiveStep(prevActiveStep => prevActiveStep + 1);
+    if (year && model && make) {
+      setActiveStep(prevActiveStep => prevActiveStep + 1);
+      calculateMPG();
+    } else {
+      alert('Please Fill out entire Form!');
+    }
   };
 
   const handleBack = () => {
@@ -183,18 +212,23 @@ const TestForm = () => {
                       Back
                     </Button>
                   )}
-                  <Button
-                    variant='contained'
-                    color='primary'
-                    onClick={() => {
-                      handleNext();
-                      calculateMPG();
-                    }}
-                    className={classes.button}>
-                    {activeStep === 0 ? 'Calculate MPG' : null}
-                    {activeStep === 1 ? 'Continue' : null}
-                    {activeStep === 2 ? 'Register Car' : null}
-                  </Button>
+                  {activeStep === 2 ? (
+                    <Button
+                      variant='contained'
+                      color='primary'
+                      onClick={submitHandler}>
+                      Register Vehicle
+                    </Button>
+                  ) : (
+                    <Button
+                      variant='contained'
+                      color='primary'
+                      onClick={handleNext}
+                      className={classes.button}>
+                      {activeStep === 0 ? 'Calculate MPG' : null}
+                      {activeStep === 1 ? 'Continue' : null}
+                    </Button>
+                  )}
                 </div>
               </div>
             </StepContent>
