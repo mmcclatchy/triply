@@ -26,7 +26,7 @@ const StartOfTripForm = (props) =>{
         selectedFood.push(el.lastChild.id)
       }
     })
-    dispatch(setDuration({daily_timelimit: sleepTime, stop_timelimit: stopTime, tolls: tolls, selectedFoods: selectedFood}))
+    dispatch(setDuration({daily_timelimit: sleepTime, stop_timelimit: stopTime, avoidTolls: tolls, selectedFoods: selectedFood}))
     history.push("/create-trip")
   }
   const handleAdditionalOptionChange = (e) => setAdditionalOption(e.target.value)
