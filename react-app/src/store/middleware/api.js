@@ -9,6 +9,7 @@ const api = ({ dispatch, getState }) => next => async action => {
   //* Payload will determine the fetch call and what is being dispatched
   const { endpoint, method, body, actionConst } = action.payload;
   
+  console.log('API PAYLOAD :', action.payload)
   
   const response = await fetch(`${baseUrl}${endpoint}`, {
     method: method,

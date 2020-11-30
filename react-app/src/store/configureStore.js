@@ -23,7 +23,6 @@ export const reducer = combineReducers({
   setDuration,
 });
 
-
 const persistedState = loadState();
 const store = createStore(
   reducer,
