@@ -20,7 +20,8 @@ const Homepage = ({ authenticated, setAuthenticated, userId }) => {
             userId={userId}
             />
           </div>
-          </div>
+        </div>
+        <div className="form_header">Plan your next Road trip</div>
           <RouteForm />
         <div className='tag_container'>
           <h1 className='homepage__tagline'>Make every </h1>
