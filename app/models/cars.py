@@ -21,5 +21,6 @@ class Car(db.Model):
             'make': self.make,
             'model': self.model,
             'year': self.year,
-            'miles_to_refuel': self.miles_to_refuel
+            'miles_to_refuel': self.miles_to_refuel,
+            'mpg': self.mpg
         }

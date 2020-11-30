@@ -38,3 +38,6 @@ class Restaurant(db.Model):
             'restaurant_cuisines':
                 [cuisine.to_dict() for cuisine in self.cuisines]
         }
+
+    def get_cuisines(self):
+        return [cuisine.to_dict()['name'] for cuisine in self.cuisines]

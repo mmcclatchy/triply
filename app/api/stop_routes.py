@@ -1,8 +1,10 @@
 from flask import Blueprint, jsonify, request
 from flask_login import login_required
 from app.models import Trip, Stop, Cuisine, db
-from app.utils import normalize, snake_case
+from app.utils import normalize, snake_case, coords_from_str
 from sqlalchemy.exc import SQLAlchemyError
+from ..Trip import TripClass
+
 
 stop_routes = Blueprint('stops', __name__)
 
@@ -34,6 +36,24 @@ def get_stop(stop_id):
 @login_required
 def post_stop(trip_id):
     data = request.json
+    trip = Trip.query.filter(Trip.id == trip_id).first()
+    trip_algo = TripClass(
+        startCor=coords_from_str(trip.start_location),
+        endCor=coords_from_str(trip.end_location),
+        travelPerDay=trip.daily_time_limit,
+        travelPerIncrement=trip.stop_time_limit,
+        milesTillFuelNeeded=trip.car.miles_to_refuel,
+        avoidTolls=trip.tolls
+    )
+    
+    place_ids = create_place_id_list(data['placeIds'])
+    stop_keys = create_stop_keys(data['placeIds'])
+    trip_algo.addStop(place_ids, stop_keys)
+    
+    if any([key for key in stop_keys if key == 'h']):
+        food_and_gas = trip_algo.getFoodAndGasNearLocation(data['placeIds']['hotel'])
+        return jsonify({ '': food_and_gas})
+    
     try:
         stop = Stop(
             trip_id=data['tripId'],
@@ -108,3 +128,9 @@ def delete_stop(stop_id):
         return {'message': f'Stop Id: {stop_id} was successfully deleted'}
     else:
         return {'errors': [f'Stop Id: {stop_id} was not found']}, 404
+
+
+################################################################
+#                       Helper Functions
+################################################################
+
