@@ -4,6 +4,7 @@
   height: 3.5em;
   margin-left: 2em;
   justify-content: flex-end;
+  margin-right: 3em;
 }
 
 .route_form_input {
@@ -15,6 +16,7 @@
   outline-color: white;
   /* height: 3em; */
   border-radius: .75em;
+
 }
 
 .submit_route {

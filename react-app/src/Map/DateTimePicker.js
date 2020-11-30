@@ -10,7 +10,6 @@ const useStyles = makeStyles((theme) => ({
     flexWrap: 'wrap',
     justifyContent: 'center',
     width: '30vw',
-    marginTop: '.5em',
     borderRadius: '.75em'
   },
   textField: {
