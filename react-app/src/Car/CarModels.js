@@ -2,17 +2,18 @@ import React, { useState, useEffect } from 'react';
 import { getModels } from '../services/fueleconomyAPI';
 import { MenuItem, Select } from '@material-ui/core';
 
-const CarModels = ({ year, make, model, setModel, updateItem }) => {
-  const [models, setModels] = useState();
+const CarModels = ({ year, make, model, setModel, updateItem, resetForm }) => {
+  const [models, setModels] = useState([]);
+  console.log(models);
 
   useEffect(() => {
-    getModels(year, make).then(setModels);
+    getModels(year, make).then(data => setModels(data));
   }, [year, make]);
 
   return (
     <>
       <Select value={model} onChange={updateItem(setModel)} variant='outlined'>
-        {models &&
+        {models && models.length ? (
           models.map(model => {
             return (
               <MenuItem
@@ -21,7 +22,10 @@ const CarModels = ({ year, make, model, setModel, updateItem }) => {
                 {model.text['#text']}
               </MenuItem>
             );
-          })}
+          })
+        ) : (
+          <MenuItem onClick={resetForm}>No Models Found</MenuItem>
+        )}
       </Select>
     </>
   );
