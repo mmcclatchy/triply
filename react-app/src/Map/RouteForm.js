@@ -122,7 +122,10 @@ const RouteForm = ({}) => {
           <Button
             className='submit_route'
             variant='contained'
-            style={{backgroundColor: "yellow"}}
+            style={{
+              backgroundColor: "yellow",
+              fontWeight: "bold",
+            }}
             onClick={handleClick}>
               Set Route
           </Button>
@@ -130,7 +133,10 @@ const RouteForm = ({}) => {
       <NavLink to='create-trip'>
           <Button
             className='api_button'
-            style={{backgroundColor: "yellow"}}
+            style={{
+              backgroundColor: "yellow",
+              fontWeight: "bold",
+            }}
             variant='contained'>W/O API Call</Button>
       </NavLink>
       </div>

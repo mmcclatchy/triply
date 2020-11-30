@@ -7,6 +7,7 @@ import {
   setDurationAction,
   setDistanceAction
 } from '../store/actions/directions';
+import { Route } from './route'
 //  use withScriptjs and withGoogleMap to wrap the map in order to get the map to load correctly
 
 
@@ -40,6 +41,14 @@ const InitMap = ({ }) => {
           destination: {
             query: reduxDestination
           },
+          waypoints: [
+            {
+              location: 'Baltimore, MD',
+              stopover: true
+            },{
+              location: 'Washington D.C.',
+              stopover: true
+            }],
           drivingOptions: {
             departureTime: new Date(reduxStartTime),
           },

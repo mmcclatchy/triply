@@ -4,7 +4,10 @@
   justify-content: flex-end;
 }
 
-.homepage__button {
+.greeting_container {
   margin-right: 2em;
+  margin-top: 1.5em;
+  width: 12em;
+  font-family: Circular, -apple-system, BlinkMacSystemFont, Roboto, Helvetica Neue, sans-serif;;
+  font-weight: bold;
 }
-
