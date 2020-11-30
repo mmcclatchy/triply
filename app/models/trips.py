@@ -1,4 +1,5 @@
 from .db import db
+from ..utils import coords_from_str
 
 
 class Trip(db.Model):
@@ -17,7 +18,7 @@ class Trip(db.Model):
     end_location = db.Column(db.String(255), nullable=False)
     directions = db.Column(db.Text)
 
-    stops = db.relationship('Stop', backref='trip', lazy='joined')
+    stops = db.relationship('Stop', back_populates='trip', lazy='joined')
 
     def to_dict(self):
         return {
@@ -40,3 +41,24 @@ class Trip(db.Model):
             return {'id': self.id, 'directions': self.directions}
         else:
             return {}
+
+    def get_time_line(self):
+        return [
+            {
+                'id': self.id,
+                'trip_id': self.id,
+                'trip_stop_num': 0,
+                'coordinates': coords_from_str(self.start_location),
+                'time': self.start_time,
+                'type:': 'Origin'
+            },
+            [stop.info() for stop in self.stops],
+            {
+                'id': self.id,
+                'trip_id': self.id,
+                'trip_stop_num': len(self.stops) + 1,
+                'coordinates': coords_from_str(self.start_location),
+                'time': self.end_time,
+                'type:': 'Destination'
+            }
+        ]

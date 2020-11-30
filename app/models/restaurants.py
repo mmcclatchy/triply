@@ -1,5 +1,6 @@
 from .db import db
 from .restaurant_cuisines import restaurant_cuisines
+from ..utils import coords_from_str
 
 
 class Restaurant(db.Model):
@@ -7,6 +8,7 @@ class Restaurant(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
+    coordinates = db.Column(db.String(50))
     phone_num = db.Column(db.String(15))
     street_address = db.Column(db.String(100))
     city = db.Column(db.String(50))
@@ -25,6 +27,7 @@ class Restaurant(db.Model):
             'id': self.id,
             'name': self.name,
             'phone_num': self.phone_num,
+            'coordinates': coords_from_str(self.coordinates),
             'street_address': self.street_address,
             'city': self.city,
             'state': self.state,
