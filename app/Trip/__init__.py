@@ -5,6 +5,7 @@ from .Stop import Stop
 import requests
 import copy
 import json
+import os
 
 
 #todo:
@@ -21,10 +22,10 @@ class TripClass:
 
         # photos, opening_hours,rating
         # locationbias=rectangle:
-        self.useThisUrlToGetCordsForAPoint = "https://maps.googleapis.com/maps/api/place/findplacefromtext/json?inputtype=textquery&fields=place_id,geometry&key=AIzaSyBmKKKPntFx-1yFUAIgXjWQU3wykVlBt3Y&input="
-        self.basicLocalSearch = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?key=AIzaSyBmKKKPntFx-1yFUAIgXjWQU3wykVlBt3Y"
-        self.basicDirectionUrl = "https://maps.googleapis.com/maps/api/directions/json?key=AIzaSyBmKKKPntFx-1yFUAIgXjWQU3wykVlBt3Y"
-        self.basicRoadsUrl = "https://roads.googleapis.com/v1/speedLimits?key=AIzaSyBmKKKPntFx-1yFUAIgXjWQU3wykVlBt3Y&units=MPH&path="
+        self.useThisUrlToGetCordsForAPoint = "https://maps.googleapis.com/maps/api/place/findplacefromtext/json?inputtype=textquery&fields=place_id,geometry&key=" + os.environ.get("BACKEND_API_KEY") + "&input="
+        self.basicLocalSearch = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?key=" + os.environ.get("BACKEND_API_KEY")
+        self.basicDirectionUrl = "https://maps.googleapis.com/maps/api/directions/json?key=" + os.environ.get("BACKEND_API_KEY")
+        self.basicRoadsUrl = "https://roads.googleapis.com/v1/speedLimits?key=" + os.environ.get("BACKEND_API_KEY") + "&units=MPH&path="
         self.startCor = kwargs.get('startCor')
         self.endCor = kwargs.get('endCor')
         self.travelPerDay = kwargs.get('dailyTimeLimit')
@@ -140,7 +141,7 @@ class TripClass:
             url = url + "&" + i + "=" + kwargs[i]
         if self.tolls:
             url += "&avoid=tolls"
-        print(url)
+        # print(url)
         return url
 
     def decodePolyline(self, encoded):
@@ -375,7 +376,7 @@ class TripClass:
             if hotel:
                 searchQuery = str(int((hotel[0]+hotel[1])/2)) + " star hotel" 
                 url = self.placeSearchUrlGenerator(searchQuery, searchBuffer[len(searchBuffer) - 1], type="lodging")
-                print(url)
+                # print(url)
             r = requests.get(url)
             r = r.json()
             for option in r["results"]:
