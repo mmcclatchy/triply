@@ -7,7 +7,7 @@ import directionsRedux from './reducers/directions';
 const composeEnhancers =
   window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
-const reducer = combineReducers({ authentication, utilities, directionsRedux });
+export const reducer = combineReducers({ authentication, utilities, directionsRedux });
 
 const configureStore = initialState => {
   return createStore(

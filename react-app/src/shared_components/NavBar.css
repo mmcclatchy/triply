@@ -11,3 +11,13 @@
   font-family: Circular, -apple-system, BlinkMacSystemFont, Roboto, Helvetica Neue, sans-serif;;
   font-weight: bold;
 }
+
+.homepage__button {
+  margin-right: 0em;
+  margin-top: 0em;
+}
+
+ element.style{
+  margin-right: 0em;
+  margin-top: 0em;
+}
