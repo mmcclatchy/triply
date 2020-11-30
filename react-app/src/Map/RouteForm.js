@@ -112,9 +112,6 @@ const RouteForm = ({}) => {
       <NavLink to='/create-trip'>
         <Button variant='contained'>Access Without API Call</Button>
       </NavLink>
-      <NavLink to='/timeline'>
-        <Button variant='contained'>Access Timeline</Button>
-      </NavLink>
     </>
   );
 };
