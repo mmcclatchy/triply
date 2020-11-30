@@ -11,7 +11,7 @@ import trips from './reducers/trips';
 const composeEnhancers =
   window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
-const reducer = combineReducers({ 
+export const reducer = combineReducers({ 
   authentication, 
   utilities, 
   directionsRedux,

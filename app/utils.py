@@ -75,5 +75,5 @@ def coords_from_str(coords):
     return coords.split(',')
 
 
-def check_previous_cuisines(tripId):
-    pass
+def create_stop_info(data):
+    
