@@ -19,8 +19,12 @@ class Stop(db.Model):
     cuisines = db.relationship("Cuisine", secondary=stop_cuisines,
                                lazy="joined",
                                backref=db.backref("stop", lazy=True))
-    gas_station = db.relationship('GasStation', back_populates='stops', lazy='joined')
-    restaurant = db.relationship('Restaurant', back_populates='stops', lazy='joined')
+    gas_station = db.relationship('GasStation',
+                                  back_populates='stops',
+                                  lazy='joined')
+    restaurant = db.relationship('Restaurant',
+                                 back_populates='stops',
+                                 lazy='joined')
     hotel = db.relationship('Hotel', back_populates='stops', lazy='joined')
     trip = db.relationship('Trip', back_populates='stops', lazy='joined')
 

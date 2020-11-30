@@ -6,10 +6,6 @@ import { Provider } from 'react-redux'
 import configureStore from './store/configureStore'
 
 
-const initialState = {
-  
-}
-
 const store = configureStore();
 
 ReactDOM.render(

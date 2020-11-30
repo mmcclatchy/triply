@@ -57,6 +57,7 @@ def post_trip(user_id):
         travelPerDay=data['dailyTimeLimit'],
         travelPerIncrement=data['stopTimeLimit'],
         milesTillFuelNeeded=car.miles_to_refuel,
+        avoidTolls=data['avoidTolls']
     )
 
     trip_instance.createDirection()
@@ -81,7 +82,7 @@ def post_trip(user_id):
         db.session.commit()
         trip_json = jsonify({
             'payload': {'trips': normalize(trip.to_dict())},
-            'directions': normalize(trip.directions_to_dict())
+            # 'directions': normalize(trip.directions_to_dict())
         })
         return trip_json
 
@@ -148,7 +149,6 @@ def delete_trip(trip_id):
 def get_timeline(trip_id):
     trip = Trip.query.filter(Trip.id == trip_id).first()
     if trip:
-        return {'trips': {'timeline': trip.get_time_line()}}
+        return {'directions': {'timeline': trip.get_time_line()}}
     else:
         return {}, 404
-    
