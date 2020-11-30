@@ -41,7 +41,7 @@ class TripClass:
         self.stopKey = kwargs.get("stopKey")
         if not self.stopKey:
             self.stopKey = []
-        
+
 
         self.directionsFromGoogle = None
         self.stops = []
@@ -50,7 +50,7 @@ class TripClass:
         self.stepTimeIndex = []
         self.totalTravelTime = None
         self.totalTravelDistance = None
-        
+
 
     def setStartCor(self, startCor):
         self.startCor = startCor
@@ -68,7 +68,7 @@ class TripClass:
             r = requests.get(url)
             self.directionsFromGoogle = r.text
             r = r.json()
-            
+
 
             legs = [i for i in r["routes"][0]["legs"]]
             directions = []
@@ -118,7 +118,7 @@ class TripClass:
 
     def getDistanceBetweenTwoPoints(self, c1, c2):
         # approximate radius of earth in meters
-        R = 6378137 
+        R = 6378137
 
         lat1 = radians(c1["lat"])
         lon1 = radians(c1["lng"])
@@ -160,7 +160,7 @@ class TripClass:
         duration = di1["duration"]["value"]
         distance = di1["distance"]['value']
         return distance / duration
-        
+
 
     def getPolyLineVertex(self):
         if self.travelPerIncrement[0] < ((self.totalTravelTime - self.stopTimeIndex[-1]) - self.endBuffer):
@@ -191,8 +191,8 @@ class TripClass:
 
         else:
             return None
-       
-        
+
+
     def getPairForBuffer(self, mod=1):
         #find the base of our rectange
         vertexInfo = self.getPolyLineVertex()
@@ -208,7 +208,7 @@ class TripClass:
         #checking to see if we have reached the "top" of the rectangle
         if (forwardTotal > self.searchRadius * mod):
             return [vertexInfo["cords"][vertexInfo["index"]], vertexInfo["cords"][i]]
-        
+
         #adding the final segment of the original polyline to the start of the next polyline
         forwardTotal += self.getDistanceBetweenTwoPoints(vertexInfo["cords"][i], self.directions[vertexInfo["stepIndex"] + 1]["start_location"])
         #checking to see if we have reached the "top" of the rectangle
@@ -223,7 +223,7 @@ class TripClass:
         #reset total to point before the step that would exceed our search value
         j -= 1
         forwardTotal -= self.directions[j]["distance"]["value"]
-        
+
         #get all the points within the polyline that contains the top of the rectangle
         finalCords = self.decodePolyline(self.directions[j]["polyline"]["points"])
         i = 0
@@ -270,7 +270,7 @@ class TripClass:
             return True
         else:
             return False
-        
+
     def checkIfHotelIsNeeded(self, cords):
         averageMetersPerSecond = self.totalTravelDistance / self.totalTravelTime
         lastWas = 0
@@ -291,12 +291,12 @@ class TripClass:
             return True
         else:
             return False
-        
-        
 
-        
 
-        
+
+
+
+
 
     def getFoodAndGasNearLocation(self, searchQuery, cords):
         food = self.placeSearchUrlGenerator(searchQuery, cords)
@@ -321,7 +321,7 @@ class TripClass:
         searchBuffer = [x for x in s]
         firstWayPoint = self.getFirstWayPoint(searchBuffer)
         endWayPoint = self.getSecondWayPoint(searchBuffer)
-        
+
         foodQuery = kwargs.get("foodQuery")
 
         if not foodQuery:
@@ -359,7 +359,7 @@ class TripClass:
 
 
 
-        
+
         #use the top and bottom function to get where we are searching
         #change the function so that the top is not as far into the road (maybe 7 mins?)
         #use it one more time so that we have 3 points
@@ -374,7 +374,7 @@ class TripClass:
 
     def getDirections(self):
         return self.directionsFromGoogle
-    
+
     def constructFromDirections(self, directionsAsJson):
         directionsFromGoogle = directionsAsJson
         self.directionsFromGoogle = directionsFromGoogle
@@ -405,7 +405,7 @@ class TripClass:
             self.stops.append(wp["place_id"])
 
         self.indexSteps()
-    
+
     def toDictForDatabase(self):
         result = {
             "daily_timelimit": self.travelPerDay,
@@ -417,7 +417,7 @@ class TripClass:
         }
         return result
 
-        
+
 
 
 
@@ -441,14 +441,14 @@ class TripClass:
 # t.createDirection()
 # # print(t.stepTimeIndex)
 # t.setTravelPerIncrement((34710, 36296))
-t.setTravelPerIncrement((7200, 20189))
-t.travelPerDay = 7200 * 2
-
-t.getNextStopDetails()
-# t.addStop(["ChIJ_yI7V3BFI4gR4K98PVlIEiQ", "ChIJ0XXQUFE-OogR2w6dkGjqhu0", "ChIJ7wHa54k-OogRdXZAth3Jz7M", "ChIJo0BrfAxSI4gR0XjDWhB5Ne8", "ChIJ0XXQUFE-OogR2w6dkGjqhu0"], ["f", "f", "f", "f", "f"])
-t.addStop(["ChIJ_yI7V3BFI4gR4K98PVlIEiQ"], ['f'])
-t.getNextStopDetails()
+# t.setTravelPerIncrement((7200, 20189))
+# t.travelPerDay = 7200 * 2
 
 # t.getNextStopDetails()
 # t.addStop(["ChIJ_yI7V3BFI4gR4K98PVlIEiQ", "ChIJ0XXQUFE-OogR2w6dkGjqhu0", "ChIJ7wHa54k-OogRdXZAth3Jz7M", "ChIJo0BrfAxSI4gR0XjDWhB5Ne8", "ChIJ0XXQUFE-OogR2w6dkGjqhu0"], ["f", "f", "f", "f", "f"])
-# print(t.getNextStopDetails()) 
+# t.addStop(["ChIJ_yI7V3BFI4gR4K98PVlIEiQ"], ['f'])
+# t.getNextStopDetails()
+
+# t.getNextStopDetails()
+# t.addStop(["ChIJ_yI7V3BFI4gR4K98PVlIEiQ", "ChIJ0XXQUFE-OogR2w6dkGjqhu0", "ChIJ7wHa54k-OogRdXZAth3Jz7M", "ChIJo0BrfAxSI4gR0XjDWhB5Ne8", "ChIJ0XXQUFE-OogR2w6dkGjqhu0"], ["f", "f", "f", "f", "f"])
+# print(t.getNextStopDetails())

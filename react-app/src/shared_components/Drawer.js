@@ -64,8 +64,8 @@ export default function TemporaryDrawer({
         style={{
           backgroundColor: "yellow",
           fontWeight: "bold",
-          marginRight: "2em",
-          marginTop:"1em"
+          // marginRight: "2em",
+          // marginTop:"1em"
         }}
         color={color}
         onClick={toggleDrawer(anchor, true)}

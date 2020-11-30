@@ -27,17 +27,21 @@ import { greeting } from '../services/utilities';
           <div className="greeting_container">
             {greeting()} {userName}
           </div>
-
-          <View anchor='My Profile'
+         <Button
             className="profile_button"
-            variant='contained'
-            style={{backgroundColor: "yellow", fontWeight: "bold"}}/>
+              style={{
+              fontWeight: "bold",
+              marginRight: "3em",
+              marginTop: "1.75em"
+            }}>
+           <View anchor='My Profile'/>
+          </Button>
 
           <Button
             variant='outlined'
             style={{
               backgroundColor: "yellow",
-              marginRight: "2em",
+              marginRight: "3em",
               fontWeight: "bold",
               marginTop:"1em"
             }}
@@ -53,8 +57,10 @@ import { greeting } from '../services/utilities';
               style={{
                 backgroundColor: "yellow",
                 fontWeight: "bold",
-                marginRight: "2em",
-                marginTop:"1em"}}
+                marginRight: "3em",
+                marginTop: "1em",
+                height: "3em",
+              }}
               className='homepage__button'>
             <View anchor='Login' />
           </Button>
@@ -64,8 +70,9 @@ import { greeting } from '../services/utilities';
               style={{
                 backgroundColor: "yellow",
                 fontWeight: "bold",
-                marginRight: "2em",
-                marginTop:"1em",
+                height: "3em",
+                marginRight: "3em",
+                marginTop:"1em"
               }}>
             <View anchor='Sign Up' />
           </Button>
