@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Redirect, Link, useHistory } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { signUp } from '../services/auth';
 import './SignUpForm.css';
 import { setAuth, setId } from '../store/actions/authentication';
@@ -10,12 +10,42 @@ const SignUpForm = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [repeatPassword, setRepeatPassword] = useState('');
+  const [usernameError, setUsernameError] = useState('');
+  const [emailError, setEmailError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
   const history = useHistory();
   const dispatch = useDispatch();
 
+  const validate = () => {
+    let usernameError = "";
+    let emailError = "";
+    let passwordError = "";
+
+    if (!email.includes("@")) {
+      emailError = "Invalid Email"
+    }
+   if (emailError) {
+      setEmailError(emailError)
+      return false
+    }
+   if (username.length < 7) {
+     usernameError = "Username must have atleast 8 characters"
+   }
+   if (usernameError) {
+     setUsernameError(usernameError)
+     return false
+   }
+   if (password.length < 7) {
+     passwordError = "Password must have atleast 8 characters"
+     return false
+   }
+   return true
+  }
   const onSignUp = async e => {
     e.preventDefault();
-    if (password === repeatPassword) {
+    const isValid = validate()
+
+    if (isValid) {
       const user = await signUp(username, email, password);
       if (!user.errors) {
         dispatch(setAuth(true));
@@ -55,6 +85,9 @@ const SignUpForm = () => {
             onChange={updateUsername}
             value={username}></input>
         </div>
+        {usernameError ?
+          <div style={{ color: "red", fontSize: 12 }} >{usernameError}</div>
+          : null}
         <div>
           <label>Email</label>
           <input
@@ -63,6 +96,9 @@ const SignUpForm = () => {
             onChange={updateEmail}
             value={email}></input>
         </div>
+        {emailError ?
+          <div style={{ color: "red", fontSize: 12 }} >{emailError}</div>
+          : null}
         <div>
           <label>Password</label>
           <input
@@ -80,6 +116,9 @@ const SignUpForm = () => {
             value={repeatPassword}
             required={true}></input>
         </div>
+        {passwordError ?
+          <div style={{ color: "red", fontSize: 12 }} >{passwordError}</div>
+          : null}
         <button type='submit'>Sign Up</button>
       </form>
     </div>
