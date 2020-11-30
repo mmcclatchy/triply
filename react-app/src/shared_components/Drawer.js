@@ -13,6 +13,18 @@ const useStyles = makeStyles({
   list: {
     width: 940
   },
+  return_home: {
+      background: "white",
+      borderRadius: 10,
+      color: 'Black',
+      height: "2em",
+      width: "1em",
+      marginLeft: "2em",
+      marginTop: "2em",
+    textAlign: "center",
+      fontWeight: "bold"
+
+  }
 });
 
 export default function TemporaryDrawer({
@@ -42,8 +54,8 @@ export default function TemporaryDrawer({
     return (
       <div className={classes.list}>
         <List>
-          <ListItem button key='Home' onClick={toggleDrawer(anchor, false)}>
-            Return Home
+          <ListItem button className={classes.return_home} key='Home' onClick={toggleDrawer(anchor, false)}>
+            X
           </ListItem>
         </List>
         {anchor === 'My Profile' ? <User userId={userId} /> : null}
@@ -60,17 +72,14 @@ export default function TemporaryDrawer({
   return (
     <>
       <Button
-        variant={variant}
+        variant="contained"
         style={{
           backgroundColor: "yellow",
           fontWeight: "bold",
-          // marginRight: "2em",
-          // marginTop:"1em"
         }}
         color={color}
         onClick={toggleDrawer(anchor, true)}
         className='homepage__button'>
-
         {anchor}
       </Button>
       <Drawer
