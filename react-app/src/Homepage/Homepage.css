@@ -6,21 +6,39 @@
   background-repeat: no-repeat;
   background-position: center 62%;
   height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 .logo {
   background-image: url('../assets/triply_logo_black.png');
   background-size: 65%;
   background-repeat: no-repeat;
-  margin-top: 10px;
-  margin-left: 20px;
-  width: 300px;
-  height: 231px;
+  margin-top: 10vh;
+  margin-left: 30px;
+  width: 35vw;
+  height: 35vh;
+  display: flex
 }
+
+.MuiButton-root{
+  background-color: yellow;
+}
+
+.MuiInputBase-input {
+  text-align: center;
+}
+/* .MuiInputLabel-formControl {
+  top: 0;
+  margin-top: .3em;
+  left: 0;
+  position: unset;
+  text-align: center;
+} */
 
 .header__content {
   display: flex;
-  justify-content: space-between;
+  height: 10em;
 }
 
 .homepage__tagline {
@@ -38,7 +56,7 @@
 }
 
 .tag_container {
-  margin-top: 320px;
+  margin-top: 300px;
   margin-right: 60px;
   text-align-last: right;
 }
@@ -46,4 +64,12 @@
 .homepage__button {
   height: 40px;
   width: 100px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.navbar_container {
+  display: flex;
+  justify-content: flex-end;
+  width: 70em
 }

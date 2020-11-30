@@ -8,4 +8,6 @@ export const DELETE_TRIP = 'triply/middleware/DELETE_TRIP';
 export const SET_CAR = 'triply/middleware/SET_CAR';
 export const DELETE_CAR = 'triply/middleware/DELETE_CAR';
 export const SET_DIRECTIONS = 'triply/directions/SET_DIRECTIONS';
+export const SET_STOP = 'triply/middleware/SET_STOP';
+export const DELETE_STOP = 'triply/middleware/DELETE_STOP';
 export const SET_AUTH = 'triply/authentication/SET_AUTH';

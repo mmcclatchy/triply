@@ -3,7 +3,7 @@ import { authenticate } from '../services/auth';
 import NavBar from '../shared_components/NavBar';
 import './Homepage.css';
 import RouteForm from '../Map/RouteForm'
-import TimePicker from '../Map/DateTimePicker'
+
 
 const Homepage = ({ authenticated, setAuthenticated, userId }) => {
   useEffect(() => {}, []);
@@ -13,14 +13,15 @@ const Homepage = ({ authenticated, setAuthenticated, userId }) => {
       <div className='homepage_body'>
         <div className='header__content'>
           <div className='logo'></div>
-          <NavBar
+          <div className='navbar_container'>
+           <NavBar
             authenticated={authenticated}
             setAuthenticated={setAuthenticated}
             userId={userId}
             />
-        </div>
-        <RouteForm />
-        <TimePicker />
+          </div>
+          </div>
+          <RouteForm />
         <div className='tag_container'>
           <h1 className='homepage__tagline'>Make every </h1>
           <h1 className='homepage__tagline'>drive an adventure</h1>
