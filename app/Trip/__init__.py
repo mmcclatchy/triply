@@ -350,6 +350,10 @@ class TripClass:
         if gas and not hotel:
             gasOptions = self.getGasNearLocation(listOfFoundSpots[0]["geometry"]["location"])
             listOfFoundSpots = {"food": listOfFoundSpots, "gas": gasOptions}
+        elif hotel:
+            listOfFoundSpots = {"hotel": listOfFoundSpots}
+        else:
+            listOfFoundSpots = {"food": listOfFoundSpots}
         return listOfFoundSpots
 
 
