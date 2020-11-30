@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { showForm, hideForm } from '../store/actions/utilities';
 import './User.css';
-import CarForm from '../Car/CarForm';
+import TestForm from '../Car/TestForm';
 
 function User({ userId }) {
   const [user, setUser] = useState({});
   const [cars, setCars] = useState([]);
+  const dispatch = useDispatch();
+  const visible = useSelector(state => state.utilities.formVisible);
 
   useEffect(() => {
     (async () => {
@@ -31,9 +33,6 @@ function User({ userId }) {
 
   return (
     <div>
-      <Link to='/'>
-        <div className='profile__logo' />
-      </Link>
       <ul>
         <li>
           <strong>User Id</strong> {userId}
@@ -62,8 +61,11 @@ function User({ userId }) {
           })}
       </div>
 
-      <button>Add a New Car</button>
-      <CarForm userId={userId} />
+      {visible ? (
+        <TestForm />
+      ) : (
+        <button onClick={() => dispatch(showForm())}>Add a New Car</button>
+      )}
     </div>
   );
 }

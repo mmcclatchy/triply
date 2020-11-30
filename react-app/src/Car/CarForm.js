@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { Button, TextField } from '@material-ui/core';
+import { useDispatch } from 'react-redux';
 import './CarForm.css';
 import CarMakes from './CarMakes';
 import CarYears from './CarYears';
 import CarModels from './CarModels';
 import { registerCar } from '../services/car';
+import { hideForm } from '../store/actions/utilities';
 import { getVehicleId, getMPG } from '../services/fueleconomyAPI';
+import TestForm from './TestForm';
 
 const CarForm = ({ userId }) => {
   const [year, setYear] = useState();
@@ -13,6 +16,7 @@ const CarForm = ({ userId }) => {
   const [model, setModel] = useState();
   const [mpg, setMPG] = useState();
   const [apiId, setApiID] = useState();
+  const dispatch = useDispatch();
 
   const submitHandler = async e => {
     e.preventDefault();
@@ -66,6 +70,17 @@ const CarForm = ({ userId }) => {
   return (
     <div>
       <h1>New Car</h1>
+      <TestForm
+        year={year}
+        setYear={setYear}
+        make={make}
+        setMake={setMake}
+        model={model}
+        setModel={setModel}
+        updateItem={updateItem}
+        mpg={mpg}
+        updateMPG={updateMPG}
+      />
       <form className='car__form' onSubmit={submitHandler}>
         <div>
           <h3>Year</h3>
@@ -108,6 +123,7 @@ const CarForm = ({ userId }) => {
           <Button type='submit' variant='outlined' color='primary'>
             Submit
           </Button>
+          <Button onClick={() => dispatch(hideForm())}>Cancel</Button>
         </div>
       </form>
     </div>
