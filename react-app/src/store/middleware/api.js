@@ -18,9 +18,8 @@ const api = ({ dispatch, getState }) => next => async action => {
   
   
   if (response.ok) {
-    const { payload, directions, suggestions } = await response.json();
+    const { payload, suggestions } = await response.json();
     
-    if (directions) dispatch({ type: SET_DIRECTIONS, directions })
     if (suggestions) dispatch({ type: SET_SUGGESTIONS, suggestions })
     
     dispatch({ type: actionConst, payload })

@@ -55,40 +55,43 @@ def post_trip(user_id):
     car = Car.query.filter(Car.id == data['carId']).first()
 
     trip_algo = TripClass(
-        startCor=origin,
-        endCor=destination,
         travelPerDay=data['dailyTimeLimit'],
         travelPerIncrement=data['stopTimeLimit'],
         milesTillFuelNeeded=car.miles_to_refuel,
         avoidTolls=data['avoidTolls']
     )
+    trip_algo.setStartLocationFromString(data['startLocation'])
+    trip_algo.setEndLocationFromString(data['endLocation'])
 
     trip_algo.createDirection()
-    directions = trip_algo.getDirections()
+    trip_dict = trip_algo.toDictForDatabase()
 
     trip = Trip(
         user_id=data['userId'],
-        name=data['name'],
-        car_id=data['carId'],
-        toll=data['toll'],
-        daily_time_limit=data['dailyTimeLimit'],
-        stop_time_limit=data['stopTimeLimit'],
-        start_time=data['startTime'],
-        start_location=coords_to_str(origin),
-        end_time=data['endTime'],
-        end_location=coords_to_str(destination),
-        directions=directions
-        )
-    
+        name=f'{data['startLocation']} - {data['endLocation']}',
+        car_id=car.id,
+        toll=trip_dict['toll'],
+        daily_time_limit=trip_dict['daily_time_limit'],
+        stop_time_limit=trip_dict['stop_time_limit'],
+        start_time=trip_dict['startTime'],
+        start_location=coords_to_str(trip_dict['start_location']),
+        end_time=trip_dict['end_time'],
+        end_location=coords_to_str(trip_dict['end_location']),
+        directions=trip_dict['directions']
+    )
+
     food_pref, hotel_pref, gas_pref = get_preferences(getdata['foodQuery'])
-    suggestions = trip_algo.getNextStopDetails(foodQuery=food_preference)
+    suggestions = trip_algo.getNextStopDetails(
+        foodQuery=food_preference,
+        hotel=hotel_pref,
+        gas=gas_pref)
 
     try:
         db.session.add(trip)
         db.session.commit()
         trip_json = jsonify({
             'payload': {'trips': normalize(trip.to_dict())},
-            # 'directions': normalize(trip.directions_to_dict())
+            'suggestions': suggestions
         })
         return trip_json
 
