@@ -6,6 +6,7 @@ import { useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import View from '../shared_components/Drawer';
 import { setAuth } from '../store/actions/authentication';
+import {setOriginAction, setDestinationAction, setStartTimeAction, setDistanceAction, setDurationAction} from '../store/actions/directions'
 import { greeting } from '../services/utilities';
 
  const NavBar = () => {
@@ -18,6 +19,11 @@ import { greeting } from '../services/utilities';
   const onLogout = async e => {
     await logout();
     dispatch(setAuth(false));
+    dispatch(setOriginAction(""));
+    dispatch(setDestinationAction(""));
+    dispatch(setStartTimeAction(""));
+    dispatch(setDistanceAction(""));
+    dispatch(setDurationAction(""));
   };
 
   return (
