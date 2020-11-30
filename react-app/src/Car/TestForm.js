@@ -75,6 +75,7 @@ const TestForm = () => {
 
   useEffect(() => {
     if (Object.keys(car).length === 0) return
+    console.log('TESTFORM: CAR: ', car)
     dispatch(postCar(car, userId));
   }, [car]);
 
