@@ -31,13 +31,13 @@ class TripClass:
         self.foodType = kwargs.get('foodTypes')
         self.milesToRefuel = kwargs.get("milesToRefuel")
         if self.milesToRefuel:
-            self.milesToRefuel *= .85
+            self.milesToRefuel *= .90
         if not self.milesToRefuel:
             #Small car average tank size times average miles per gallon
             self.milesToRefuel = 12 * 25
-        self.tolls = kwargs.get("tolls")
+        self.tolls = kwargs.get("avoidTolls")
         if self.tolls is None:
-            self.tolls = True
+            self.tolls = False
         self.stopKey = kwargs.get("stopKey")
         if not self.stopKey:
             self.stopKey = []
@@ -68,8 +68,7 @@ class TripClass:
             r = requests.get(url)
             self.directionsFromGoogle = r.text
             r = r.json()
-
-
+            
             legs = [i for i in r["routes"][0]["legs"]]
             directions = []
             for i in range(len(legs)):
@@ -111,6 +110,8 @@ class TripClass:
         url = self.basicDirectionUrl
         for i in kwargs:
             url = url + "&" + i + "=" + kwargs[i]
+        if not self.tolls:
+            url += "&avoid=tolls"
         return url
 
     def decodePolyline(self, encoded):
@@ -150,7 +151,7 @@ class TripClass:
             string = string+"place_id:"+stop+"|"
         string = string[:-1]
         self.createDirection(waypoints=string)
-        self.stopKey = stopKey
+        self.stopKey = self.stopKey + stopKey
 
 
     def setTravelPerIncrement(self, tup):
@@ -291,13 +292,7 @@ class TripClass:
             return True
         else:
             return False
-
-
-
-
-
-
-
+        
     def getFoodAndGasNearLocation(self, searchQuery, cords):
         food = self.placeSearchUrlGenerator(searchQuery, cords)
         gas = self.getGasNearLocation(cords)
@@ -355,6 +350,10 @@ class TripClass:
         if gas and not hotel:
             gasOptions = self.getGasNearLocation(listOfFoundSpots[0]["geometry"]["location"])
             listOfFoundSpots = {"food": listOfFoundSpots, "gas": gasOptions}
+        elif hotel:
+            listOfFoundSpots = {"hotel": listOfFoundSpots}
+        else:
+            listOfFoundSpots = {"food": listOfFoundSpots}
         return listOfFoundSpots
 
 
@@ -373,12 +372,15 @@ class TripClass:
         #profit
 
     def getDirections(self):
-        return self.directionsFromGoogle
-
+        d = json.loads(self.directionsFromGoogle)
+        d["stopKey"] = self.stopKey
+        return json.dumps(d)
+    
     def constructFromDirections(self, directionsAsJson):
         directionsFromGoogle = directionsAsJson
         self.directionsFromGoogle = directionsFromGoogle
         d = json.loads(directionsFromGoogle)
+        self.stopKey = d["stopKey"]
         legs = [i for i in d["routes"][0]["legs"]]
         directions = []
         for i in range(len(legs)):
@@ -417,7 +419,13 @@ class TripClass:
         }
         return result
 
+    def prettyPrintDuration(self):
+        pass
+    
+    def prettyPrintTime(self):
+        pass
 
+        
 
 
 
@@ -441,13 +449,19 @@ class TripClass:
 # # t.createDirection()
 # # # print(t.stepTimeIndex)
 # # t.setTravelPerIncrement((34710, 36296))
-# t.setTravelPerIncrement((7200, 20189))
-# t.travelPerDay = 7200 * 2
 
-# t.getNextStopDetails()
-# # t.addStop(["ChIJ_yI7V3BFI4gR4K98PVlIEiQ", "ChIJ0XXQUFE-OogR2w6dkGjqhu0", "ChIJ7wHa54k-OogRdXZAth3Jz7M", "ChIJo0BrfAxSI4gR0XjDWhB5Ne8", "ChIJ0XXQUFE-OogR2w6dkGjqhu0"], ["f", "f", "f", "f", "f"])
-# t.addStop(["ChIJ_yI7V3BFI4gR4K98PVlIEiQ"], ['f'])
-# t.getNextStopDetails()
+# # t.setTravelPerIncrement((7200, 20189))
+# # t.travelPerDay = 7200 * 2
+
+# # t.getNextStopDetails()
+# t.addStop(["ChIJ_yI7V3BFI4gR4K98PVlIEiQ", "ChIJ0XXQUFE-OogR2w6dkGjqhu0", "ChIJ7wHa54k-OogRdXZAth3Jz7M", "ChIJo0BrfAxSI4gR0XjDWhB5Ne8", "ChIJ0XXQUFE-OogR2w6dkGjqhu0"], ["f", "f", "f", "f", "f"])
+# # t.addStop(["ChIJ_yI7V3BFI4gR4K98PVlIEiQ"], ['f'])
+# # t.getNextStopDetails()
+
+# n = TripClass()
+# print(t.getDirections())
+# n.constructFromDirections(t.getDirections())
+# print(n.stopKey)
 
 # t.getNextStopDetails()
 # t.addStop(["ChIJ_yI7V3BFI4gR4K98PVlIEiQ", "ChIJ0XXQUFE-OogR2w6dkGjqhu0", "ChIJ7wHa54k-OogRdXZAth3Jz7M", "ChIJo0BrfAxSI4gR0XjDWhB5Ne8", "ChIJ0XXQUFE-OogR2w6dkGjqhu0"], ["f", "f", "f", "f", "f"])
