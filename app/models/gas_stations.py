@@ -1,4 +1,5 @@
 from .db import db
+from ..utils import coords_from_str
 
 
 class GasStation(db.Model):
@@ -6,6 +7,7 @@ class GasStation(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
+    coordinates = db.Column(db.String(50))
     phone_num = db.Column(db.String(15))
     street_address = db.Column(db.String(100))
     city = db.Column(db.String(50))
@@ -20,6 +22,7 @@ class GasStation(db.Model):
         return {
             'id': self.id,
             'name': self.name,
+            'coordinates': coords_from_str(self.coordinates),
             'phone_num': self.phone_num,
             'street_address': self.street_address,
             'city': self.city,

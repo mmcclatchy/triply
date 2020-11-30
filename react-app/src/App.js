@@ -4,12 +4,12 @@ import LoginForm from './Login/LoginForm';
 import SignUpForm from './Signup/SignUpForm';
 import { setId, setName } from './store/actions/authentication';
 import { useDispatch } from 'react-redux';
-import ProtectedRoute from './authorization/ProtectedRoute';
 import View from './shared_components/Drawer';
 import Homepage from './Homepage/Homepage';
 import { authenticate } from './services/auth';
 import TripPage from './Map/TripPage';
 import TripTimeline from './Timeline/TripTimeline';
+import { setAuth } from './store/actions/authentication';
 
 function App() {
   const [authenticated, setAuthenticated] = useState(false);
@@ -19,7 +19,7 @@ function App() {
   useEffect(() => {
     authenticate().then(user => {
       if (!user.errors) {
-        setAuthenticated(true);
+        dispatch(setAuth(true));
         dispatch(setId(user.id));
         dispatch(setName(user.username));
       }

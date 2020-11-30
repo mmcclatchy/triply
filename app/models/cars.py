@@ -11,6 +11,7 @@ class Car(db.Model):
     model = db.Column(db.String(100), nullable=False)
     year = db.Column(db.Integer, nullable=False)
     miles_to_refuel = db.Column(db.Integer, nullable=False)
+    mpg = db.Column(db.Float, nullable=False)
 
     def to_dict(self):
         return {

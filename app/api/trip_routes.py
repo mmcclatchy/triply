@@ -131,7 +131,7 @@ def modify_trip(trip_id):
 @trip_routes.route('/trips/<int:trip_id>', methods=['DELETE'])
 @login_required
 def delete_trip(trip_id):
-    trip = Trip.query.get(trip_id)
+    trip = Trip.query.filter(Trip.id == trip_id).first()
 
     if trip:
         db.session.delete(trip)
@@ -142,7 +142,13 @@ def delete_trip(trip_id):
         return {'errors': [f'Trip Id: {trip_id} was not found']}, 404
 
 
-@trip_routes.route('/trips/test', methods=['POST'])
+# GET the stop timeline associated with a trip
+@trip_routes.route('/trips/<int:trip_id>/timeline', methods=['GET'])
 @login_required
-def test_route():
+def get_timeline(trip_id):
+    trip = Trip.query.filter(Trip.id == trip_id).first()
+    if trip:
+        return {'trips': {'timeline': trip.get_time_line()}}
+    else:
+        return {}, 404
     
