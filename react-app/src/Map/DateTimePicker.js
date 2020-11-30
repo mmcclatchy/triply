@@ -8,11 +8,23 @@ const useStyles = makeStyles((theme) => ({
   container: {
     display: 'flex',
     flexWrap: 'wrap',
+    justifyContent: 'center',
+    width: '30vw',
+    borderRadius: '.75em'
   },
   textField: {
-    marginLeft: theme.spacing(1),
-    marginRight: theme.spacing(1),
-    width: 250,
+    "& .MuiInputLabel-formControl": {
+      position: "unset",
+      background:"white",
+    }
+  },
+  textField: {
+    // marginLeft: theme.spacing(1),
+    // marginRight: '2vw',
+    width: 275,
+    background: 'white',
+    borderRadius: '.8em',
+    position: "",
   },
 }));
 
@@ -28,19 +40,20 @@ export default function DateAndTimePickers() {
   }
   console.log(startTimeContent)
   return (
-    <form className={classes.container} noValidate>
+    <div className="picker_container">
+      <form className={classes.container} noValidate>
       <TextField
         id="datetime"
         label="Start Time"
         type="datetime-local"
         value={startTimeContent}
         onChange = {updateStartTime}
-
         className={classes.textField}
         InputLabelProps={{
           shrink: true,
         }}
       />
     </form>
+    </div>
   );
 }

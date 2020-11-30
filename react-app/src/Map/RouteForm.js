@@ -7,6 +7,8 @@ import {
   setOriginAction,
   setDestinationAction
 } from '../store/actions/directions';
+import './RouteForm.css';
+import TimePicker from '../Map/DateTimePicker'
 //  use withScriptjs and withGoogleMap to wrap the map in order to get the map to load correctly
 
 const RouteForm = ({}) => {
@@ -92,29 +94,52 @@ const RouteForm = ({}) => {
 
   return (
     <>
-      <TextField
-        id='origin'
-        label='Origin'
-        variant='filled'
-        value={originFormContent}
-        onChange={updateOriginFormContent}
-      />
-      <TextField
-        id='destination'
-        label='Destination'
-        variant='filled'
-        value={destinationFormContent}
-        onChange={updateDestinationFormContent}
-      />
-      <Button variant='contained' onClick={handleClick}>
-        Submit
-      </Button>
-      <NavLink to='/create-trip'>
-        <Button variant='contained'>Access Without API Call</Button>
+      <div className="route_form">
+        <TextField
+          id='origin'
+          className='route_form_input'
+          label='Origin'
+          variant='standard'
+          InputProps={{ disableUnderline: true }}
+          inputProps={{ style: { textAlign: 'center' }}}
+          value={originFormContent}
+          onChange={updateOriginFormContent}
+        />
+        <TextField
+          id='destination'
+          label='Destination'
+          InputProps={{ disableUnderline: true }}
+          inputProps={{ style: { textAlign: 'center' }}}
+          className='route_form_input'
+          variant='standard'
+          value={destinationFormContent}
+          onChange={updateDestinationFormContent}
+        />
+      </div>
+      <div className="buttons">
+        <TimePicker />
+        <div className="submit_container">
+          <Button
+            className='submit_route'
+            variant='contained'
+            style={{
+              backgroundColor: "yellow",
+              fontWeight: "bold",
+            }}
+            onClick={handleClick}>
+              Set Route
+          </Button>
+        </div>
+      <NavLink to='create-trip'>
+          <Button
+            className='api_button'
+            style={{
+              backgroundColor: "yellow",
+              fontWeight: "bold",
+            }}
+            variant='contained'>W/O API Call</Button>
       </NavLink>
-      <NavLink to='/timeline'>
-        <Button variant='contained'>Access Timeline</Button>
-      </NavLink>
+      </div>
     </>
   );
 };
