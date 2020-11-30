@@ -10,6 +10,7 @@ import { authenticate } from './services/auth';
 import TripPage from './Map/TripPage';
 import TripTimeline from './Timeline/TripTimeline';
 import { setAuth } from './store/actions/authentication';
+import StartOfTripForm from "./StartOfTripForm/StartOfTripForm"
 
 function App() {
   const [authenticated, setAuthenticated] = useState(false);
@@ -44,6 +45,9 @@ function App() {
           authenticated={authenticated}
           setAuthenticated={setAuthenticated}
         />
+      </Route>
+      <Route path="/setUpTrip" exact={true}>
+        <StartOfTripForm />
       </Route>
 
       <Route path='/create-trip' exact={true}>
