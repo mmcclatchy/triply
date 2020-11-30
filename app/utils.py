@@ -75,5 +75,9 @@ def coords_from_str(coords):
     return coords.split(',')
 
 
-def check_previous_cuisines(tripId):
-    pass
+def create_stop_keys(data):
+    return [place_id[0] for place_id in data['placeIds']]
+
+
+def create_place_id_list(data):
+    return [data['placeIds'][key] for key in data['placeIds']]

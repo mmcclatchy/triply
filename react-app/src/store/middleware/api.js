@@ -3,17 +3,17 @@ const baseUrl = process.env.REACT_APP_BASE_URL
 
 
 //* API Middleware receives an action object and parses the data to make a specific fetch request
-const api = dispatch => next => async action => {
-
+const api = ({ dispatch, getState }) => next => async action => {
   if (action.type !== API) return next(action);
   
   //* Payload will determine the fetch call and what is being dispatched
   const { endpoint, method, body, actionConst } = action.payload;
   
+  console.log('API PAYLOAD :', action.payload)
   
-  const response = await fetch(`${baseUrl}/${endpoint}`, {
+  const response = await fetch(`${baseUrl}${endpoint}`, {
     method: method,
-    'Content-Type': 'application/json', 
+    headers: { 'Content-Type': 'application/json' }, 
     body: body
   });
   

@@ -1,20 +1,45 @@
 import { createStore, applyMiddleware, combineReducers, compose } from 'redux';
+import { loadState, saveState } from '../services/utilities'
 import thunk from 'redux-thunk';
 import utilities from './reducers/utilities';
 import authentication from './reducers/authentication';
 import directionsRedux from './reducers/directions';
+import api from './middleware/api';
+import cars from './reducers/cars';
+import stops from './reducers/stops';
+import trips from './reducers/trips';
+import setDuration from './reducers/setDurations';
 
 const composeEnhancers =
   window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
-export const reducer = combineReducers({ authentication, utilities, directionsRedux });
+export const reducer = combineReducers({
+  authentication,
+  utilities,
+  directionsRedux,
+  trips,
+  stops,
+  cars,
+  setDuration,
+});
 
-const configureStore = initialState => {
-  return createStore(
-    reducer,
-    initialState,
-    composeEnhancers(applyMiddleware(thunk))
-  );
-};
+const persistedState = loadState();
+const store = createStore(
+  reducer,
+  persistedState,
+  composeEnhancers(applyMiddleware(thunk, api))
+);
 
-export default configureStore;
+store.subscribe(() => {
+  saveState({
+    authentication: store.getState().authentication,
+    utilities: store.getState().utilities,
+    directionsRedux: store.getState().directionsRedux,
+    trips: store.getState().trips,
+    stops: store.getState().stops,
+    cars: store.getState().cars,
+    setDuration: store.getState().setDuration,
+  });
+});
+
+export default store
