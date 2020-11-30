@@ -31,17 +31,17 @@ class TripClass:
         self.foodType = kwargs.get('foodTypes')
         self.milesToRefuel = kwargs.get("milesToRefuel")
         if self.milesToRefuel:
-            self.milesToRefuel *= .85
+            self.milesToRefuel *= .90
         if not self.milesToRefuel:
             #Small car average tank size times average miles per gallon
             self.milesToRefuel = 12 * 25
-        self.tolls = kwargs.get("tolls")
+        self.tolls = kwargs.get("avoidTolls")
         if self.tolls is None:
-            self.tolls = True
+            self.tolls = False
         self.stopKey = kwargs.get("stopKey")
         if not self.stopKey:
             self.stopKey = []
-        
+
 
         self.directionsFromGoogle = None
         self.stops = []
@@ -50,7 +50,7 @@ class TripClass:
         self.stepTimeIndex = []
         self.totalTravelTime = None
         self.totalTravelDistance = None
-        
+
 
     def setStartCor(self, startCor):
         self.startCor = startCor
@@ -69,7 +69,6 @@ class TripClass:
             self.directionsFromGoogle = r.text
             r = r.json()
             
-
             legs = [i for i in r["routes"][0]["legs"]]
             directions = []
             for i in range(len(legs)):
@@ -111,6 +110,8 @@ class TripClass:
         url = self.basicDirectionUrl
         for i in kwargs:
             url = url + "&" + i + "=" + kwargs[i]
+        if not self.tolls:
+            url += "&avoid=tolls"
         return url
 
     def decodePolyline(self, encoded):
@@ -118,7 +119,7 @@ class TripClass:
 
     def getDistanceBetweenTwoPoints(self, c1, c2):
         # approximate radius of earth in meters
-        R = 6378137 
+        R = 6378137
 
         lat1 = radians(c1["lat"])
         lon1 = radians(c1["lng"])
@@ -150,7 +151,7 @@ class TripClass:
             string = string+"place_id:"+stop+"|"
         string = string[:-1]
         self.createDirection(waypoints=string)
-        self.stopKey = stopKey
+        self.stopKey = self.stopKey + stopKey
 
 
     def setTravelPerIncrement(self, tup):
@@ -160,7 +161,7 @@ class TripClass:
         duration = di1["duration"]["value"]
         distance = di1["distance"]['value']
         return distance / duration
-        
+
 
     def getPolyLineVertex(self):
         if self.travelPerIncrement[0] < ((self.totalTravelTime - self.stopTimeIndex[-1]) - self.endBuffer):
@@ -191,8 +192,8 @@ class TripClass:
 
         else:
             return None
-       
-        
+
+
     def getPairForBuffer(self, mod=1):
         #find the base of our rectange
         vertexInfo = self.getPolyLineVertex()
@@ -208,7 +209,7 @@ class TripClass:
         #checking to see if we have reached the "top" of the rectangle
         if (forwardTotal > self.searchRadius * mod):
             return [vertexInfo["cords"][vertexInfo["index"]], vertexInfo["cords"][i]]
-        
+
         #adding the final segment of the original polyline to the start of the next polyline
         forwardTotal += self.getDistanceBetweenTwoPoints(vertexInfo["cords"][i], self.directions[vertexInfo["stepIndex"] + 1]["start_location"])
         #checking to see if we have reached the "top" of the rectangle
@@ -223,7 +224,7 @@ class TripClass:
         #reset total to point before the step that would exceed our search value
         j -= 1
         forwardTotal -= self.directions[j]["distance"]["value"]
-        
+
         #get all the points within the polyline that contains the top of the rectangle
         finalCords = self.decodePolyline(self.directions[j]["polyline"]["points"])
         i = 0
@@ -270,7 +271,7 @@ class TripClass:
             return True
         else:
             return False
-        
+
     def checkIfHotelIsNeeded(self, cords):
         averageMetersPerSecond = self.totalTravelDistance / self.totalTravelTime
         lastWas = 0
@@ -292,12 +293,6 @@ class TripClass:
         else:
             return False
         
-        
-
-        
-
-        
-
     def getFoodAndGasNearLocation(self, searchQuery, cords):
         food = self.placeSearchUrlGenerator(searchQuery, cords)
         gas = self.getGasNearLocation(cords)
@@ -321,7 +316,7 @@ class TripClass:
         searchBuffer = [x for x in s]
         firstWayPoint = self.getFirstWayPoint(searchBuffer)
         endWayPoint = self.getSecondWayPoint(searchBuffer)
-        
+
         foodQuery = kwargs.get("foodQuery")
 
         if not foodQuery:
@@ -355,11 +350,15 @@ class TripClass:
         if gas and not hotel:
             gasOptions = self.getGasNearLocation(listOfFoundSpots[0]["geometry"]["location"])
             listOfFoundSpots = {"food": listOfFoundSpots, "gas": gasOptions}
+        elif hotel:
+            listOfFoundSpots = {"hotel": listOfFoundSpots}
+        else:
+            listOfFoundSpots = {"food": listOfFoundSpots}
         return listOfFoundSpots
 
 
 
-        
+
         #use the top and bottom function to get where we are searching
         #change the function so that the top is not as far into the road (maybe 7 mins?)
         #use it one more time so that we have 3 points
@@ -373,12 +372,15 @@ class TripClass:
         #profit
 
     def getDirections(self):
-        return self.directionsFromGoogle
+        d = json.loads(self.directionsFromGoogle)
+        d["stopKey"] = self.stopKey
+        return json.dumps(d)
     
     def constructFromDirections(self, directionsAsJson):
         directionsFromGoogle = directionsAsJson
         self.directionsFromGoogle = directionsFromGoogle
         d = json.loads(directionsFromGoogle)
+        self.stopKey = d["stopKey"]
         legs = [i for i in d["routes"][0]["legs"]]
         directions = []
         for i in range(len(legs)):
@@ -405,7 +407,7 @@ class TripClass:
             self.stops.append(wp["place_id"])
 
         self.indexSteps()
-    
+
     def toDictForDatabase(self):
         result = {
             "daily_timelimit": self.travelPerDay,
@@ -416,6 +418,12 @@ class TripClass:
             "directions": self.getDirections()
         }
         return result
+
+    def prettyPrintDuration(self):
+        pass
+    
+    def prettyPrintTime(self):
+        pass
 
         
 
@@ -429,26 +437,32 @@ class TripClass:
 # # print(t.stops[0].food)
 # # print("NEW STUFFFFFF!!!!!!!!!!")
 # # t.setEndCor({"lat": 40.712776, "lng": -74.005974})
-# # t.setStartCor({"lat":42.789379, "lng":-86.107201})
+# # # t.setStartCor({"lat":42.789379, "lng":-86.107201})
+# # # t.createDirection()
+# # # print(t.stops)
+# # # print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+# # # print(t.directions)
+# # # print(t.totalTravelTime)
+# # # print(t.totalTravelDistance)
+# # t.setStartCor({"lat": 40.365232, "lng": -98.109069})
+# # t.setEndCor({"lat":40.524798, "lng": -98.108422})
 # # t.createDirection()
-# # print(t.stops)
-# # print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-# # print(t.directions)
-# # print(t.totalTravelTime)
-# # print(t.totalTravelDistance)
-# t.setStartCor({"lat": 40.365232, "lng": -98.109069})
-# t.setEndCor({"lat":40.524798, "lng": -98.108422})
-# t.createDirection()
-# # print(t.stepTimeIndex)
-# t.setTravelPerIncrement((34710, 36296))
-t.setTravelPerIncrement((7200, 20189))
-t.travelPerDay = 7200 * 2
+# # # print(t.stepTimeIndex)
+# # t.setTravelPerIncrement((34710, 36296))
 
-t.getNextStopDetails()
+# # t.setTravelPerIncrement((7200, 20189))
+# # t.travelPerDay = 7200 * 2
+
+# # t.getNextStopDetails()
 # t.addStop(["ChIJ_yI7V3BFI4gR4K98PVlIEiQ", "ChIJ0XXQUFE-OogR2w6dkGjqhu0", "ChIJ7wHa54k-OogRdXZAth3Jz7M", "ChIJo0BrfAxSI4gR0XjDWhB5Ne8", "ChIJ0XXQUFE-OogR2w6dkGjqhu0"], ["f", "f", "f", "f", "f"])
-t.addStop(["ChIJ_yI7V3BFI4gR4K98PVlIEiQ"], ['f'])
-t.getNextStopDetails()
+# # t.addStop(["ChIJ_yI7V3BFI4gR4K98PVlIEiQ"], ['f'])
+# # t.getNextStopDetails()
+
+# n = TripClass()
+# print(t.getDirections())
+# n.constructFromDirections(t.getDirections())
+# print(n.stopKey)
 
 # t.getNextStopDetails()
 # t.addStop(["ChIJ_yI7V3BFI4gR4K98PVlIEiQ", "ChIJ0XXQUFE-OogR2w6dkGjqhu0", "ChIJ7wHa54k-OogRdXZAth3Jz7M", "ChIJo0BrfAxSI4gR0XjDWhB5Ne8", "ChIJ0XXQUFE-OogR2w6dkGjqhu0"], ["f", "f", "f", "f", "f"])
-# print(t.getNextStopDetails()) 
+# print(t.getNextStopDetails())

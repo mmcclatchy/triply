@@ -9,30 +9,30 @@ export const getCars = userId => ({
 })
 
 
-export const getCar = tripId => ({
+export const getCar = carId => ({
   type: API,
   method: 'GET',
-  endpoint: `/cars/${tripId}`,
+  endpoint: `/cars/${carId}`,
   actionConst: SET_CAR
 })
 
 
-export const postCar = (trip, userId) => ({
+export const postCar = (car, userId) => ({
   type: API,
   payload: {
     method: 'POST',
     endpoint: `/users/${userId}/cars`,
-    body: JSON.stringify(trip),
+    body: JSON.stringify(car),
     actionConst: SET_CAR
   },
 });
 
 
-export const deleteCar = tripId => ({
+export const deleteCar = carId => ({
   type: API,
   payload: {
     method: 'DELETE',
-    endpoint: `/cars/${tripId}`,
+    endpoint: `/cars/${carId}`,
     actionConst: DELETE_CAR
   }
 })

@@ -139,7 +139,10 @@ const RouteForm = ({}) => {
               fontWeight: "bold",
             }}
             variant='contained'>W/O API Call</Button>
-      </NavLink>
+        </NavLink>
+        <NavLink to='/timeline'>
+        <Button variant='contained'>Access Timeline</Button>
+        </NavLink>
       </div>
 
     </>

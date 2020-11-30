@@ -1,11 +1,11 @@
-import { SET_STOP } from '../actions/utilities';
+import { SET_STOP, DELETE_STOP } from '../constants/constants';
 
 
 // payloads have been normalized in the back end
-export default function reducer(state, { payload }) {
+export default function reducer(state = {}, { type, payload }) {
   Object.freeze(state);
   
-  switch (action.type) {
+  switch (type) {
     case SET_STOP: 
       return { ...state, payload };
     
