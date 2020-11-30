@@ -72,6 +72,7 @@ const TestForm = () => {
   };
 
   useEffect(() => {
+    if (Object.keys(car).length === 0) return
     console.log('hitting here');
     console.log(postCar(car, userId))
     dispatch(postCar(car, userId));
