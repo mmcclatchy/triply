@@ -1,4 +1,4 @@
-import { API, SET_DIRECTIONS } from '../constants/constants';
+import { API, SET_DIRECTIONS, SET_SUGGESTIONS } from '../constants/constants';
 const baseUrl = process.env.REACT_APP_BASE_URL
 
 
@@ -9,7 +9,6 @@ const api = ({ dispatch, getState }) => next => async action => {
   //* Payload will determine the fetch call and what is being dispatched
   const { endpoint, method, body, actionConst } = action.payload;
   
-  console.log('API PAYLOAD :', action.payload)
   
   const response = await fetch(`${baseUrl}${endpoint}`, {
     method: method,
@@ -19,9 +18,10 @@ const api = ({ dispatch, getState }) => next => async action => {
   
   
   if (response.ok) {
-    const { payload, directions } = await response.json();
+    const { payload, directions, suggestions } = await response.json();
     
     if (directions) dispatch({ type: SET_DIRECTIONS, directions })
+    if (suggestions) dispatch({ type: SET_SUGGESTIONS, suggestions })
     
     dispatch({ type: actionConst, payload })
   }

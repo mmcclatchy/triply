@@ -52,7 +52,7 @@ def post_stop(trip_id):
     
     if any([key for key in stop_keys if key == 'h']):
         food_and_gas = trip_algo.getFoodAndGasNearLocation(data['placeIds']['hotel'])
-        return jsonify({ '': food_and_gas})
+        return jsonify({'suggestions': food_and_gas})
     
     try:
         stop = Stop(

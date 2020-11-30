@@ -11,4 +11,5 @@ export const SET_DIRECTIONS = 'triply/directions/SET_DIRECTIONS';
 export const SET_STOP = 'triply/middleware/SET_STOP';
 export const DELETE_STOP = 'triply/middleware/DELETE_STOP';
 export const SET_AUTH = 'triply/authentication/SET_AUTH';
-export const SET_DURATIONS = 'triply/StartOfTripForm/SET_DURATIONS'
+export const SET_DURATIONS = 'triply/StartOfTripForm/SET_DURATIONS';
+export const SET_SUGGESTIONS = 'triply/tripForm/SET_SUGGESTIONS';
