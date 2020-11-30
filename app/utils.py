@@ -81,3 +81,7 @@ def create_stop_keys(data):
 
 def create_place_id_list(data):
     return [data['placeIds'][key] for key in data['placeIds']]
+
+
+def get_preferences(data):
+    

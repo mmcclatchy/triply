@@ -1,7 +1,10 @@
 from flask import Blueprint, jsonify, request
 from flask_login import login_required
 from app.models import Trip, User, Car, db
-from app.utils import normalize, snake_case, get_place_coords, coords_to_str
+from app.utils import (
+    normalize, snake_case, get_place_coords, coords_to_str,
+    get_food_preference
+)
 from sqlalchemy.exc import SQLAlchemyError
 from ..Trip import TripClass
 
@@ -51,7 +54,7 @@ def post_trip(user_id):
     destination = get_place_coords(data['endLocation'])
     car = Car.query.filter(Car.id == data['carId']).first()
 
-    trip_instance = TripClass(
+    trip_algo = TripClass(
         startCor=origin,
         endCor=destination,
         travelPerDay=data['dailyTimeLimit'],
@@ -60,8 +63,8 @@ def post_trip(user_id):
         avoidTolls=data['avoidTolls']
     )
 
-    trip_instance.createDirection()
-    directions = trip_instance.getDirections()
+    trip_algo.createDirection()
+    directions = trip_algo.getDirections()
 
     trip = Trip(
         user_id=data['userId'],
@@ -76,6 +79,9 @@ def post_trip(user_id):
         end_location=coords_to_str(destination),
         directions=directions
         )
+    
+    food_pref, hotel_pref, gas_pref = get_preferences(getdata['foodQuery'])
+    suggestions = trip_algo.getNextStopDetails(foodQuery=food_preference)
 
     try:
         db.session.add(trip)

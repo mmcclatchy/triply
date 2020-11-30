@@ -45,15 +45,17 @@ def post_stop(trip_id):
         milesTillFuelNeeded=trip.car.miles_to_refuel,
         avoidTolls=trip.tolls
     )
-    
+
     place_ids = create_place_id_list(data['placeIds'])
     stop_keys = create_stop_keys(data['placeIds'])
     trip_algo.addStop(place_ids, stop_keys)
-    
+
+    # If the place ids include a hotel,
+    # send suggestions for food and gas based on that location
     if any([key for key in stop_keys if key == 'h']):
         food_and_gas = trip_algo.getFoodAndGasNearLocation(data['placeIds']['hotel'])
         return jsonify({'suggestions': food_and_gas})
-    
+
     try:
         stop = Stop(
             trip_id=data['tripId'],
