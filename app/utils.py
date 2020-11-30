@@ -81,7 +81,3 @@ def create_stop_keys(data):
 
 def create_place_id_list(data):
     return [data['placeIds'][key] for key in data['placeIds']]
-
-
-test = {'placeIds': {'gas': 123, 'rest': 234, 'hotel': 345}}
-print(create_place_id_list(test))

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { showForm, hideForm } from '../store/actions/utilities';
+import { Button } from '@material-ui/core';
 import './User.css';
 import TestForm from '../Car/TestForm';
 
@@ -62,7 +63,15 @@ function User({ userId }) {
       </div>
 
       {visible ? (
-        <TestForm />
+        <>
+          <TestForm />
+          <Button
+            variant='outlined'
+            color='secondary'
+            onClick={() => dispatch(hideForm())}>
+            Cancel
+          </Button>
+        </>
       ) : (
         <button onClick={() => dispatch(showForm())}>Add a New Car</button>
       )}

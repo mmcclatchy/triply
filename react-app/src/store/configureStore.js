@@ -23,15 +23,6 @@ export const reducer = combineReducers({
   setDuration,
 });
 
-// const configureStore = initialState => {
-//   return createStore(
-//     reducer,
-//     initialState,
-//     composeEnhancers(applyMiddleware(thunk, api))
-//   );
-// };
-
-// export default configureStore;
 
 const persistedState = loadState();
 const store = createStore(

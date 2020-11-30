@@ -4,7 +4,6 @@ import { SET_CAR, DELETE_CAR } from '../constants/constants';
 // payloads have been normalized in the back end
 export default function reducer(state = {}, { type, payload }) {
   Object.freeze(state);
-  console.log("CAR REDUCER")
   console.log('TYPE: ', type, '\nPayload: ', payload)
   switch (type) {
     case SET_CAR: 

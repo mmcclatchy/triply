@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { hideForm } from '../store/actions/utilities';
 import { getVehicleId, getMPG, getTankSize } from '../services/fueleconomyAPI';
 import { registerCar } from '../services/car';
 import { makeStyles } from '@material-ui/core/styles';
-import { postCar } from '../store/actions/cars';
 import './CarForm.css';
 import CarMakes from './CarMakes';
 import CarYears from './CarYears';
@@ -65,15 +65,14 @@ const TestForm = () => {
       year: year,
       make: make,
       model: model,
-      mpg: mpg,
+      mpg: parseInt(mpg),
       tankSize: tankSize
     };
     setCar(new_car);
+    dispatch(hideForm());
   };
 
   useEffect(() => {
-    console.log('hitting here');
-    console.log(postCar(car, userId))
     dispatch(postCar(car, userId));
   }, [car]);
 

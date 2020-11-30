@@ -15,7 +15,6 @@ export const getCar = carId => ({
 });
 
 export const postCar = (car, userId) => {
-  console.log('POST CAR')
   return {
     type: API,
     payload: {
