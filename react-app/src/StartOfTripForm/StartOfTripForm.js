@@ -1,10 +1,12 @@
 import React, {useState, useEffect} from "react"
 import {useDispatch} from "react-redux"
+import { useHistory } from "react-router-dom"
 import {setDuration} from "../store/actions/setDuration"
 
 
 const StartOfTripForm = (props) =>{
   const dispatch = useDispatch()
+  const history = useHistory()
 
   const [stopTime, setStopTime] = useState(5400)
   const [sleepTime, setSleepTime]= useState(18000)
@@ -17,7 +19,15 @@ const StartOfTripForm = (props) =>{
   const handleSleepChange = (e) => setSleepTime(e.target.value)
   const handleCheck = (e) => {setTolls(e.target.checked)}
   const saveInfo = e =>{
-    dispatch(setDuration({daily_timelimit: sleepTime, stop_timelimit: stopTime, tolls: tolls}))
+    const op = document.getElementById("options").childNodes;
+    const selectedFood = []
+    op.forEach(el=>{
+      if(el.lastChild.checked){
+        selectedFood.push(el.lastChild.id)
+      }
+    })
+    dispatch(setDuration({daily_timelimit: sleepTime, stop_timelimit: stopTime, tolls: tolls, selectedFoods: selectedFood}))
+    history.push("/create-trip")
   }
   const handleAdditionalOptionChange = (e) => setAdditionalOption(e.target.value)
   const handleAdditionalOptionAddition = (e) => {
@@ -84,8 +94,6 @@ const StartOfTripForm = (props) =>{
       <p>{sleepTime}</p>
       <label>Avoid Toll Roads? (Often requires a longer route)</label>
       <input type={"checkbox"} checked={tolls} onClick={handleCheck} />
-      <br></br>
-      <button onClick={saveInfo}>Save This Information</button>
       <br />
       <br />
       <label>Choose some food types you'd like to eat, or add your own</label>
@@ -94,6 +102,8 @@ const StartOfTripForm = (props) =>{
       </div>
       <input onChange={handleAdditionalOptionChange} value={additionalOption} />
       <button onClick={handleAdditionalOptionAddition}>Add Option</button>
+      <br></br>
+      <button onClick={saveInfo}>Save This Information</button>
     </div>
 
   )
