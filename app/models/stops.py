@@ -44,9 +44,8 @@ class Stop(db.Model):
         hotel = self.hotel
         rest = self.restaurant
         sub_stops = []
-        
+
         for sub_stop in [gas, hotel, rest]:
-            print('*************\n\n', sub_stop, '\n\n*************')
             if sub_stop.id:
                 return {
                     'id': sub_stop.id,
