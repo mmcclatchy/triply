@@ -53,9 +53,9 @@ class Stop(db.Model):
                     'trip_id': self.trip_id,
                     'trip_stop_num': self.trip_stop_num,
                     'coordinates': sub_stop.coordinates,
-                    'time': sub_stop.time,
+                    'time': self.time,
                     'type:': f'{sub_stop.__class__.__name__}',
-                    details: {
+                    'details': {
                         'name': sub_stop.name,
                         'street_address': sub_stop.street_address,
                         'city': sub_stop.city,
