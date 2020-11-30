@@ -74,7 +74,7 @@ const StartOfTripForm = (props) =>{
 
 
   return(
-    <div>
+    <div className="StartOfTripForm">
       <label>How Often Do You Want To Stop?</label>
       <select value={stopTime} onChange={handleStopChange}>
         <option value={5400}>Every Hour or Two</option>

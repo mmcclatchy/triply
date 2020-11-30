@@ -1,5 +1,6 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
+import StartOfTripForm from "../StartOfTripForm/StartOfTripForm"
 
 const TripSummary = () => {
   const userName = useSelector((state) => state.authentication.userName)
@@ -11,6 +12,7 @@ const TripSummary = () => {
 
   return (
     <>
+      <StartOfTripForm />
       <div className="trip_summary_container">
         <h1>{userName}'s Trip</h1>
         <h3>Origin: {origin}</h3>

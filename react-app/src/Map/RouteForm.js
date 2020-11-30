@@ -83,7 +83,7 @@ const RouteForm = ({}) => {
     setDestination(destinationFormContent);
     dispatch(setOriginAction(originFormContent));
     dispatch(setDestinationAction(destinationFormContent));
-    return history.push(`/setUpTrip`);
+    return history.push(`/create-trip`);
   };
   const updateOriginFormContent = e => {
     setOriginFormContent(e.target.value);

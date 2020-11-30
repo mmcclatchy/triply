@@ -46,9 +46,6 @@ function App() {
           setAuthenticated={setAuthenticated}
         />
       </Route>
-      <Route path="/setUpTrip" exact={true}>
-        <StartOfTripForm />
-      </Route>
 
       <Route path='/create-trip' exact={true}>
         <TripPage />

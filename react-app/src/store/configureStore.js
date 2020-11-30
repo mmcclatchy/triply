@@ -8,7 +8,7 @@ import setDuration from "./reducers/setDurations"
 const composeEnhancers =
   window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
-const reducer = combineReducers({ authentication, utilities, directionsRedux, setDuration });
+export const reducer = combineReducers({ authentication, utilities, directionsRedux, setDuration });
 
 const configureStore = initialState => {
   return createStore(
