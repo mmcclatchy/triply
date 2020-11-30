@@ -1,6 +1,7 @@
 import React from 'react';
 import Map from './Map';
 import TripSummary from './TripSummary';
+import TripTimeline from '../Timeline/TripTimeline';
 import { NavLink } from 'react-router-dom';
 import './TripPage.css';
 
@@ -11,6 +12,7 @@ const TripPage = () => {
         <div className='trip_temp_logo' />
       </NavLink>
       <h1>Trip Form</h1>
+      <TripTimeline />
       <TripSummary />
       <Map />
     </div>

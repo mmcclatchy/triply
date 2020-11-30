@@ -8,8 +8,6 @@ import json
 
 
 #todo:
-    #determine if gas is needed
-    #determine if hotel is needed
     #tailor the hotel search to stars!!!
 
 
@@ -29,7 +27,7 @@ class TripClass:
         self.startCor = kwargs.get('startCor')
         self.endCor = kwargs.get('endCor')
         self.travelPerDay = kwargs.get('dailyTimeLimit')
-        self.travelPerIncrement = kwargs.get('dailyTstopTimeLimitimeLimit')
+        self.travelPerIncrement = kwargs.get('incrementTimeLimit')
         self.foodType = kwargs.get('foodTypes')
         self.milesToRefuel = kwargs.get("milesToRefuel")
         if self.milesToRefuel:
@@ -67,7 +65,6 @@ class TripClass:
             url = self.makeUrl(origin=origin, destination=destination)
             if kwargs.get("waypoints"):
                 url += kwargs.get("waypoints")
-            # print("!!!!!!!!!!!!!!!!", url)
             r = requests.get(url)
             self.directionsFromGoogle = r.text
             r = r.json()
@@ -249,12 +246,14 @@ class TripClass:
         #this can be improved for speed at a later date
         return self.endCor
 
-    def placeSearchUrlGenerator(self, searchQuery, searchCord):
+    def placeSearchUrlGenerator(self, searchQuery, searchCord, **kwargs):
         url = self.basicLocalSearch
         url = url + "&location="
         url = url + str(searchCord["lat"]) + "," + str(searchCord["lng"])
         url = url + "&keyword=" + searchQuery
         url = url + "&rankby=distance"
+        if kwargs.get("type"):
+            url = url + "&type=" + kwargs.get("type")
         return url
 
     def checkIfGasIsNeeded(self, cords):
@@ -267,16 +266,37 @@ class TripClass:
         dictOfGoogle = json.loads(self.directionsFromGoogle)
         wp = dictOfGoogle["routes"][0]["legs"][lastWas]
         aproxDistance = self.getDistanceBetweenTwoPoints(cords, wp["start_location"])
-        # print(cords, wp["start_location"])
-        # print(aproxDistance)
-        # print(self.milesToRefuel)
-        if aproxDistance * 2 >= self.milesToRefuel:
+        if aproxDistance * 2 >= self.milesToRefuel * 1609.34:
             return True
         else:
             return False
         
     def checkIfHotelIsNeeded(self, cords):
-        pass
+        averageMetersPerSecond = self.totalTravelDistance / self.totalTravelTime
+        lastWas = 0
+        for i in range(len(self.stopKey)):
+            j = len(self.stopKey) - 1 - i
+            if self.stopKey[j] == "h":
+                lastWas = j
+        dictOfGoogle = json.loads(self.directionsFromGoogle)
+        wp = dictOfGoogle["routes"][0]["legs"][lastWas]
+        legs = dictOfGoogle["routes"][0]["legs"]
+        timeSinceLastSleep = 0
+        j = lastWas
+        while j < len(legs) - 2:
+            timeSinceLastSleep += legs[j]["duration"]["value"]
+            j += 1
+        timeSinceLastSleep += (self.getDistanceBetweenTwoPoints(cords, wp["start_location"]) / averageMetersPerSecond) * 2
+        if timeSinceLastSleep > self.travelPerDay:
+            return True
+        else:
+            return False
+        
+        
+
+        
+
+        
 
     def getFoodAndGasNearLocation(self, searchQuery, cords):
         food = self.placeSearchUrlGenerator(searchQuery, cords)
@@ -289,8 +309,9 @@ class TripClass:
         return r
 
     def getGasNearLocation(self, cords):
-        print("we need gas!!!!!!!!!!!!!!!")
-        return self.placeSearchUrlGenerator("gas station", cords)
+        r = requests.get(self.placeSearchUrlGenerator("gas station", cords, type="gas_station"))
+        r = r.json()
+        return r
 
 
     def getNextStopDetails(self, **kwargs):
@@ -309,9 +330,9 @@ class TripClass:
         gas = kwargs.get("gas")
         mod = 1
         if not gas:
-            gas = self.checkIfGasIsNeeded(firstWayPoint)
+            gas = self.checkIfGasIsNeeded(searchBuffer[0])
         if not hotel:
-            hotel = self.checkIfHotelIsNeeded(firstWayPoint)
+            hotel = self.checkIfHotelIsNeeded(searchBuffer[0])
             mod = 3
 
         listOfFoundSpots = []
@@ -319,9 +340,10 @@ class TripClass:
         while len(listOfFoundSpots) < 3*mod and numberOfCheckedSpots < 3:
             numberOfCheckedSpots += 1
             searchQuery = foodQuery
+            url = self.placeSearchUrlGenerator(searchQuery, searchBuffer[len(searchBuffer) - 1])
             if hotel:
                 searchQuery = "hotel"
-            url = self.placeSearchUrlGenerator(searchQuery, searchBuffer[len(searchBuffer) - 1])
+                url = self.placeSearchUrlGenerator(searchQuery, searchBuffer[len(searchBuffer) - 1], type="lodging")
             r = requests.get(url)
             r = r.json()
             for option in r["results"]:
@@ -330,6 +352,9 @@ class TripClass:
                     break
             #appends the next point to search buffer
             searchBuffer.append(self.getPairForBuffer(((len(searchBuffer)) * 2) + 1)[1])
+        if gas and not hotel:
+            gasOptions = self.getGasNearLocation(listOfFoundSpots[0]["geometry"]["location"])
+            listOfFoundSpots = {"food": listOfFoundSpots, "gas": gasOptions}
         return listOfFoundSpots
 
 
@@ -380,6 +405,17 @@ class TripClass:
             self.stops.append(wp["place_id"])
 
         self.indexSteps()
+    
+    def toDictForDatabase(self):
+        result = {
+            "daily_timelimit": self.travelPerDay,
+            "stop_timelimit": self.travelPerIncrement,
+            "toll": self.tolls,
+            "start_location": self.startCor,
+            "end_location": self.endCor,
+            "directions": self.getDirections()
+        }
+        return result
 
         
 
@@ -387,25 +423,32 @@ class TripClass:
 
 
 # t = TripClass()
-# print(t.getDistance("cwoiGvvacNGAEAECUK_@QuAm@]OyB}@u@]C?ECmBy@OGSIWKo@Y[KgAe@oAg@sAi@m@[OGg@]USIIMKi@m@W[i@k@IKMQQOIKa@g@MMqA_Bo@}@s@w@g@o@SU_CoCiBuB{AiBa@i@MSIQKOIOGSIMQa@Sc@IWMYQo@yAwEgAmD[iAc@mA[gAIYG]AECQEYOkAo@}FK{@O{@qAsISuA{@qGy@yFIc@Gk@Ew@QeGAUAa@C{@Ci@EkBIiCMeDCk@QyEAIQ_EAYOqDA[SsDGqACo@Gs@Mu@G]Mm@I_@[{AWoAGWqAoEsAuEMi@]cAKWWm@Q]Uc@U_@k@_AeAcB_@k@gAiBWc@aA}Ao@cAiAiBu@mAmB_DeAcBYg@OWmCwEiBsCeEmHa@q@w@uAU]c@y@i@eAO[Q]MY[o@O_@kBaEyC{GMYYk@q@wAKSGOIMe@{@g@}@aAyAWa@S[W]_@k@a@k@OUm@y@e@o@_@i@?E?E?AAAACGIi@w@q@aAaAwA_@k@wCiE[c@i@u@OSSWCEOOMMMO]]][UUKIWWMKKKA?]Yg@_@MKCCIG[Og@YOIo@[kAo@gE{B_CmAi@[_Ag@s@_@yAw@mAq@ECECCCE?E?G?ECkCaBMIo@]]QgAo@]OwEiCWMcAi@_@OcAi@e@U[SgBaAg@We@Wc@UOIMGq@]cAk@IEOG_Ai@g@WOGmAq@}A{@WMUMWQ_CyAGE]S{@q@AAg@a@a@]EEo@k@UWY[MMGI_AgAcAkAWYw@aAg@m@QSkAsAwAcBOSwAeBg@m@cAmAc@i@kByB_CmCs@}@]a@sA}AoA{A{AiBeD_EiC}CiAsAUY_AiA]a@EEqA_B]_@SYKKi@o@w@_A_AkAuAaBsA_BcBsBaAiAiAuAg@m@[]cBuBaAkAW[e@i@_AiAGIm@u@a@c@k@s@Y][_@_AiAu@}@gC{CwBkCkBwBY]s@{@i@m@y@_AKKy@_A_@c@aAgAw@{@SW_BiBi@m@i@o@oB{BkAuAGG{@_Ak@s@gE}EEG{@aAg@k@qCaDkC{CkAsAACw@}@k@m@m@q@w@aAOSY]s@y@gAmAmAqAe@i@_BgBs@y@q@u@cBmB{AcBkC{Cg@k@cAkAiAoAOQgBqBi@k@SSk@m@i@k@QQe@a@EEGECCCAKIYWm@k@SSGIGGsAmAwBmBMOy@q@CCC?CAAC[YUUSUWWaA{@g@e@eB}Aw@s@y@w@WSeB{Aq@i@a@]qAgAcA{@_@Y]Y]Yy@o@{@s@cBsAq@k@u@o@_Au@yAqAKIaA_A[Yi@g@WWg@i@QQ}@w@i@i@e@i@WUc@a@m@i@wAmAyCgCoCcCqAiAiEyD}CsCg@c@kCaC[Yk@g@cA}@qAmAcA}@uEcEWS{@w@US}@y@MKg@e@q@m@o@i@i@e@gAaAMMs@m@OOi@e@a@_@GGKIw@q@_@[Y[k@e@g@c@aA_Ay@q@uCiC}AuAUSSQUUSSWSUSMMIGkAeAyAqA][}CoCQD[Wc@c@Ma@ACCCSUa@a@QYYe@We@O[O_@IUMi@"))
-# print(t.getDistanceBetweenTwoPoints({"lat":43.6672211, "lng":-79.3125987}, {"lat": 43.7739717, "lng": -79.1830736}))
-# t.addStop(123, food=1, gas=2)
-# print(t.stops[0].food)
-# print("NEW STUFFFFFF!!!!!!!!!!")
-# t.setEndCor({"lat": 40.712776, "lng": -74.005974})
-# t.setStartCor({"lat":42.789379, "lng":-86.107201})
-# t.createDirection()
-# print(t.stops)
-# print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-# print(t.directions)
-# print(t.totalTravelTime)
-# print(t.totalTravelDistance)
+# # print(t.getDistance("cwoiGvvacNGAEAECUK_@QuAm@]OyB}@u@]C?ECmBy@OGSIWKo@Y[KgAe@oAg@sAi@m@[OGg@]USIIMKi@m@W[i@k@IKMQQOIKa@g@MMqA_Bo@}@s@w@g@o@SU_CoCiBuB{AiBa@i@MSIQKOIOGSIMQa@Sc@IWMYQo@yAwEgAmD[iAc@mA[gAIYG]AECQEYOkAo@}FK{@O{@qAsISuA{@qGy@yFIc@Gk@Ew@QeGAUAa@C{@Ci@EkBIiCMeDCk@QyEAIQ_EAYOqDA[SsDGqACo@Gs@Mu@G]Mm@I_@[{AWoAGWqAoEsAuEMi@]cAKWWm@Q]Uc@U_@k@_AeAcB_@k@gAiBWc@aA}Ao@cAiAiBu@mAmB_DeAcBYg@OWmCwEiBsCeEmHa@q@w@uAU]c@y@i@eAO[Q]MY[o@O_@kBaEyC{GMYYk@q@wAKSGOIMe@{@g@}@aAyAWa@S[W]_@k@a@k@OUm@y@e@o@_@i@?E?E?AAAACGIi@w@q@aAaAwA_@k@wCiE[c@i@u@OSSWCEOOMMMO]]][UUKIWWMKKKA?]Yg@_@MKCCIG[Og@YOIo@[kAo@gE{B_CmAi@[_Ag@s@_@yAw@mAq@ECECCCE?E?G?ECkCaBMIo@]]QgAo@]OwEiCWMcAi@_@OcAi@e@U[SgBaAg@We@Wc@UOIMGq@]cAk@IEOG_Ai@g@WOGmAq@}A{@WMUMWQ_CyAGE]S{@q@AAg@a@a@]EEo@k@UWY[MMGI_AgAcAkAWYw@aAg@m@QSkAsAwAcBOSwAeBg@m@cAmAc@i@kByB_CmCs@}@]a@sA}AoA{A{AiBeD_EiC}CiAsAUY_AiA]a@EEqA_B]_@SYKKi@o@w@_A_AkAuAaBsA_BcBsBaAiAiAuAg@m@[]cBuBaAkAW[e@i@_AiAGIm@u@a@c@k@s@Y][_@_AiAu@}@gC{CwBkCkBwBY]s@{@i@m@y@_AKKy@_A_@c@aAgAw@{@SW_BiBi@m@i@o@oB{BkAuAGG{@_Ak@s@gE}EEG{@aAg@k@qCaDkC{CkAsAACw@}@k@m@m@q@w@aAOSY]s@y@gAmAmAqAe@i@_BgBs@y@q@u@cBmB{AcBkC{Cg@k@cAkAiAoAOQgBqBi@k@SSk@m@i@k@QQe@a@EEGECCCAKIYWm@k@SSGIGGsAmAwBmBMOy@q@CCC?CAAC[YUUSUWWaA{@g@e@eB}Aw@s@y@w@WSeB{Aq@i@a@]qAgAcA{@_@Y]Y]Yy@o@{@s@cBsAq@k@u@o@_Au@yAqAKIaA_A[Yi@g@WWg@i@QQ}@w@i@i@e@i@WUc@a@m@i@wAmAyCgCoCcCqAiAiEyD}CsCg@c@kCaC[Yk@g@cA}@qAmAcA}@uEcEWS{@w@US}@y@MKg@e@q@m@o@i@i@e@gAaAMMs@m@OOi@e@a@_@GGKIw@q@_@[Y[k@e@g@c@aA_Ay@q@uCiC}AuAUSSQUUSSWSUSMMIGkAeAyAqA][}CoCQD[Wc@c@Ma@ACCCSUa@a@QYYe@We@O[O_@IUMi@"))
+# # print(t.getDistanceBetweenTwoPoints({"lat":43.6672211, "lng":-79.3125987}, {"lat": 43.7739717, "lng": -79.1830736}))
+# # t.addStop(123, food=1, gas=2)
+# # print(t.stops[0].food)
+# # print("NEW STUFFFFFF!!!!!!!!!!")
+# # t.setEndCor({"lat": 40.712776, "lng": -74.005974})
+# # t.setStartCor({"lat":42.789379, "lng":-86.107201})
+# # t.createDirection()
+# # print(t.stops)
+# # print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+# # print(t.directions)
+# # print(t.totalTravelTime)
+# # print(t.totalTravelDistance)
 # t.setStartCor({"lat": 40.365232, "lng": -98.109069})
 # t.setEndCor({"lat":40.524798, "lng": -98.108422})
-# print(t.stepTimeIndex)
+# t.createDirection()
+# # print(t.stepTimeIndex)
 # t.setTravelPerIncrement((34710, 36296))
-# t.setTravelPerIncrement((7200, 20189))
+t.setTravelPerIncrement((7200, 20189))
+t.travelPerDay = 7200 * 2
+
+t.getNextStopDetails()
+# t.addStop(["ChIJ_yI7V3BFI4gR4K98PVlIEiQ", "ChIJ0XXQUFE-OogR2w6dkGjqhu0", "ChIJ7wHa54k-OogRdXZAth3Jz7M", "ChIJo0BrfAxSI4gR0XjDWhB5Ne8", "ChIJ0XXQUFE-OogR2w6dkGjqhu0"], ["f", "f", "f", "f", "f"])
+t.addStop(["ChIJ_yI7V3BFI4gR4K98PVlIEiQ"], ['f'])
+t.getNextStopDetails()
 
 # t.getNextStopDetails()
 # t.addStop(["ChIJ_yI7V3BFI4gR4K98PVlIEiQ", "ChIJ0XXQUFE-OogR2w6dkGjqhu0", "ChIJ7wHa54k-OogRdXZAth3Jz7M", "ChIJo0BrfAxSI4gR0XjDWhB5Ne8", "ChIJ0XXQUFE-OogR2w6dkGjqhu0"], ["f", "f", "f", "f", "f"])
-# print(t.getNextStopDetails())
+# print(t.getNextStopDetails()) 
