@@ -1,3 +1,14 @@
 .NavBar {
   display: flex;
+  height: 3em;
+  justify-content: flex-end;
 }
+
+.greeting_container {
+  margin-right: 2em;
+  margin-top: 1.5em;
+  width: 12em;
+  font-family: Circular, -apple-system, BlinkMacSystemFont, Roboto, Helvetica Neue, sans-serif;;
+  font-weight: bold;
+}
+
