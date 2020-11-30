@@ -73,7 +73,7 @@ const TestForm = () => {
   };
 
   useEffect(() => {
-    registerCar(car, userId);
+    dispatch(postCar(car, userId));
   }, [car]);
 
   const getStepContent = step => {

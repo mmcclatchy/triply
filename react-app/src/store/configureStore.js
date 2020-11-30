@@ -1,9 +1,10 @@
 import { createStore, applyMiddleware, combineReducers, compose } from 'redux';
+import { loadState, saveState } from '../services/utilities'
 import thunk from 'redux-thunk';
-import api from './middleware/api';
 import utilities from './reducers/utilities';
 import authentication from './reducers/authentication';
 import directionsRedux from './reducers/directions';
+import api from './middleware/api';
 import cars from './reducers/cars';
 import stops from './reducers/stops';
 import trips from './reducers/trips';
@@ -19,15 +20,27 @@ export const reducer = combineReducers({
   trips,
   stops,
   cars,
-  setDuration
+  setDuration,
 });
 
-const configureStore = initialState => {
-  return createStore(
-    reducer,
-    initialState,
-    composeEnhancers(applyMiddleware(thunk, api))
-  );
-};
 
-export default configureStore;
+const persistedState = loadState();
+const store = createStore(
+  reducer,
+  persistedState,
+  composeEnhancers(applyMiddleware(thunk, api))
+);
+
+store.subscribe(() => {
+  saveState({
+    authentication: store.getState().authentication,
+    utilities: store.getState().utilities,
+    directionsRedux: store.getState().directionsRedux,
+    trips: store.getState().trips,
+    stops: store.getState().stops,
+    cars: store.getState().cars,
+    setDuration: store.getState().setDuration,
+  });
+});
+
+export default store
