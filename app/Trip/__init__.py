@@ -58,13 +58,13 @@ class TripClass:
         self.gasEveryStop = False
 
     def setStartLocationFromString(self, startLocationString):
-        url = self.useThisUrlToGetCordsForAPoint + parse.quote_plus(startLocationString)
+        url = self.useThisUrlToGetCordsForAPoint + parse.quote(startLocationString)
         r = requests.get(url)
         r = r.json()
         self.startCor = r["candidates"][0]["geometry"]["location"]
 
     def setEndLocationFromString(self, endLocationString):
-        url = self.useThisUrlToGetCordsForAPoint + parse.quote_plus(endLocationString)
+        url = self.useThisUrlToGetCordsForAPoint + parse.quote(endLocationString)
         r = requests.get(url)
         r = r.json()
         self.endCor = r["candidates"][0]["geometry"]["location"]
@@ -124,7 +124,6 @@ class TripClass:
             self.travelPerIncrement = (self.timeBeforeRunningOutOfGas, "placeholder...lol")
             self.gasEveryStop = True
         
-
 
     def indexSteps(self):
         index = []
@@ -282,7 +281,7 @@ class TripClass:
         url = self.basicLocalSearch
         url = url + "&location="
         url = url + str(searchCord["lat"]) + "," + str(searchCord["lng"])
-        url = url + "&keyword=" + parse.quote_plus(searchQuery)
+        url = url + "&keyword=" + parse.quote(searchQuery)
         url = url + "&rankby=distance"
         if kwargs.get("type"):
             url = url + "&type=" + kwargs.get("type")
@@ -320,7 +319,7 @@ class TripClass:
             j += 1
         timeSinceLastSleep += (self.getDistanceBetweenTwoPoints(cords, wp["start_location"]) / averageMetersPerSecond) * 2
         if timeSinceLastSleep > self.travelPerDay:
-            return True
+            return (2, 4)
         else:
             return False
         
@@ -369,8 +368,9 @@ class TripClass:
             searchQuery = foodQuery
             url = self.placeSearchUrlGenerator(searchQuery, searchBuffer[len(searchBuffer) - 1])
             if hotel:
-                searchQuery = "hotel"
+                searchQuery = str(int((hotel[0]+hotel[1])/2)) + " star hotel" 
                 url = self.placeSearchUrlGenerator(searchQuery, searchBuffer[len(searchBuffer) - 1], type="lodging")
+                print(url)
             r = requests.get(url)
             r = r.json()
             for option in r["results"]:
@@ -469,54 +469,66 @@ class TripClass:
             result += " and " + str(minutes) + " Minutes"
         return result
 
-        
+    def editStop(self, newPlaceId, **kwargs):
+        i = kwargs.get("stopIndex")
+        oldId = kwargs.get("oldPlaceId")
+        if i:
+            self.stops[i] = newPlaceId
+        elif oldPlaceId:
+            self.stops[self.stops.index(oldPlaceId)] = newPlaceId
+        else:
+            return None
+        self.createDirection()
 
 
 
 
-t = TripClass()
-t.setStartLocationFromString("Holland, mi")
-t.setEndLocationFromString("California")
-t.milesToRefuel = 15
-# t.setTravelPerIncrement(20189)
-t.createDirection()
-
-# t.milesToRefuel = 15
-print(t.getNextStopDetails(fordQuery = "Mexican"))
-
-# # # print(t.getDistance("cwoiGvvacNGAEAECUK_@QuAm@]OyB}@u@]C?ECmBy@OGSIWKo@Y[KgAe@oAg@sAi@m@[OGg@]USIIMKi@m@W[i@k@IKMQQOIKa@g@MMqA_Bo@}@s@w@g@o@SU_CoCiBuB{AiBa@i@MSIQKOIOGSIMQa@Sc@IWMYQo@yAwEgAmD[iAc@mA[gAIYG]AECQEYOkAo@}FK{@O{@qAsISuA{@qGy@yFIc@Gk@Ew@QeGAUAa@C{@Ci@EkBIiCMeDCk@QyEAIQ_EAYOqDA[SsDGqACo@Gs@Mu@G]Mm@I_@[{AWoAGWqAoEsAuEMi@]cAKWWm@Q]Uc@U_@k@_AeAcB_@k@gAiBWc@aA}Ao@cAiAiBu@mAmB_DeAcBYg@OWmCwEiBsCeEmHa@q@w@uAU]c@y@i@eAO[Q]MY[o@O_@kBaEyC{GMYYk@q@wAKSGOIMe@{@g@}@aAyAWa@S[W]_@k@a@k@OUm@y@e@o@_@i@?E?E?AAAACGIi@w@q@aAaAwA_@k@wCiE[c@i@u@OSSWCEOOMMMO]]][UUKIWWMKKKA?]Yg@_@MKCCIG[Og@YOIo@[kAo@gE{B_CmAi@[_Ag@s@_@yAw@mAq@ECECCCE?E?G?ECkCaBMIo@]]QgAo@]OwEiCWMcAi@_@OcAi@e@U[SgBaAg@We@Wc@UOIMGq@]cAk@IEOG_Ai@g@WOGmAq@}A{@WMUMWQ_CyAGE]S{@q@AAg@a@a@]EEo@k@UWY[MMGI_AgAcAkAWYw@aAg@m@QSkAsAwAcBOSwAeBg@m@cAmAc@i@kByB_CmCs@}@]a@sA}AoA{A{AiBeD_EiC}CiAsAUY_AiA]a@EEqA_B]_@SYKKi@o@w@_A_AkAuAaBsA_BcBsBaAiAiAuAg@m@[]cBuBaAkAW[e@i@_AiAGIm@u@a@c@k@s@Y][_@_AiAu@}@gC{CwBkCkBwBY]s@{@i@m@y@_AKKy@_A_@c@aAgAw@{@SW_BiBi@m@i@o@oB{BkAuAGG{@_Ak@s@gE}EEG{@aAg@k@qCaDkC{CkAsAACw@}@k@m@m@q@w@aAOSY]s@y@gAmAmAqAe@i@_BgBs@y@q@u@cBmB{AcBkC{Cg@k@cAkAiAoAOQgBqBi@k@SSk@m@i@k@QQe@a@EEGECCCAKIYWm@k@SSGIGGsAmAwBmBMOy@q@CCC?CAAC[YUUSUWWaA{@g@e@eB}Aw@s@y@w@WSeB{Aq@i@a@]qAgAcA{@_@Y]Y]Yy@o@{@s@cBsAq@k@u@o@_Au@yAqAKIaA_A[Yi@g@WWg@i@QQ}@w@i@i@e@i@WUc@a@m@i@wAmAyCgCoCcCqAiAiEyD}CsCg@c@kCaC[Yk@g@cA}@qAmAcA}@uEcEWS{@w@US}@y@MKg@e@q@m@o@i@i@e@gAaAMMs@m@OOi@e@a@_@GGKIw@q@_@[Y[k@e@g@c@aA_Ay@q@uCiC}AuAUSSQUUSSWSUSMMIGkAeAyAqA][}CoCQD[Wc@c@Ma@ACCCSUa@a@QYYe@We@O[O_@IUMi@"))
-# # # print(t.getDistanceBetweenTwoPoints({"lat":43.6672211, "lng":-79.3125987}, {"lat": 43.7739717, "lng": -79.1830736}))
-# # # print(t.stops[0].food)
-# # # print("NEW STUFFFFFF!!!!!!!!!!")
-# t.setEndCor({"lat": 40.712776, "lng": -74.005974})
-# t.setStartCor({"lat":42.789379, "lng":-90.207801})
+# t = TripClass()
+# t.setStartLocationFromString("Holland, mi")
+# t.setEndLocationFromString("California")
+# t.travelPerDay = 21600
+# # t.setTravelPerIncrement(20189)
 # t.createDirection()
-# print("GOT TO THIS SPOT")
-# # # print(t.stops)
-# # # print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-# # # print(t.directions)
-# # # print(t.totalTravelTime)
-# # # print(t.totalTravelDistance)
-# t.setStartCor({"lat": 40.365232, "lng": -98.109069})
-# t.setEndCor({"lat":40.524798, "lng": -98.108422})
-# t.createDirection()
-# print(t.prettyPrintDuration(), t.prettyPrintTime())
-# # # print(t.stepTimeIndex)
-# # t.setTravelPerIncrement((34710, 36296))
 
-# # t.setTravelPerIncrement((7200, 20189))
-# # t.travelPerDay = 7200 * 2
+# # t.milesToRefuel = 15
 
-# # t.getNextStopDetails()
+
+# # # # print(t.getDistance("cwoiGvvacNGAEAECUK_@QuAm@]OyB}@u@]C?ECmBy@OGSIWKo@Y[KgAe@oAg@sAi@m@[OGg@]USIIMKi@m@W[i@k@IKMQQOIKa@g@MMqA_Bo@}@s@w@g@o@SU_CoCiBuB{AiBa@i@MSIQKOIOGSIMQa@Sc@IWMYQo@yAwEgAmD[iAc@mA[gAIYG]AECQEYOkAo@}FK{@O{@qAsISuA{@qGy@yFIc@Gk@Ew@QeGAUAa@C{@Ci@EkBIiCMeDCk@QyEAIQ_EAYOqDA[SsDGqACo@Gs@Mu@G]Mm@I_@[{AWoAGWqAoEsAuEMi@]cAKWWm@Q]Uc@U_@k@_AeAcB_@k@gAiBWc@aA}Ao@cAiAiBu@mAmB_DeAcBYg@OWmCwEiBsCeEmHa@q@w@uAU]c@y@i@eAO[Q]MY[o@O_@kBaEyC{GMYYk@q@wAKSGOIMe@{@g@}@aAyAWa@S[W]_@k@a@k@OUm@y@e@o@_@i@?E?E?AAAACGIi@w@q@aAaAwA_@k@wCiE[c@i@u@OSSWCEOOMMMO]]][UUKIWWMKKKA?]Yg@_@MKCCIG[Og@YOIo@[kAo@gE{B_CmAi@[_Ag@s@_@yAw@mAq@ECECCCE?E?G?ECkCaBMIo@]]QgAo@]OwEiCWMcAi@_@OcAi@e@U[SgBaAg@We@Wc@UOIMGq@]cAk@IEOG_Ai@g@WOGmAq@}A{@WMUMWQ_CyAGE]S{@q@AAg@a@a@]EEo@k@UWY[MMGI_AgAcAkAWYw@aAg@m@QSkAsAwAcBOSwAeBg@m@cAmAc@i@kByB_CmCs@}@]a@sA}AoA{A{AiBeD_EiC}CiAsAUY_AiA]a@EEqA_B]_@SYKKi@o@w@_A_AkAuAaBsA_BcBsBaAiAiAuAg@m@[]cBuBaAkAW[e@i@_AiAGIm@u@a@c@k@s@Y][_@_AiAu@}@gC{CwBkCkBwBY]s@{@i@m@y@_AKKy@_A_@c@aAgAw@{@SW_BiBi@m@i@o@oB{BkAuAGG{@_Ak@s@gE}EEG{@aAg@k@qCaDkC{CkAsAACw@}@k@m@m@q@w@aAOSY]s@y@gAmAmAqAe@i@_BgBs@y@q@u@cBmB{AcBkC{Cg@k@cAkAiAoAOQgBqBi@k@SSk@m@i@k@QQe@a@EEGECCCAKIYWm@k@SSGIGGsAmAwBmBMOy@q@CCC?CAAC[YUUSUWWaA{@g@e@eB}Aw@s@y@w@WSeB{Aq@i@a@]qAgAcA{@_@Y]Y]Yy@o@{@s@cBsAq@k@u@o@_Au@yAqAKIaA_A[Yi@g@WWg@i@QQ}@w@i@i@e@i@WUc@a@m@i@wAmAyCgCoCcCqAiAiEyD}CsCg@c@kCaC[Yk@g@cA}@qAmAcA}@uEcEWS{@w@US}@y@MKg@e@q@m@o@i@i@e@gAaAMMs@m@OOi@e@a@_@GGKIw@q@_@[Y[k@e@g@c@aA_Ay@q@uCiC}AuAUSSQUUSSWSUSMMIGkAeAyAqA][}CoCQD[Wc@c@Ma@ACCCSUa@a@QYYe@We@O[O_@IUMi@"))
+# # # # print(t.getDistanceBetweenTwoPoints({"lat":43.6672211, "lng":-79.3125987}, {"lat": 43.7739717, "lng": -79.1830736}))
+# # # # print(t.stops[0].food)
+# # # # print("NEW STUFFFFFF!!!!!!!!!!")
+# # t.setEndCor({"lat": 40.712776, "lng": -74.005974})
+# # t.setStartCor({"lat":42.789379, "lng":-90.207801})
+# # t.createDirection()
+# # print("GOT TO THIS SPOT")
+# # # # print(t.stops)
+# # # # print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+# # # # print(t.directions)
+# # # # print(t.totalTravelTime)
+# # # # print(t.totalTravelDistance)
+# # t.setStartCor({"lat": 40.365232, "lng": -98.109069})
+# # t.setEndCor({"lat":40.524798, "lng": -98.108422})
+# # t.createDirection()
+# # print(t.prettyPrintDuration(), t.prettyPrintTime())
+# # # # print(t.stepTimeIndex)
+# # # t.setTravelPerIncrement((34710, 36296))
+# # # t.setTravelPerIncrement((7200, 20189))
+# # # t.travelPerDay = 7200 * 2
+
+# # # t.getNextStopDetails()
 # t.addStop(["ChIJ_yI7V3BFI4gR4K98PVlIEiQ", "ChIJ0XXQUFE-OogR2w6dkGjqhu0", "ChIJ7wHa54k-OogRdXZAth3Jz7M", "ChIJo0BrfAxSI4gR0XjDWhB5Ne8", "ChIJ0XXQUFE-OogR2w6dkGjqhu0"], ["f", "f", "f", "f", "f"])
-# # t.addStop(["ChIJ_yI7V3BFI4gR4K98PVlIEiQ"], ['f'])
-# # t.getNextStopDetails()
-
+# print(t.getNextStopDetails(fordQuery = "Mexican"))
 # n = TripClass()
-# print(t.getDirections())
 # n.constructFromDirections(t.getDirections())
-# print(n.stopKey)
+# print(n.stopKey, n.stops)
+# # # t.addStop(["ChIJ_yI7V3BFI4gR4K98PVlIEiQ"], ['f'])
+# # # t.getNextStopDetails()
 
-# t.getNextStopDetails()
-# t.addStop(["ChIJ_yI7V3BFI4gR4K98PVlIEiQ", "ChIJ0XXQUFE-OogR2w6dkGjqhu0", "ChIJ7wHa54k-OogRdXZAth3Jz7M", "ChIJo0BrfAxSI4gR0XjDWhB5Ne8", "ChIJ0XXQUFE-OogR2w6dkGjqhu0"], ["f", "f", "f", "f", "f"])
-# print(t.getNextStopDetails())
+# # n = TripClass()
+# # print(t.getDirections())
+# # n.constructFromDirections(t.getDirections())
+# # print(n.stopKey)
+
+# # t.getNextStopDetails()
+# # t.addStop(["ChIJ_yI7V3BFI4gR4K98PVlIEiQ", "ChIJ0XXQUFE-OogR2w6dkGjqhu0", "ChIJ7wHa54k-OogRdXZAth3Jz7M", "ChIJo0BrfAxSI4gR0XjDWhB5Ne8", "ChIJ0XXQUFE-OogR2w6dkGjqhu0"], ["f", "f", "f", "f", "f"])
+# # print(t.getNextStopDetails())
