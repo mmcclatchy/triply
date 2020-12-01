@@ -10,6 +10,7 @@ import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import './TripPage.css';
 import { useDispatch, useSelector} from 'react-redux';
 import { useHistory } from 'react-router-dom';
+import { putTrip } from '../store/actions/trips'
 import { setDuration } from '../store/actions/setDuration';
 
 const StartOfTripForm = props => {
@@ -45,19 +46,25 @@ const StartOfTripForm = props => {
         selectedFood.push(el.lastChild.id);
       }
     });
-    dispatch(
-      setDuration({
-        daily_timelimit: sleepTime,
-        stop_timelimit: stopTime,
-        avoidTolls: tolls,
-        selectedFoods: selectedFood,
-        tripCar: selectedCar
+    dispatch(putTrip(
+      {
+        db: {
+          // carId: carId,
+          dailyTimelimit: sleepTime,
+          stopTimelimit: stopTime,
+          avoidTolls: tolls,
+        },
+        preferences: {
+          foodQuery: selectedFood,
+        }
       })
     );
     history.push('/create-trip');
   };
+  
   const handleAdditionalOptionChange = e =>
     setAdditionalOption(e.target.value);
+  
   const handleAdditionalOptionAddition = e => {
     if (!additionalOption) {
       return;
