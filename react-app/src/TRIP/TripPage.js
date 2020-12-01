@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Map from '../Map/Map';
 import TripSummary from './TripSummary';
 import TripTimeline from '../Timeline/TripTimeline';
