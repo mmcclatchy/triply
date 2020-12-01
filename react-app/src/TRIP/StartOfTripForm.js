@@ -5,6 +5,7 @@ import LocalGasStationIcon from '@material-ui/icons/LocalGasStation';
 import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
 import HotelIcon from '@material-ui/icons/Hotel';
 import FastfoodIcon from '@material-ui/icons/Fastfood';
+import DirectionsCarIcon from '@material-ui/icons/DirectionsCar';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import './TripPage.css';
 import { useDispatch, useSelector} from 'react-redux';
@@ -16,7 +17,7 @@ const StartOfTripForm = props => {
   const history = useHistory();
 
   const [car, setCar] = useState([])
-  // const [cars, setCars] = useState([]);
+  const [selectedCar, setSelectedCar] = useState([]);
   const [stopTime, setStopTime] = useState(5400);
   const [sleepTime, setSleepTime] = useState(18000);
   const [tolls, setTolls] = useState(false);
@@ -30,7 +31,7 @@ const StartOfTripForm = props => {
   const [additionalOption, setAdditionalOption] = useState('');
   const [selectedFoods, setSelectedFoods] = useState([]);
   const userId = useSelector(state => state.authentication.userId);
-  const handleCarChange = e => setCar(e.target.value);
+  const handleCarChange = e => {setSelectedCar(e.target.value)};
   const handleStopChange = e => setStopTime(e.target.value);
   const handleSleepChange = e => setSleepTime(e.target.value);
   const handleCheck = e => {
@@ -49,8 +50,8 @@ const StartOfTripForm = props => {
         daily_timelimit: sleepTime,
         stop_timelimit: stopTime,
         avoidTolls: tolls,
-        selectedFoods: selectedFood
-        // tripCar: car
+        selectedFoods: selectedFood,
+        tripCar: selectedCar
       })
     );
     history.push('/create-trip');
@@ -123,12 +124,12 @@ const StartOfTripForm = props => {
 
           <br />
 
-          <LocalGasStationIcon />
+          <DirectionsCarIcon />
           <div>
             <label>Which car will you be driving?</label>
-            <select value={car} onChange={handleCarChange}>
-              {car &&
-                Object.keys(car).map(key => {
+            <select value={selectedCar} onChange={handleCarChange}>
+              {/* {car && */}
+                { Object.keys(car).map(key => {
                   const current = car[`${key}`]
                   return (
                     <option key={current.id} value={current.id}>{current.year}{current.make}{current.model}</option>
