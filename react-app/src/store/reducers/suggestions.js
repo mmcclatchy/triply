@@ -6,6 +6,7 @@ export default function reducer(state = [], { type, payload }) {
   console.log('SUGGESTIONS REDUCER: ', type, payload)
   switch (type) {
     case SET_SUGGESTIONS: 
+        // return [...state, payload.suggestions]
       return [
         {
           coordinates: '23498, 13890',

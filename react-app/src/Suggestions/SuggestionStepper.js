@@ -44,11 +44,13 @@ const useStyles = makeStyles(theme => ({
 const generateContent = array => {
   let obj = {};
   array.forEach((n, i) => {
-    let step = obj[i + 1];
+    console.log("INSIDE")
+    let step = obj[i];
     if (step === undefined) {
-      obj[i + 1] = n;
+      obj[i] = n;
     }
   });
+  console.log("THIS IS THE OBJ", obj)
   return obj;
 };
 
@@ -63,19 +65,20 @@ export default function SuggestionStepper() {
   const [hotels, setHotels] = useState([]);
   const [restaurants, setRestaurants] = useState([]);
   const [gasStations, setGasStations] = useState([]);
+  const [content, setContent] = useState([])
   const suggestions = useSelector(state => state.suggestions)
   
   const classes = useStyles();
-  let content;
+  console.log("I just wiped content")
   useEffect(() => {
     console.log('SUGGESTIONS IN STEPPER', suggestions)
-    if (!suggestions) return
-    content = generateContent(suggestions);
+    if (!suggestions.length) return
+      setContent(generateContent(suggestions));
     
   }, [suggestions])
   
   useEffect(() => {
-    if (!suggestions) return
+    if (!content) return
     function getSteps() {
       const length = suggestions.length;
       const steps = [];
@@ -88,13 +91,16 @@ export default function SuggestionStepper() {
   }, [suggestions]);
 
   useEffect(() => {
-    if (!suggestions) return
+    console.log("steps were changed", content)
+    if (!content) return
     function getContent() {
-      const info = content[activeStep + 1];
+      const info = content[activeStep];
+      console.log(info, "!!!!!!!!!")
       if (info) {
         setData(info);
         setHotels(info.suggestions.Hotel);
         setRestaurants(info.suggestions.Restaurant);
+        console.log(info.suggestions.Restaurant, "!!!!!!!!!!!!!!!!!!!!!!!!!")
         setGasStations(info.suggestions.Gas);
       }
     }

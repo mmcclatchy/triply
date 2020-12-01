@@ -49,7 +49,7 @@ const SDetails = ({
     <>
       <div>
         <div className='sdetails__title'>
-          <h2>Suggested Stop at {node.time.slice(10)}</h2>
+          {/* <h2>Suggested Stop at {node.time.slice(10)}</h2> */}
         </div>
 
         <div className='sdetails__containers'>
@@ -62,9 +62,9 @@ const SDetails = ({
                 return (
                   <>
                     <div className='inner__details'>
-                      <div>
+                      {/* <div>
                         <img width='70px' height='70px' src={e.img_url} />
-                      </div>
+                      </div> */}
                       <div>
                         <Typography variant='h6' component='h1'>
                           {e.name}
@@ -72,9 +72,7 @@ const SDetails = ({
                         <Typography>
                           {e.city}, {e.state}
                         </Typography>
-                      </div>
-
-                      <BookButton
+                        <BookButton
                         registerRestaurant={registerRestaurant}
                         registerGas={registerGas}
                         registerHotel={registerHotel}
@@ -82,6 +80,9 @@ const SDetails = ({
                         type={e.type}
                         booked={checkBooked(e.type, i)}
                       />
+                      </div>
+
+                      
                     </div>
                   </>
                 );
@@ -98,9 +99,9 @@ const SDetails = ({
                 return (
                   <>
                     <div className='inner__details'>
-                      <div>
+                      {/* <div>
                         <img width='70px' height='70px' src={e.img_url} />
-                      </div>
+                      </div> */}
                       <div>
                         <Typography variant='h6' component='h1'>
                           {e.name}
@@ -134,9 +135,9 @@ const SDetails = ({
                 return (
                   <>
                     <div className='inner__details'>
-                      <div>
+                      {/* <div>
                         <img width='70px' height='70px' src={e.img_url} />
-                      </div>
+                      </div> */}
                       <div>
                         <Typography variant='h6' component='h1'>
                           {e.name}
