@@ -17,8 +17,8 @@ import SuggestionStepper from '../Suggestions/SuggestionStepper';
 const StartOfTripForm = props => {
   const dispatch = useDispatch();
   const userName = useSelector(state => state.authentication.userName);
-  const tripId = useSelector(state => state.trips.payload);
-  console.log(tripId);
+  const trip = useSelector(state => state.trips.payload);
+  console.log(trip);
 
   const [car, setCar] = useState([]);
   const [selectedCar, setSelectedCar] = useState([]);
@@ -57,7 +57,7 @@ const StartOfTripForm = props => {
       putTrip(
         {
           db: {
-            carId: car.id,
+            carId: selectedCar,
             dailyTimeLimit: sleepTime,
             stopTimeLimit: stopTime,
             avoidTolls: tolls
@@ -66,7 +66,7 @@ const StartOfTripForm = props => {
             foodQuery: selectedFood
           }
         },
-        tripId
+        trip.currentId
       )
     );
     setToggle(false);

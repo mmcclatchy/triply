@@ -83,10 +83,9 @@ def post_trip(user_id):
 
         # Create a json object structured for Redux slices of state
         trip_json = jsonify({
-            'payload': {'trips': normalize(trip.to_dict())},
+            'payload': {'trips': normalize(trip.to_dict()), 'currentId': trip.id},
             'timeline': trip.get_timeline()
         })
-        print('********\n\nTRIP JSON: ', trip.to_dict(), '\n\n\n')
         return trip_json
 
     except SQLAlchemyError as e:
@@ -101,42 +100,44 @@ def post_trip(user_id):
 @login_required
 def modify_trip(trip_id):
     data = request.json
-
+    
     # Amend the Trip Model with attributes sent from Frontend for the DB
     trip = Trip.query.get(trip_id)
     for key, value in data['db'].items():
         setattr(trip, snake_case(key), value)
 
     # Query for the Trip's car
-    car = Car.query.get(data['carId'])
+    car = Car.query.get(data['db']['carId'])
 
     # Recreate an instance of the Trip Algorithm
     trip_algo = TripClass(
         startCor=coords_from_str(trip.start_location),
         endCor=coords_from_str(trip.end_location),
-        travelPerDay=data['dailyTimeLimit'],
-        travelPerIncrement=data['stopTimeLimit'],
+        travelPerDay=data['db']['dailyTimeLimit'],
+        travelPerIncrement=data['db']['stopTimeLimit'],
         milesToRefuel=car.miles_to_refuel,
-        avoidTolls=data['avoidTolls']
+        avoidTolls=data['db']['avoidTolls']
     )
 
     # Recreate the directions of the Algorithm
-    trip_algo.constructFromDirections(trip['directions'])
-
+    trip_algo.constructFromDirections(trip.directions)
+    
+    
+    print('********\n\n', data, '\n')
     # Get preferences and search next stop for places that match preferences
-    food_query, hotel, gas = get_preferences(data['preferences'])
-    suggestions = trip_algo.getNextStopDetails(foodQuery=food_query,
-                                               hotel=hotel,
-                                               gas=gas)
+    # food_query, hotel, gas = get_preferences(data['preferences'])
+    suggestions = trip_algo.getNextStopDetails(foodQuery=data['preferences']['foodQuery'][0],
+                                               hotel=data.get('hotel'),
+                                               gas=data.get('gas'))
 
     # Adjust the directions and save to the database model
-    trip_algo.getDirections()
-    trip['directions'] = trip_algo['directions']
+    directions = trip_algo.getDirections()
+    trip.directions = directions
 
     try:
         db.session.commit()
         trip_json = jsonify({
-            'payload': {'trips': normalize(trip.to_dict())},
+            'payload': {'trips': normalize(trip.to_dict()), 'currentId': trip.id},
             'suggestions': {'suggestions': suggestions},
             'timeline': trip.get_timeline()
         })

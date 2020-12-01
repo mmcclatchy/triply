@@ -531,13 +531,14 @@ class TripClass:
           "name": obj["name"],
           'place_id': obj["place_id"],
           'type': type,
-          'city': obj["vicinity"].split(",")[1],
           'img_url':
             "https://img.icons8.com/ios-filled/50/000000/next-location.png",
-          'street_address': obj["vicinity"].split(",")[0],
         }
         if obj.get("photo"):
             result["img_url"] = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=" + obj["photos"][0]["photo_reference"] + "&key=" + os.environ.get("FRONTEND_API_KEY")
+        if obj.get('vicinity'):
+            result['city'] = obj["vicinity"].split(",")[1]
+            result['street_address'] = obj["vicinity"].split(",")[0]
         return result
 
     def getCordsOfWayPoints(self):
