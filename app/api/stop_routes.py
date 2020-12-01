@@ -47,6 +47,7 @@ def post_stop(trip_id):
     restaurant, gas, hotel = get_places(data)
 
     food_preference = trip.next_cuisine_option(data['cuisines'])
+    print('****************\n\n', food_preference, '\n\n**************')
 
     # If the place ids include a hotel, send suggestions
     # for food and gas based on the location of the hotel
