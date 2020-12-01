@@ -35,6 +35,7 @@ const composeEnhancers =
 const persistedState = loadState();
 const store = createStore(
   reducer,
+  // initialState,
   persistedState,
   composeEnhancers(applyMiddleware(thunk, api))
 );

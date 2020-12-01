@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { algorithm } from './dummy_suggestions';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { postStop } from '../store/actions/stops';
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
@@ -63,13 +63,21 @@ export default function SuggestionStepper() {
   const [hotels, setHotels] = useState([]);
   const [restaurants, setRestaurants] = useState([]);
   const [gasStations, setGasStations] = useState([]);
-
+  const suggestions = useSelector(state => state.suggestions.suggestions)
+  
   const classes = useStyles();
-  const content = generateContent(foo.output);
-
+  let content;
   useEffect(() => {
+    console.log('SUGGESTIONS IN STEPPER', suggestions)
+    if (!suggestions) return
+    content = generateContent(suggestions);
+    
+  }, [suggestions])
+  
+  useEffect(() => {
+    if (!suggestions) return
     function getSteps() {
-      const length = foo.output.length;
+      const length = suggestions.length;
       const steps = [];
       for (let i = 0; i < length; i++) {
         steps.push(`Stop Option ${i + 1}`);
@@ -77,9 +85,10 @@ export default function SuggestionStepper() {
       setSteps(steps);
     }
     getSteps();
-  }, []);
+  }, [suggestions]);
 
   useEffect(() => {
+    if (!suggestions) return
     function getContent() {
       const info = content[activeStep + 1];
       if (info) {

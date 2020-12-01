@@ -412,11 +412,11 @@ class TripClass:
         timeOfStop = self.convertSecondsTravelSecondsToDTOfStop(self.stopTimeIndex[-1] + self.travelPerIncrement[0])
         if gas and not hotel:
             gasOptions = self.getGasNearLocation("placeholder", cords=listOfFoundSpots[0]["geometry"]["location"])
-            listOfFoundSpots = {"time": timeOfStop, "Restaurant": [self.convertToFrontEndFormat(x, "food") for x in listOfFoundSpots], "Gas": [self.convertToFrontEndFormat(x, gas) for x in gasOptions["gas"]]}
+            listOfFoundSpots = {"time": timeOfStop, 'suggestions': {"Restaurant": [self.convertToFrontEndFormat(x, "food") for x in listOfFoundSpots], "Gas": [self.convertToFrontEndFormat(x, gas) for x in gasOptions["gas"]]}}
         elif hotel:
-            listOfFoundSpots = {"time": timeOfStop, "Hotel": [self.convertToFrontEndFormat(x, "hotel") for x in listOfFoundSpots]}
+            listOfFoundSpots = {"time": timeOfStop, 'suggestions': {"Hotel": [self.convertToFrontEndFormat(x, "hotel") for x in listOfFoundSpots]}}
         else:
-            listOfFoundSpots = {"time": timeOfStop, "Restaurant": [self.convertToFrontEndFormat(x, "food") for x in listOfFoundSpots]}
+            listOfFoundSpots = {"time": timeOfStop, 'suggestions': {"Restaurant": [self.convertToFrontEndFormat(x, "food") for x in listOfFoundSpots]}}
         return listOfFoundSpots
 
 
@@ -536,9 +536,9 @@ class TripClass:
         }
         if obj.get("photo"):
             result["img_url"] = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=" + obj["photos"][0]["photo_reference"] + "&key=" + os.environ.get("FRONTEND_API_KEY")
-        if obj.get('vicinity'):
-            result['city'] = obj["vicinity"].split(",")[1]
-            result['street_address'] = obj["vicinity"].split(",")[0]
+        # if obj.get('vicinity'):
+            # result['city'] = obj["vicinity"].split(",")[1]
+            # result['street_address'] = obj["vicinity"].split(",")[0]
         return result
 
     def getCordsOfWayPoints(self):
