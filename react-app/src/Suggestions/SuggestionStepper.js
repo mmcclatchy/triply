@@ -176,7 +176,7 @@ export default function SuggestionStepper() {
 
   return (
     <div className={classes.root}>
-      <Stepper activeStep={activeStep}>
+      <Stepper activeStep={activeStep} orientation='vertical'>
         {steps.map(label => {
           const stepProps = {};
           const labelProps = {};
