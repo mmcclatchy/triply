@@ -99,15 +99,20 @@ def post_trip(user_id):
 def modify_trip(trip_id):
     data = request.json
 
-    # Amend the Trip Model with attributes sent from Frontend
+    # Amend the Trip Model with attributes sent from Frontend for the DB
     trip = Trip.query.get(trip_id)
-    for key, value in data.items():
-        setattr(trip, key, value)
+    for key, value in data['db'].items():
+        setattr(trip, snake_case(key), value)
 
-    trip_instance.createDirection()
+    # Reconstruct the Trip
+    trip_algo = TripClass()
+    trip_algo.constructFromDirections(trip['directions'])
 
-    trip_instance.getDirections()
-    trip['directions'] = trip_instance['directions']
+    food_query = data['preferences']['foodQuery']
+    trip_algo.getNextStopDetails()
+
+    trip_algo.getDirections()
+    trip['directions'] = trip_algo['directions']
 
     try:
         db.session.commit()

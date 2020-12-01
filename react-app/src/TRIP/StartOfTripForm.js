@@ -42,11 +42,17 @@ const StartOfTripForm = props => {
         selectedFood.push(el.lastChild.id);
       }
     });
-    dispatch(putTrip({
-        daily_timelimit: sleepTime,
-        stop_timelimit: stopTime,
-        avoidTolls: tolls,
-        selectedFoods: selectedFood
+    dispatch(putTrip(
+      {
+        db: {
+          // carId: carId,
+          dailyTimelimit: sleepTime,
+          stopTimelimit: stopTime,
+          avoidTolls: tolls,
+        },
+        preferences: {
+          foodQuery: selectedFood,
+        }
       })
     );
     history.push('/create-trip');

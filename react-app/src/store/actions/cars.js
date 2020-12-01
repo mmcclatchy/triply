@@ -2,16 +2,20 @@ import { API, SET_CAR, DELETE_CAR } from '../constants/constants';
 
 export const getCars = userId => ({
   type: API,
-  method: 'GET',
-  endpoint: `/users/${userId}/cars`,
-  actionConst: SET_CAR
+  payload: {
+    method: 'GET',
+    endpoint: `/users/${userId}/cars`,
+    actionConst: SET_CAR
+  }
 });
 
 export const getCar = carId => ({
   type: API,
-  method: 'GET',
-  endpoint: `/cars/${carId}`,
-  actionConst: SET_CAR
+  payload: {
+    method: 'GET',
+    endpoint: `/cars/${carId}`,
+    actionConst: SET_CAR
+  }
 });
 
 export const postCar = (car, userId) => {
