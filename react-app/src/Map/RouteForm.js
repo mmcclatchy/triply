@@ -94,7 +94,7 @@ const RouteForm = ({}) => {
       startLocation: or,
       endLocation: de
     };
-    console.log(new_trip);
+    console.log('ABOUT TO DISPATCH', new_trip);
     dispatch(postTrip(new_trip, userId));
     return history.push(`/create-trip`);
   };

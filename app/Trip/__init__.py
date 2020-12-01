@@ -64,17 +64,17 @@ class TripClass:
     def convertDepartureTime(self, dt):
         if not dt:
             return
-        t = dt.split(" ")[1]
+        t = dt.split("T")[1]
         t = t.split(":")
         hours = int(t[0])
         minutes = int(t[1])
-        seconds = int(t[2])
-        return seconds + (minutes * 60) + ((hours * 60) * 60)
+        return (minutes * 60) + ((hours * 60) * 60)
 
     def setStartLocationFromString(self, startLocationString):
         url = self.useThisUrlToGetCordsForAPoint + parse.quote(startLocationString)
         r = requests.get(url)
         r = r.json()
+        print('*******\n\n', r, '\n\n')
         self.startCor = r["candidates"][0]["geometry"]["location"]
 
     def setEndLocationFromString(self, endLocationString):
@@ -95,7 +95,7 @@ class TripClass:
             origin = str(self.startCor["lat"]) + "," + str(self.startCor["lng"])
             destination = str(self.endCor["lat"]) + "," + str(self.endCor["lng"])
             url = self.makeUrl(origin=origin, destination=destination)
-            print(url)
+            print('*********\n\n', url, '\n\n\n')
             if kwargs.get("waypoints"):
                 url += kwargs.get("waypoints")
             r = requests.get(url)

@@ -17,7 +17,7 @@ import SuggestionStepper from '../Suggestions/SuggestionStepper';
 const StartOfTripForm = props => {
   const dispatch = useDispatch();
   const userName = useSelector(state => state.authentication.userName);
-  const tripId = useSelector(state => state.trips.payload.trips.currentId);
+  const tripId = useSelector(state => state.trips.payload);
   console.log(tripId);
 
   const [car, setCar] = useState([]);

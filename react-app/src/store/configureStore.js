@@ -13,15 +13,20 @@ import setDuration from './reducers/setDurations';
 const composeEnhancers =
   window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
-export const reducer = combineReducers({
-  authentication,
-  utilities,
-  directionsRedux,
-  trips,
-  stops,
-  cars,
-  setDuration,
-});
+  const initialState = {
+    
+  }
+  
+  export const reducer = combineReducers({
+    authentication,
+    utilities,
+    directionsRedux,
+    trips,
+    stops,
+    cars,
+    setDuration,
+  });
+
 
 const persistedState = loadState();
 const store = createStore(

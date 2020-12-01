@@ -7,6 +7,7 @@ from app.utils import (
 )
 from sqlalchemy.exc import SQLAlchemyError
 from ..Trip import TripClass
+import json
 
 
 trip_routes = Blueprint('trips', __name__)
@@ -52,10 +53,11 @@ def post_trip(user_id):
     data = request.json
     origin = data['startLocation']
     destination = data['endLocation']
+    print('********\n\nORIGIN', origin, destination, '\n\n\n')
 
     # Create an instance of the Trip Algorithm
     # and set the origin and destination
-    trip_algo = TripClass(departureTime=data['time'])
+    trip_algo = TripClass(departureTime=data['startTime'])
     trip_algo.setStartLocationFromString(origin)
     trip_algo.setEndLocationFromString(destination)
 
@@ -63,15 +65,15 @@ def post_trip(user_id):
     # and create a dictionary of the information the Frontend needs
     trip_algo.createDirection()
     trip_dict = trip_algo.toDictForDatabase()
+    print('\n\n\n', trip_dict)
 
     # Create a model of the Trip for the DB
     trip = Trip(
         user_id=data['userId'],
         name=f'{origin} -> {destination}',
-        start_time=trip_dict['startTime'],
-        start_location=coords_to_str(trip_dict['start_location']),
-        end_time=trip_dict['end_time'],
-        end_location=coords_to_str(trip_dict['end_location']),
+        start_time=data['startTime'],
+        start_location=json.dumps(trip_dict['start_location']),
+        end_location=json.dumps(trip_dict['end_location']),
         directions=trip_dict['directions']
     )
 
@@ -84,6 +86,7 @@ def post_trip(user_id):
             'payload': {'trips': normalize(trip.to_dict())},
             'timeline': trip.get_timeline()
         })
+        print('********\n\nTRIP JSON: ', trip.to_dict(), '\n\n\n')
         return trip_json
 
     except SQLAlchemyError as e:
