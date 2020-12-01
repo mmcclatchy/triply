@@ -13,9 +13,7 @@ class Car(db.Model):
     miles_to_refuel = db.Column(db.Integer, nullable=False)
     mpg = db.Column(db.Float, nullable=False)
 
-    trips = db.relationship('Trip',
-                            backref=db.backref('car', lazy='joined'),
-                            lazy=True)
+    trips = db.relationship('Trip', back_populates='car', lazy=True)
 
     def to_dict(self):
         return {
