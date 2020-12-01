@@ -4,10 +4,12 @@ import { showForm, hideForm } from '../store/actions/utilities';
 import { Button } from '@material-ui/core';
 import './User.css';
 import TestForm from '../Car/TestForm';
+import { getTrips } from '../store/actions/trips'
 
 function User({ userId }) {
   const [user, setUser] = useState({});
   const [cars, setCars] = useState([]);
+  const [trips, setTrips] = useState([])
   const dispatch = useDispatch();
   const visible = useSelector(state => state.utilities.formVisible);
 
@@ -26,6 +28,10 @@ function User({ userId }) {
       setCars(data.cars);
     };
     getCars();
+  }, []);
+
+  useEffect(() => {
+   dispatch(getTrips(userId))
   }, []);
 
   if (!user) {

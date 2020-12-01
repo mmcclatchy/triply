@@ -21,9 +21,11 @@ const TripSummary = () => {
     <>
       <Paper variant='outlined' elevation={8}>
         <div className='trip_summary_container'>
+          {userName ?
           <Typography variant='h4' component='h1'>
             {userName}'s Trip
           </Typography>
+            : null}
 
           {details ? (
             <>
