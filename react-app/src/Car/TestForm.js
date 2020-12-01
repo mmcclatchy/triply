@@ -74,7 +74,7 @@ const TestForm = (props) => {
   };
 
   useEffect(() => {
-    if (Object.keys(car).length === 0) return
+    if (Object.keys(car).length === 0) return;
     dispatch(postCar(car, userId));
     dispatch(hideForm());
     props.setGettingCars(2)
@@ -159,7 +159,10 @@ const TestForm = (props) => {
 
   const getTank = async () => {
     const data = await getTankSize(make, model, year);
+<<<<<<< HEAD
     // console.log(data);
+=======
+>>>>>>> main
   };
 
   const resetForm = () => {
