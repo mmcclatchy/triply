@@ -9,24 +9,12 @@ const TripSummary = () => {
   const [details, setDetails] = useState(false);
   const userName = useSelector(state => state.authentication.userName);
   const dispatch = useDispatch();
-  const userId = useSelector(state => state.authentication.userId);
 
   const distance = useSelector(state => state.directionsRedux.distance);
   const duration = useSelector(state => state.directionsRedux.duration);
   const origin = useSelector(state => state.directionsRedux.origin);
   const destination = useSelector(state => state.directionsRedux.destination);
   const startTime = useSelector(state => state.directionsRedux.startTime);
-
-  useEffect(() => {
-    const new_trip = {
-      userId: userId,
-      startTime: startTime,
-      startLocation: origin,
-      endLocation: destination
-    };
-    console.log(new_trip);
-    dispatch(postTrip(new_trip, userId));
-  }, []);
 
   const showDetails = open => {
     setDetails(open);
