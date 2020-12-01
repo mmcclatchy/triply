@@ -1,4 +1,4 @@
-import { API, SET_DIRECTIONS, SET_SUGGESTIONS } from '../constants/constants';
+import { API, SET_TIMELINE, SET_SUGGESTIONS } from '../constants/constants';
 const baseUrl = process.env.REACT_APP_BASE_URL
 
 
@@ -18,9 +18,10 @@ const api = ({ dispatch, getState }) => next => async action => {
   
   
   if (response.ok) {
-    const { payload, suggestions } = await response.json();
+    const { payload, suggestions, timeline } = await response.json();
     
     if (suggestions) dispatch({ type: SET_SUGGESTIONS, suggestions })
+    if (timeline) dispatch({ type: SET_TIMELINE, timeline })
     
     dispatch({ type: actionConst, payload })
   }

@@ -76,7 +76,7 @@ def coords_from_str(coords):
 
 
 def create_stop_keys(data):
-    return [place_id[0] for place_id in data['placeIds']]
+    return [place_id[0].lower() for place_id in data['placeIds']]
 
 
 def create_place_id_list(data):
@@ -84,4 +84,9 @@ def create_place_id_list(data):
 
 
 def get_preferences(data):
-    
+    return [
+        data['preferences']['foodQuery'],
+        data['preferences']['hotel'],
+        data['preferences']['gas']
+    ]
+

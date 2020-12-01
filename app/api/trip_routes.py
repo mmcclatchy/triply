@@ -3,7 +3,7 @@ from flask_login import login_required
 from app.models import Trip, User, Car, db
 from app.utils import (
     normalize, snake_case, get_place_coords, coords_to_str,
-    get_food_preference
+    get_preferences
 )
 from sqlalchemy.exc import SQLAlchemyError
 from ..Trip import TripClass
@@ -50,9 +50,9 @@ def get_trip(trip_id):
 @login_required
 def post_trip(user_id):
     data = request.json
-    origin = get_place_coords(data['startLocation'])
-    destination = get_place_coords(data['endLocation'])
-    car = Car.query.filter(Car.id == data['carId']).first()
+    origin = data['startLocation']
+    destination = data['endLocation']
+    car = Car.query.filter(Car.id == data['carId']).first()  #! <---- Fix
 
     trip_algo = TripClass(
         travelPerDay=data['dailyTimeLimit'],
@@ -68,7 +68,7 @@ def post_trip(user_id):
 
     trip = Trip(
         user_id=data['userId'],
-        name=f'{data['startLocation']} - {data['endLocation']}',
+        name=f'{origin} - {destination}',
         car_id=car.id,
         toll=trip_dict['toll'],
         daily_time_limit=trip_dict['daily_time_limit'],
@@ -80,18 +80,21 @@ def post_trip(user_id):
         directions=trip_dict['directions']
     )
 
-    food_pref, hotel_pref, gas_pref = get_preferences(getdata['foodQuery'])
+    food_pref, hotel_pref, gas_pref = get_preferences(getdata['preferences'])
+    food_query = trip.next_cuisine_option(food_pref)
     suggestions = trip_algo.getNextStopDetails(
-        foodQuery=food_preference,
+        foodQuery=food_query,
         hotel=hotel_pref,
         gas=gas_pref)
 
     try:
         db.session.add(trip)
         db.session.commit()
+        
         trip_json = jsonify({
             'payload': {'trips': normalize(trip.to_dict())},
-            'suggestions': suggestions
+            'suggestions': suggestions,
+            'timeline': trip.get_timeline()
         })
         return trip_json
 
@@ -126,7 +129,8 @@ def modify_trip(trip_id):
         db.session.commit()
         trip_json = jsonify({
             'payload': {'trips': normalize(trip.to_dict())},
-            'directions': normalize(trip.directions_to_dict())
+            'directions': normalize(trip.directions_to_dict()),
+            'timeline': trip.get_timeline()
         })
         return trip_json
 
