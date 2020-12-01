@@ -1,25 +1,90 @@
 import React, { useState } from 'react';
 import { Redirect, Link, useHistory } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { signUp } from '../services/auth';
+import { TextField, Button } from '@material-ui/core';
 import './SignUpForm.css';
-import { setAuth, setId } from '../store/actions/authentication';
+import { setAuth, setName } from '../store/actions/authentication';
+import { makeStyles } from '@material-ui/core/styles';
+
+const useStyles = makeStyles({
+  button: {
+    background: 'linear-gradient(45deg, #E9F61C  30%, #FF8E53 90%)',
+    border: 0,
+    borderRadius: 3,
+    boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
+    color: 'Black',
+    height: 48,
+    padding: '0 30px',
+    marginTop: "-1em"
+  },
+  login_header: {
+    fontFamily: "Circular, -apple-system, BlinkMacSystemFont, Roboto, Helvetica Neue, sans-serif",
+    fontSize: "40px",
+    marginTop: ".5em",
+    marginBottom: ".5em"
+  },
+  e_input: {
+    marginTop: "2em",
+    marginBottom: "2em"
+  },
+   normal_input: {
+    marginBottom: "2em"
+  }
+});
 
 const SignUpForm = () => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [repeatPassword, setRepeatPassword] = useState('');
+  const [usernameError, setUsernameError] = useState('');
+  const [emailError, setEmailError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
   const history = useHistory();
   const dispatch = useDispatch();
+  const classes = useStyles();
 
+  const validate = () => {
+    let usernameError = "";
+    let emailError = "";
+    let passwordError = "";
+
+    if (!email.includes("@")) {
+      emailError = "Invalid Email"
+    }
+   if (emailError) {
+      setEmailError(emailError)
+    }
+   if (username.length < 7) {
+     usernameError = "Username must have atleast 8 characters"
+   }
+   if (usernameError) {
+     setUsernameError(usernameError)
+   }
+   if (password.length < 7) {
+     passwordError = "Password must have atleast 8 characters"
+   }
+   if (password !== repeatPassword) {
+     passwordError = "Passwords do not match"
+   }
+   if (passwordError) {
+      setPasswordError(passwordError)
+    }
+    if (emailError || usernameError || passwordError) {
+     return false
+   }
+   return true
+  }
   const onSignUp = async e => {
     e.preventDefault();
-    if (password === repeatPassword) {
+    const isValid = validate()
+
+    if (isValid) {
       const user = await signUp(username, email, password);
       if (!user.errors) {
         dispatch(setAuth(true));
-        dispatch(setId(user.username));
+        dispatch(setName(user.username));
       }
     }
     history.push('/');
@@ -46,41 +111,66 @@ const SignUpForm = () => {
       <Link to='/'>
         <div className='signup__logo' />
       </Link>
+      <div className={classes.login_header}>Save your adventures.</div>
       <form onSubmit={onSignUp}>
         <div>
-          <label>User Name</label>
-          <input
+          <TextField
             type='text'
+            className={classes.normal_input}
+            label="Username"
             name='username'
             onChange={updateUsername}
-            value={username}></input>
+            value={username}
+            required={true}>
+            </TextField>
         </div>
+        {usernameError ?
+          <div style={{ color: "red", fontSize: 12 }} >{usernameError}</div>
+          : null}
         <div>
-          <label>Email</label>
-          <input
+          <TextField
             type='text'
             name='email'
+            label="Email"
+            className={classes.normal_input}
             onChange={updateEmail}
-            value={email}></input>
+            value={email}
+            required={true}>
+            </TextField>
         </div>
+        {emailError ?
+          <div style={{ color: "red", fontSize: 12 }} >{emailError}</div>
+          : null}
         <div>
-          <label>Password</label>
-          <input
+          <TextField
             type='password'
+            label="Password"
+            className={classes.normal_input}
             name='password'
             onChange={updatePassword}
-            value={password}></input>
+            value={password}
+            required={true}>
+          </TextField>
         </div>
         <div>
-          <label>Repeat Password</label>
-          <input
+          <TextField
             type='password'
+            label="Confirm Password"
+            className={classes.normal_input}
             name='repeat_password'
             onChange={updateRepeatPassword}
             value={repeatPassword}
-            required={true}></input>
+            required={true}>
+          </TextField>
         </div>
-        <button type='submit'>Sign Up</button>
+        {passwordError ?
+          <div style={{ color: "red", fontSize: 12 }} >{passwordError}</div>
+          : null}
+        <Button
+          className={classes.button}
+          type='submit'>
+          Sign Up
+          </Button>
       </form>
     </div>
   );

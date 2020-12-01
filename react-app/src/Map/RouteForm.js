@@ -126,12 +126,13 @@ const RouteForm = ({}) => {
             style={{
               backgroundColor: "yellow",
               fontWeight: "bold",
+              marginBottom:"1.7em"
             }}
             onClick={handleClick}>
               Set Route
           </Button>
         </div>
-      <NavLink to='create-trip'>
+      {/* <NavLink to='create-trip'>
           <Button
             className='api_button'
             style={{
@@ -142,7 +143,7 @@ const RouteForm = ({}) => {
         </NavLink>
         <NavLink to='/timeline'>
         <Button variant='contained'>Access Timeline</Button>
-        </NavLink>
+        </NavLink> */}
       </div>
 
     </>
