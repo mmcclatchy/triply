@@ -20,7 +20,7 @@ def get_trips(user_id):
     try:
         trips = Trip.query.filter(Trip.user_id == user_id).all()
         trip_dicts = [trip.to_dict() for trip in trips]
-        trips_json = jsonify({'trips': normalize(trip_dicts)})
+        trips_json = jsonify({'payload': {'trips': normalize(trip_dicts)}})
         return trips_json
 
     except SQLAlchemyError as e:
@@ -36,7 +36,7 @@ def get_trip(trip_id):
 
     try:
         trip = Trip.query.filter(Trip.id == trip_id).first()
-        trip_json = jsonify({'trips': normalize(trip.to_dict())})
+        trip_json = jsonify({'payload': {'trips': normalize(trip.to_dict())}})
         return trip_json
 
     except SQLAlchemyError as e:

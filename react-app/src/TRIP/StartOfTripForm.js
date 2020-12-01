@@ -89,6 +89,7 @@ const StartOfTripForm = props => {
     const newBox = document.getElementById('options').lastChild.lastChild;
     // console.log(newBox);
     newBox.checked = true;
+
   }, [options.length]);
 
   const handleCheckOfFood = e => {
@@ -104,12 +105,12 @@ const StartOfTripForm = props => {
       }
       s.slice(i, 1);
       setSelectedFoods(s);
-      console.log(s);
+      // console.log(s);
     }
   };
 
   useEffect(() => {
-    // console.log('useeffect ran');
+
     if (!userId) {
       return null;
     }
@@ -118,8 +119,7 @@ const StartOfTripForm = props => {
       const response = await fetch(`/api/users/${userId}/cars`);
       const data = await response.json();
       setCar(data.cars);
-      // console.log(data.cars);
-      // console.log(car);
+
     };
     getCars();
   }, []);

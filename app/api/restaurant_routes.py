@@ -13,7 +13,7 @@ restaurant_routes = Blueprint('restaurants', __name__)
 def get_restaurants():
     restaurants = Restaurant.query.all()
     rest_list = [restaurant.to_dict() for restaurant in restaurants]
-    return {'restaurants': normalize(rest_list)}
+    return {{'payload': normalize(rest_list)}}
 
 
 # GET restaurant associated with a specific stop
@@ -26,7 +26,7 @@ def get_restaurant(stop_id):
     if not restaurant:
         return {}, 404
     restaurant_json = jsonify({
-        'restaurants': normalize(restaurant.to_dict())
+        'payload': normalize(restaurant.to_dict())
     })
     return restaurant_json
 

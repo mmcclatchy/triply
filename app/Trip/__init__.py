@@ -46,6 +46,8 @@ class TripClass:
         self.stopKey = kwargs.get("stopKey")
         if not self.stopKey:
             self.stopKey = []
+        self.departureTime = self.convertDepartureTime(kwargs.get("departureTime"))
+
 
 
         self.directionsFromGoogle = None
@@ -57,6 +59,17 @@ class TripClass:
         self.totalTravelTime = None
         self.totalTravelDistance = None
         self.gasEveryStop = False
+
+
+    def convertDepartureTime(self, dt):
+        if not dt:
+            return
+        t = dt.split(" ")[1]
+        t = t.split(":")
+        hours = int(t[0])
+        minutes = int(t[1])
+        seconds = int(t[2])
+        return seconds + (minutes * 60) + ((hours * 60) * 60)
 
     def setStartLocationFromString(self, startLocationString):
         url = self.useThisUrlToGetCordsForAPoint + parse.quote(startLocationString)
@@ -82,10 +95,10 @@ class TripClass:
             origin = str(self.startCor["lat"]) + "," + str(self.startCor["lng"])
             destination = str(self.endCor["lat"]) + "," + str(self.endCor["lng"])
             url = self.makeUrl(origin=origin, destination=destination)
+            print(url)
             if kwargs.get("waypoints"):
                 url += kwargs.get("waypoints")
             r = requests.get(url)
-            self.directionsFromGoogle = r.text
             r = r.json()
             
             legs = [i for i in r["routes"][0]["legs"]]
@@ -94,6 +107,9 @@ class TripClass:
                 for j in range(len(legs[i]["steps"])):
                     directions.append(legs[i]["steps"][j])
             self.directions = directions
+
+            r["departureTime"] = self.departureTime
+            self.directionsFromGoogle = json.dumps(r)
 
             distance = 0
             time = 0
@@ -393,13 +409,14 @@ class TripClass:
                     break
             #appends the next point to search buffer
             searchBuffer.append(self.getPairForBuffer(((len(searchBuffer)) * 2) + 1)[1])
+        timeOfStop = self.convertSecondsTravelSecondsToDTOfStop(self.stopTimeIndex[-1] + self.travelPerIncrement[0])
         if gas and not hotel:
-            gasOptions = self.getGasNearLocation(listOfFoundSpots[0]["geometry"]["location"])
-            listOfFoundSpots = {"food": listOfFoundSpots, "gas": [x for x in gasOptions["results"]]}
+            gasOptions = self.getGasNearLocation("placeholder", cords=listOfFoundSpots[0]["geometry"]["location"])
+            listOfFoundSpots = {"time": timeOfStop, "Restaurant": [self.convertToFrontEndFormat(x, "food") for x in listOfFoundSpots], "Gas": [self.convertToFrontEndFormat(x, gas) for x in gasOptions["gas"]]}
         elif hotel:
-            listOfFoundSpots = {"hotel": listOfFoundSpots}
+            listOfFoundSpots = {"time": timeOfStop, "Hotel": [self.convertToFrontEndFormat(x, "hotel") for x in listOfFoundSpots]}
         else:
-            listOfFoundSpots = {"food": listOfFoundSpots}
+            listOfFoundSpots = {"time": timeOfStop, "Restaurant": [self.convertToFrontEndFormat(x, "food") for x in listOfFoundSpots]}
         return listOfFoundSpots
 
 
@@ -433,6 +450,8 @@ class TripClass:
             for j in range(len(legs[i]["steps"])):
                 directions.append(legs[i]["steps"][j])
         self.directions = directions
+
+        self.departureTime = d["departureTime"]
 
         distance = 0
         time = 0
@@ -507,19 +526,57 @@ class TripClass:
         d = json.loads(self.directionsFromGoogle)
         return d["foodPreferences"]
 
+    def convertToFrontEndFormat(self, obj, type):
+        result = {
+          "name": obj["name"],
+          'place_id': obj["place_id"],
+          'type': type,
+          'city': obj["vicinity"].split(",")[1],
+          'img_url':
+            "https://img.icons8.com/ios-filled/50/000000/next-location.png",
+          'street_address': obj["vicinity"].split(",")[0],
+        }
+        if obj.get("photo"):
+            result["img_url"] = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=" + obj["photos"][0]["photo_reference"] + "&key=" + os.environ.get("FRONTEND_API_KEY")
+        return result
+
+    def getCordsOfWayPoints(self):
+        d = json.loads(self.directionsFromGoogle)
+        result = []
+        for leg in d["routes"][0]['legs']:
+            result.append(leg["end_location"])
+        result.pop()
+        return result
+
+    def convertSecondsTravelSecondsToDTOfStop(self, seconds):
+        collector = seconds % self.travelPerDay
+        collector += self.departureTime
+        collector = round(collector / 60)
+        minutes = collector % 60
+        collector -= minutes
+        hours = collector / 60
+        sign = "AM"
+        if hours > 12:
+            hours -= 12
+            sign = "PM"
+        return "2020-12-01 " + str(int(hours)) + ":" + str(minutes) + sign
 
 
-# t = TripClass()
-# # print(t.getFoodAndGasNearLocation("Mexican", "ChIJ_yI7V3BFI4gR4K98PVlIEiQ"))
+# t = TripClass(departureTime="2012-12-12 14:10:20")
+# # # print(t.getFoodAndGasNearLocation("Mexican", "ChIJ_yI7V3BFI4gR4K98PVlIEiQ"))
 # t.setStartLocationFromString("Holland, mi")
 # t.setEndLocationFromString("California")
 # t.createDirection()
-# t.setFoodPreferences(["I want FOOOOOD!!", "and other stuff"])
-# n = TripClass()
-# n.constructFromDirections(t.getDirections())
-# print(n.getFoodPreferences())
-# t.travelPerDay = 21600
+# # t.setFoodPreferences(["I want FOOOOOD!!", "and other stuff"])
+# # n = TripClass()
+# # n.constructFromDirections(t.getDirections())
+# # print(n.getFoodPreferences())
+# # # t.travelPerDay = 21600
 # t.setTravelPerIncrement(20189)
+# t.travelPerDay = (20189 * 2.1)
+# # # print(t.getNextStopDetails())
+# t.addStop(["ChIJQTPp6l2444cRXVrR1VRtz_U"], ["f"])
+# print(t.getNextStopDetails())
 # t.createDirection()
 
 # t.milesToRefuel = 15
@@ -549,8 +606,12 @@ class TripClass:
 # # # t.setTravelPerIncrement((7200, 20189))
 # # # t.travelPerDay = 7200 * 2
 
-# # # t.getNextStopDetails()
+# t.getNextStopDetails()
 # t.addStop(["ChIJ_yI7V3BFI4gR4K98PVlIEiQ", "ChIJ0XXQUFE-OogR2w6dkGjqhu0", "ChIJ7wHa54k-OogRdXZAth3Jz7M", "ChIJo0BrfAxSI4gR0XjDWhB5Ne8", "ChIJ0XXQUFE-OogR2w6dkGjqhu0"], ["f", "f", "f", "f", "f"])
+# # print(t.getCordsOfWayPoints())
+# n = TripClass()
+# n.constructFromDirections(t.getDirections())
+# print(n.convertSecondsToDT(n.departureTime))
 # print(t.getNextStopDetails(fordQuery = "Mexican"))
 # n = TripClass()
 # n.constructFromDirections(t.getDirections())
