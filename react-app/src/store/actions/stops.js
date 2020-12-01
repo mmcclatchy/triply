@@ -3,17 +3,21 @@ import { API, SET_STOP, DELETE_STOP } from '../constants/constants';
 
 export const getStops = tripId => ({
   type: API,
-  method: 'GET',
-  endpoint: `/trips/${tripId}/stops`,
-  actionConst: SET_STOP
+  payload: {
+    method: 'GET',
+    endpoint: `/trips/${tripId}/stops`,
+    actionConst: SET_STOP
+  }
 })
 
 
 export const getStop = stopId => ({
   type: API,
-  method: 'GET',
-  endpoint: `/stops/${stopId}`,
-  actionConst: SET_STOP
+  payload: {
+    method: 'GET',
+    endpoint: `/stops/${stopId}`,
+    actionConst: SET_STOP
+  }
 })
 
 

@@ -5,6 +5,7 @@ from .Stop import Stop
 import requests
 import copy
 import json
+import os
 
 
 #todo:
@@ -21,10 +22,10 @@ class TripClass:
 
         # photos, opening_hours,rating
         # locationbias=rectangle:
-        self.useThisUrlToGetCordsForAPoint = "https://maps.googleapis.com/maps/api/place/findplacefromtext/json?inputtype=textquery&fields=place_id,geometry&key=AIzaSyBmKKKPntFx-1yFUAIgXjWQU3wykVlBt3Y&input="
-        self.basicLocalSearch = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?key=AIzaSyBmKKKPntFx-1yFUAIgXjWQU3wykVlBt3Y"
-        self.basicDirectionUrl = "https://maps.googleapis.com/maps/api/directions/json?key=AIzaSyBmKKKPntFx-1yFUAIgXjWQU3wykVlBt3Y"
-        self.basicRoadsUrl = "https://roads.googleapis.com/v1/speedLimits?key=AIzaSyBmKKKPntFx-1yFUAIgXjWQU3wykVlBt3Y&units=MPH&path="
+        self.useThisUrlToGetCordsForAPoint = "https://maps.googleapis.com/maps/api/place/findplacefromtext/json?inputtype=textquery&fields=place_id,geometry&key=" + os.environ.get("BACKEND_API_KEY") + "&input="
+        self.basicLocalSearch = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?key=" + os.environ.get("BACKEND_API_KEY")
+        self.basicDirectionUrl = "https://maps.googleapis.com/maps/api/directions/json?key=" + os.environ.get("BACKEND_API_KEY")
+        self.basicRoadsUrl = "https://roads.googleapis.com/v1/speedLimits?key=" + os.environ.get("BACKEND_API_KEY") + "&units=MPH&path="
         self.startCor = kwargs.get('startCor')
         self.endCor = kwargs.get('endCor')
         self.travelPerDay = kwargs.get('dailyTimeLimit')
@@ -140,7 +141,7 @@ class TripClass:
             url = url + "&" + i + "=" + kwargs[i]
         if self.tolls:
             url += "&avoid=tolls"
-        print(url)
+        # print(url)
         return url
 
     def decodePolyline(self, encoded):
@@ -323,20 +324,33 @@ class TripClass:
         else:
             return False
         
-    def getFoodAndGasNearLocation(self, searchQuery, cords):
-        food = self.placeSearchUrlGenerator(searchQuery, cords)
-        gas = self.getGasNearLocation(cords)
-        r = []
-        for item in food:
-            r.append(item)
-        for item in gas:
-            r.append(item)
-        return r
+    def getCordsFromPlaceId(self, placeId):
+        url = "https://maps.googleapis.com/maps/api/place/details/json?fields=geometry&key=" + os.environ.get("BACKEND_API_KEY")
+        r = requests.get(url + "&place_id=" + placeId)
+        r = r.json()
+        return r["result"]["geometry"]["location"]
 
-    def getGasNearLocation(self, cords):
+    def getFoodAndGasNearLocation(self, searchQuery, place_Id):
+        cords = self.getCordsFromPlaceId(place_Id)
+        food = requests.get(self.placeSearchUrlGenerator(searchQuery, cords))
+        food = food.json()
+        gas = self.getGasNearLocation(place_Id, cords=cords)
+        f = []
+        g = []
+        for item in food["results"]:
+            f.append(item)
+        for item in gas:
+            g.append(item)
+        return {"food": f, "gas": g}
+
+    def getGasNearLocation(self, place_Id, **kwargs):
+        cords = kwargs.get("cords")
+        if not cords:
+            cords = self.getCordsFromPlaceId(place_Id)
         r = requests.get(self.placeSearchUrlGenerator("gas station", cords, type="gas_station"))
         r = r.json()
-        return r
+        r = [i for i in r["results"]]
+        return {"gas": r}
 
 
     def getNextStopDetails(self, **kwargs):
@@ -370,7 +384,7 @@ class TripClass:
             if hotel:
                 searchQuery = str(int((hotel[0]+hotel[1])/2)) + " star hotel" 
                 url = self.placeSearchUrlGenerator(searchQuery, searchBuffer[len(searchBuffer) - 1], type="lodging")
-                print(url)
+                # print(url)
             r = requests.get(url)
             r = r.json()
             for option in r["results"]:
@@ -381,7 +395,7 @@ class TripClass:
             searchBuffer.append(self.getPairForBuffer(((len(searchBuffer)) * 2) + 1)[1])
         if gas and not hotel:
             gasOptions = self.getGasNearLocation(listOfFoundSpots[0]["geometry"]["location"])
-            listOfFoundSpots = {"food": listOfFoundSpots, "gas": gasOptions}
+            listOfFoundSpots = {"food": listOfFoundSpots, "gas": [x for x in gasOptions["results"]]}
         elif hotel:
             listOfFoundSpots = {"hotel": listOfFoundSpots}
         else:
@@ -480,17 +494,37 @@ class TripClass:
             return None
         self.createDirection()
 
+    def setFoodPreferences(self, foodPreferences):
+        if not self.directionsFromGoogle:
+            return None
+        d = json.loads(self.directionsFromGoogle)
+        d["foodPreferences"] = foodPreferences
+        self.directionsFromGoogle = json.dumps(d)
+
+    def getFoodPreferences(self):
+        if not self.directionsFromGoogle:
+            return None
+        d = json.loads(self.directionsFromGoogle)
+        return d["foodPreferences"]
 
 
 
 # t = TripClass()
+# # print(t.getFoodAndGasNearLocation("Mexican", "ChIJ_yI7V3BFI4gR4K98PVlIEiQ"))
 # t.setStartLocationFromString("Holland, mi")
 # t.setEndLocationFromString("California")
+# t.createDirection()
+# t.setFoodPreferences(["I want FOOOOOD!!", "and other stuff"])
+# n = TripClass()
+# n.constructFromDirections(t.getDirections())
+# print(n.getFoodPreferences())
 # t.travelPerDay = 21600
-# # t.setTravelPerIncrement(20189)
+# t.setTravelPerIncrement(20189)
 # t.createDirection()
 
-# # t.milesToRefuel = 15
+# t.milesToRefuel = 15
+
+# print(json.dumps(t.getNextStopDetails()))
 
 
 # # # # print(t.getDistance("cwoiGvvacNGAEAECUK_@QuAm@]OyB}@u@]C?ECmBy@OGSIWKo@Y[KgAe@oAg@sAi@m@[OGg@]USIIMKi@m@W[i@k@IKMQQOIKa@g@MMqA_Bo@}@s@w@g@o@SU_CoCiBuB{AiBa@i@MSIQKOIOGSIMQa@Sc@IWMYQo@yAwEgAmD[iAc@mA[gAIYG]AECQEYOkAo@}FK{@O{@qAsISuA{@qGy@yFIc@Gk@Ew@QeGAUAa@C{@Ci@EkBIiCMeDCk@QyEAIQ_EAYOqDA[SsDGqACo@Gs@Mu@G]Mm@I_@[{AWoAGWqAoEsAuEMi@]cAKWWm@Q]Uc@U_@k@_AeAcB_@k@gAiBWc@aA}Ao@cAiAiBu@mAmB_DeAcBYg@OWmCwEiBsCeEmHa@q@w@uAU]c@y@i@eAO[Q]MY[o@O_@kBaEyC{GMYYk@q@wAKSGOIMe@{@g@}@aAyAWa@S[W]_@k@a@k@OUm@y@e@o@_@i@?E?E?AAAACGIi@w@q@aAaAwA_@k@wCiE[c@i@u@OSSWCEOOMMMO]]][UUKIWWMKKKA?]Yg@_@MKCCIG[Og@YOIo@[kAo@gE{B_CmAi@[_Ag@s@_@yAw@mAq@ECECCCE?E?G?ECkCaBMIo@]]QgAo@]OwEiCWMcAi@_@OcAi@e@U[SgBaAg@We@Wc@UOIMGq@]cAk@IEOG_Ai@g@WOGmAq@}A{@WMUMWQ_CyAGE]S{@q@AAg@a@a@]EEo@k@UWY[MMGI_AgAcAkAWYw@aAg@m@QSkAsAwAcBOSwAeBg@m@cAmAc@i@kByB_CmCs@}@]a@sA}AoA{A{AiBeD_EiC}CiAsAUY_AiA]a@EEqA_B]_@SYKKi@o@w@_A_AkAuAaBsA_BcBsBaAiAiAuAg@m@[]cBuBaAkAW[e@i@_AiAGIm@u@a@c@k@s@Y][_@_AiAu@}@gC{CwBkCkBwBY]s@{@i@m@y@_AKKy@_A_@c@aAgAw@{@SW_BiBi@m@i@o@oB{BkAuAGG{@_Ak@s@gE}EEG{@aAg@k@qCaDkC{CkAsAACw@}@k@m@m@q@w@aAOSY]s@y@gAmAmAqAe@i@_BgBs@y@q@u@cBmB{AcBkC{Cg@k@cAkAiAoAOQgBqBi@k@SSk@m@i@k@QQe@a@EEGECCCAKIYWm@k@SSGIGGsAmAwBmBMOy@q@CCC?CAAC[YUUSUWWaA{@g@e@eB}Aw@s@y@w@WSeB{Aq@i@a@]qAgAcA{@_@Y]Y]Yy@o@{@s@cBsAq@k@u@o@_Au@yAqAKIaA_A[Yi@g@WWg@i@QQ}@w@i@i@e@i@WUc@a@m@i@wAmAyCgCoCcCqAiAiEyD}CsCg@c@kCaC[Yk@g@cA}@qAmAcA}@uEcEWS{@w@US}@y@MKg@e@q@m@o@i@i@e@gAaAMMs@m@OOi@e@a@_@GGKIw@q@_@[Y[k@e@g@c@aA_Ay@q@uCiC}AuAUSSQUUSSWSUSMMIGkAeAyAqA][}CoCQD[Wc@c@Ma@ACCCSUa@a@QYYe@We@O[O_@IUMi@"))

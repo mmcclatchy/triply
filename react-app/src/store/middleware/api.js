@@ -1,4 +1,4 @@
-import { API, SET_DIRECTIONS } from '../constants/constants';
+import { API, SET_TIMELINE, SET_SUGGESTIONS } from '../constants/constants';
 const baseUrl = process.env.REACT_APP_BASE_URL;
 
 //* API Middleware receives an action object and parses the data to make a specific fetch request
@@ -15,9 +15,10 @@ const api = ({ dispatch, getState }) => next => async action => {
   });
 
   if (response.ok) {
-    const { payload, directions } = await response.json();
+    const { payload, suggestions, timeline } = await response.json();
 
-    if (directions) dispatch({ type: SET_DIRECTIONS, directions });
+    if (suggestions) dispatch({ type: SET_SUGGESTIONS, suggestions });
+    if (timeline) dispatch({ type: SET_TIMELINE, timeline });
 
     dispatch({ type: actionConst, payload });
   }

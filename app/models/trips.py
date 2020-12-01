@@ -8,10 +8,10 @@ class Trip(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     name = db.Column(db.String(100), nullable=False)
-    car_id = db.Column(db.Integer, db.ForeignKey('cars.id'), nullable=False)
-    daily_time_limit = db.Column(db.Integer, nullable=False)
-    stop_time_limit = db.Column(db.Integer, nullable=False)
-    toll = db.Column(db.Boolean, nullable=False)
+    car_id = db.Column(db.Integer, db.ForeignKey('cars.id'))
+    daily_time_limit = db.Column(db.Integer)
+    stop_time_limit = db.Column(db.Integer)
+    toll = db.Column(db.Boolean)
     start_time = db.Column(db.DateTime)
     start_location = db.Column(db.String(255), nullable=False)
     end_time = db.Column(db.DateTime)
@@ -19,6 +19,7 @@ class Trip(db.Model):
     directions = db.Column(db.Text)
 
     stops = db.relationship('Stop', back_populates='trip', lazy='joined')
+    car = db.relationship('Car', back_populates='trip', lazy='joined')
 
     def to_dict(self):
         return {
@@ -42,7 +43,7 @@ class Trip(db.Model):
         else:
             return {}
 
-    def get_time_line(self):
+    def get_timeline(self):
         return [
             {
                 'id': self.id,

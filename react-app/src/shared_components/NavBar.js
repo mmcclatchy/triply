@@ -5,7 +5,7 @@ import { Button } from '@material-ui/core';
 import { useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import View from '../shared_components/Drawer';
-import { setAuth } from '../store/actions/authentication';
+import { setAuth, setName, setId } from '../store/actions/authentication';
 import {setOriginAction, setDestinationAction, setStartTimeAction, setDistanceAction, setDurationAction} from '../store/actions/directions'
 import { greeting } from '../services/utilities';
 
@@ -24,6 +24,8 @@ import { greeting } from '../services/utilities';
     dispatch(setStartTimeAction(""));
     dispatch(setDistanceAction(""));
     dispatch(setDurationAction(""));
+    dispatch(setName(""));
+    dispatch(setId(""));
   };
 
   return (
@@ -33,12 +35,13 @@ import { greeting } from '../services/utilities';
           <div className="greeting_container">
             {greeting()} {userName}
           </div>
-         <Button
+          <Button
             className="profile_button"
               style={{
               fontWeight: "bold",
               marginRight: "3em",
-              marginTop: "1.75em"
+              marginTop: "1.75em",
+
             }}>
            <View anchor='My Profile'/>
           </Button>

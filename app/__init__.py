@@ -24,7 +24,8 @@ app = Flask(__name__)
 CORS(app)
 
 # Setup login manager
-login = LoginManager(app)
+login = LoginManager()
+login.init_app(app)
 login.login_view = 'auth.unauthorized'
 
 

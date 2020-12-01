@@ -36,6 +36,20 @@ def get_stop(stop_id):
 @login_required
 def post_stop(trip_id):
     data = request.json
+    
+    place_ids = create_place_id_list(data['placeIds'])
+    stop_keys = create_stop_keys(data['placeIds'])
+    trip_algo.addStop(place_ids, stop_keys)
+    
+    # If the place ids include a hotel,
+    # send suggestions for food and gas based on that location
+    if any([key for key in stop_keys if key == 'h']):
+        trip_algo = TripClass()
+        food_and_gas = trip_algo.getFoodAndGasNearLocation(data['placeIds']['hotel'])
+        return jsonify({
+            'suggestions': {'suggestions': food_and_gas, 'hotelChoice': hotel}
+        })
+    
     trip = Trip.query.filter(Trip.id == trip_id).first()
     trip_algo = TripClass(
         startCor=coords_from_str(trip.start_location),
@@ -45,15 +59,9 @@ def post_stop(trip_id):
         milesTillFuelNeeded=trip.car.miles_to_refuel,
         avoidTolls=trip.tolls
     )
-    
-    place_ids = create_place_id_list(data['placeIds'])
-    stop_keys = create_stop_keys(data['placeIds'])
-    trip_algo.addStop(place_ids, stop_keys)
-    
-    if any([key for key in stop_keys if key == 'h']):
-        food_and_gas = trip_algo.getFoodAndGasNearLocation(data['placeIds']['hotel'])
-        return jsonify({ '': food_and_gas})
-    
+
+    trip_algo.constructFromDirections(trip.directions)
+
     try:
         stop = Stop(
             trip_id=data['tripId'],
@@ -76,7 +84,8 @@ def post_stop(trip_id):
 
         db.session.add(stop)
         db.session.commit()
-        stop_json = jsonify({'stops': normalize(stop.to_dict())})
+        stop_json = jsonify({
+            'payload': {'stops': normalize(stop.to_dict())}})
         return stop_json
 
     except SQLAlchemyError as e:

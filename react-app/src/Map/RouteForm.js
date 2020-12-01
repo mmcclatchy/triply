@@ -124,13 +124,14 @@ const RouteForm = ({}) => {
             variant='contained'
             style={{
               backgroundColor: 'yellow',
-              fontWeight: 'bold'
+              fontWeight: 'bold',
+              marginBottom: '1.7em'
             }}
             onClick={handleClick}>
             Set Route
           </Button>
         </div>
-        <NavLink to='create-trip'>
+        {/* <NavLink to='create-trip'>
           <Button
             className='api_button'
             style={{
@@ -141,9 +142,9 @@ const RouteForm = ({}) => {
             W/O API Call
           </Button>
         </NavLink>
-        <NavLink to='/stepper'>
-          <Button variant='contained'>Access Stepper</Button>
-        </NavLink>
+        <NavLink to='/timeline'>
+        <Button variant='contained'>Access Timeline</Button>
+        </NavLink> */}
       </div>
     </>
   );
