@@ -52,27 +52,22 @@ def post_trip(user_id):
     data = request.json
     origin = data['startLocation']
     destination = data['endLocation']
-    car = Car.query.filter(Car.id == data['carId']).first()  #! <---- Fix
 
-    trip_algo = TripClass(
-        travelPerDay=data['dailyTimeLimit'],
-        travelPerIncrement=data['stopTimeLimit'],
-        milesTillFuelNeeded=car.miles_to_refuel,
-        avoidTolls=data['avoidTolls']
-    )
-    trip_algo.setStartLocationFromString(data['startLocation'])
-    trip_algo.setEndLocationFromString(data['endLocation'])
+    # Create an instance of the Trip Algorithm
+    # and set the origin and destination
+    trip_algo = TripClass()
+    trip_algo.setStartLocationFromString(origin)
+    trip_algo.setEndLocationFromString(destination)
 
+    # Set the directions from Google API
+    # and create a dictionary of the information the Frontend needs
     trip_algo.createDirection()
     trip_dict = trip_algo.toDictForDatabase()
 
+    # Create a model of the Trip for the DB
     trip = Trip(
         user_id=data['userId'],
-        name=f'{origin} - {destination}',
-        car_id=car.id,
-        toll=trip_dict['toll'],
-        daily_time_limit=trip_dict['daily_time_limit'],
-        stop_time_limit=trip_dict['stop_time_limit'],
+        name=f'{origin} -> {destination}',
         start_time=trip_dict['startTime'],
         start_location=coords_to_str(trip_dict['start_location']),
         end_time=trip_dict['end_time'],
@@ -80,20 +75,13 @@ def post_trip(user_id):
         directions=trip_dict['directions']
     )
 
-    food_pref, hotel_pref, gas_pref = get_preferences(getdata['preferences'])
-    food_query = trip.next_cuisine_option(food_pref)
-    suggestions = trip_algo.getNextStopDetails(
-        foodQuery=food_query,
-        hotel=hotel_pref,
-        gas=gas_pref)
-
     try:
         db.session.add(trip)
         db.session.commit()
-        
+
+        # Create a json object structured for Redux slices of state
         trip_json = jsonify({
             'payload': {'trips': normalize(trip.to_dict())},
-            'suggestions': suggestions,
             'timeline': trip.get_timeline()
         })
         return trip_json
@@ -111,25 +99,21 @@ def post_trip(user_id):
 def modify_trip(trip_id):
     data = request.json
 
+    # Amend the Trip Model with attributes sent from Frontend
+    trip = Trip.query.get(trip_id)
+    for key, value in data.items():
+        setattr(trip, key, value)
+
+    trip_instance.createDirection()
+
+    trip_instance.getDirections()
+    trip['directions'] = trip_instance['directions']
+
     try:
-        trip = Trip.query.get(trip_id)
-        for key, value in data.items():
-            setattr(trip, key, value)
-
-        if data['startTime'] | data['endTime']:
-            trip_instance = TripClass(
-                startCor=origin,
-                endCor=destination,
-            )
-            trip_instance.createDirection()
-
-        trip_instance.getDirections()
-        trip['directions'] = trip_instance['directions']
-
         db.session.commit()
         trip_json = jsonify({
             'payload': {'trips': normalize(trip.to_dict())},
-            'directions': normalize(trip.directions_to_dict()),
+            
             'timeline': trip.get_timeline()
         })
         return trip_json
@@ -165,3 +149,65 @@ def get_timeline(trip_id):
         return {'directions': {'timeline': trip.get_time_line()}}
     else:
         return {}, 404
+
+#################################################################
+#################################################################
+
+# # POST a trip associated with a user
+# @trip_routes.route('/users/<int:user_id>/trips', methods=['POST'])
+# @login_required
+# def post_trip(user_id):
+#     data = request.json
+#     origin = data['startLocation']
+#     destination = data['endLocation']
+#     car = Car.query.filter(Car.id == data['carId']).first()  #! <---- Fix
+
+#     trip_algo = TripClass(
+#         travelPerDay=data['dailyTimeLimit'],
+#         travelPerIncrement=data['stopTimeLimit'],
+#         milesTillFuelNeeded=car.miles_to_refuel,
+#         avoidTolls=data['avoidTolls']
+#     )
+#     trip_algo.setStartLocationFromString(data['startLocation'])
+#     trip_algo.setEndLocationFromString(data['endLocation'])
+
+#     trip_algo.createDirection()
+#     trip_dict = trip_algo.toDictForDatabase()
+
+#     trip = Trip(
+#         user_id=data['userId'],
+#         name=f'{origin} -> {destination}',
+#         car_id=car.id,
+#         toll=trip_dict['toll'],
+#         daily_time_limit=trip_dict['daily_time_limit'],
+#         stop_time_limit=trip_dict['stop_time_limit'],
+#         start_time=trip_dict['startTime'],
+#         start_location=coords_to_str(trip_dict['start_location']),
+#         end_time=trip_dict['end_time'],
+#         end_location=coords_to_str(trip_dict['end_location']),
+#         directions=trip_dict['directions']
+#     )
+
+#     food_pref, hotel_pref, gas_pref = get_preferences(getdata['preferences'])
+#     food_query = trip.next_cuisine_option(food_pref)
+#     suggestions = trip_algo.getNextStopDetails(
+#         foodQuery=food_query,
+#         hotel=hotel_pref,
+#         gas=gas_pref)
+
+#     try:
+#         db.session.add(trip)
+#         db.session.commit()
+
+#         trip_json = jsonify({
+#             'payload': {'trips': normalize(trip.to_dict())},
+#             'suggestions': suggestions,
+#             'timeline': trip.get_timeline()
+#         })
+#         return trip_json
+
+#     except SQLAlchemyError as e:
+#         error = str(e.__dict__['orig'])
+#         print(error)
+#         db.session.rollback()
+#         return {'errors': ['An error occurred while retrieving the data']}, 500
