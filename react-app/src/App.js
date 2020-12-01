@@ -8,9 +8,8 @@ import View from './shared_components/Drawer';
 import Homepage from './Homepage/Homepage';
 import { authenticate } from './services/auth';
 import TripPage from './TRIP/TripPage';
-import TripTimeline from './Timeline/TripTimeline';
 import { setAuth } from './store/actions/authentication';
-import StartOfTripForm from './TRIP/StartOfTripForm';
+import SuggestionStepper from './Suggestions/SuggestionStepper';
 
 function App() {
   const [authenticated, setAuthenticated] = useState(false);
@@ -51,8 +50,8 @@ function App() {
         <TripPage />
       </Route>
 
-      <Route path='/timeline'>
-        <TripTimeline />
+      <Route path='/stepper' exact={true}>
+        <SuggestionStepper />
       </Route>
 
       <Route path='/profile/:userId' authenticated={authenticated}>

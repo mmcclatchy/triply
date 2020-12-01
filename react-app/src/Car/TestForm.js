@@ -71,10 +71,9 @@ const TestForm = () => {
     };
     setCar(new_car);
   };
-  
+
   useEffect(() => {
-    if (Object.keys(car).length === 0) return
-    console.log('TESTFORM: CAR: ', car)
+    if (Object.keys(car).length === 0) return;
     dispatch(postCar(car, userId));
     dispatch(hideForm());
   }, [car]);
@@ -158,7 +157,6 @@ const TestForm = () => {
 
   const getTank = async () => {
     const data = await getTankSize(make, model, year);
-    console.log(data);
   };
 
   const resetForm = () => {

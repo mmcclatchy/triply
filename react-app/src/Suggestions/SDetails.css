@@ -1,0 +1,8 @@
+.inner__details {
+  display: flex;
+}
+
+.sdetails__containers {
+  display: flex;
+  flex-direction: column;
+}
