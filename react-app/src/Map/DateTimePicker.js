@@ -34,8 +34,7 @@ export default function DateAndTimePickers() {
   const [startTime, setStartTime] = useState('');
   const [startTimeContent, setStartTimeContent] = useState('');
   const updateStartTime = e => {
-    const time = new Date(e.target.value).toLocaleString();
-    setStartTimeContent(time);
+    setStartTimeContent(e.target.value);
     dispatch(setStartTimeAction(startTimeContent));
   };
 

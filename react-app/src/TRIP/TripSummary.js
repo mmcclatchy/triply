@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { Paper, Typography, Button } from '@material-ui/core';
 import DriveEtaIcon from '@material-ui/icons/DriveEta';
+import { postTrip } from '../store/actions/trips';
 import './TripPage.css';
 
 const TripSummary = () => {
   const [details, setDetails] = useState(false);
   const userName = useSelector(state => state.authentication.userName);
-
+  const dispatch = useDispatch();
   const userId = useSelector(state => state.authentication.userId);
 
   const distance = useSelector(state => state.directionsRedux.distance);
@@ -18,13 +19,14 @@ const TripSummary = () => {
 
   useEffect(() => {
     const new_trip = {
-      user_id: userId,
-      start_time: startTime,
-      start_location: origin,
-      end_location: destination
+      userId: userId,
+      startTime: startTime,
+      startLocation: origin,
+      endLocation: destination
     };
     console.log(new_trip);
-  });
+    dispatch(postTrip(new_trip, userId));
+  }, []);
 
   const showDetails = open => {
     setDetails(open);
@@ -34,11 +36,11 @@ const TripSummary = () => {
     <>
       <Paper variant='outlined' elevation={8}>
         <div className='trip_summary_container'>
-          {userName ?
-          <Typography variant='h4' component='h1'>
-            {userName ? `${userName}'s Trip` : `Triply Roadtrip`}
-          </Typography>
-            : null}
+          {userName ? (
+            <Typography variant='h4' component='h1'>
+              {userName ? `${userName}'s Trip` : `Triply Roadtrip`}
+            </Typography>
+          ) : null}
 
           {details ? (
             <>
