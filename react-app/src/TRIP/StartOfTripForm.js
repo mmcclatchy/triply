@@ -61,18 +61,18 @@ const StartOfTripForm = props => {
     );
     history.push('/create-trip');
   };
-  
+
   const handleAdditionalOptionChange = e =>
     setAdditionalOption(e.target.value);
-  
+
   const handleAdditionalOptionAddition = e => {
     if (!additionalOption) {
       return;
     }
     let o = options;
     o.push(additionalOption);
-    console.log('adding');
-    console.log(o);
+    // console.log('adding');
+    // console.log(o);
     setOptions(o);
     setAdditionalOption('');
   };
@@ -82,9 +82,9 @@ const StartOfTripForm = props => {
       return;
     }
     const newBox = document.getElementById('options').lastChild.lastChild;
-    console.log(newBox);
+    // console.log(newBox);
     newBox.checked = true;
-    console.log('Hello');
+    // console.log('Hello');
   }, [options.length]);
 
   const handleCheckOfFood = e => {
@@ -100,12 +100,12 @@ const StartOfTripForm = props => {
       }
       s.slice(i, 1);
       setSelectedFoods(s);
-      console.log(s);
+      // console.log(s);
     }
   };
 
   useEffect(() => {
-   console.log("useeffect ran")
+  //  console.log("useeffect ran")
     if (!userId) {
       return null;
     }
@@ -114,8 +114,8 @@ const StartOfTripForm = props => {
       const response = await fetch(`/api/users/${userId}/cars`);
       const data = await response.json();
       setCar(data.cars);
-      console.log(data.cars)
-      console.log(car)
+      // console.log(data.cars)
+      // console.log(car)
     };
     getCars();
   },[])

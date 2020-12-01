@@ -129,7 +129,6 @@ function User({ userId }) {
       setCars(data.cars);
     };
     getCars();
-    console.log("sanity check")
   }, [gettingCars]);
 
   useEffect(() => {

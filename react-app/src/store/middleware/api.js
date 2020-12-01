@@ -19,7 +19,6 @@ const api = ({ dispatch, getState }) => next => async action => {
 
   if (response.ok) {
     const { payload, suggestions, timeline } = await response.json();
-    console.log(payload)
     if (suggestions) dispatch({ type: SET_SUGGESTIONS, suggestions })
     if (timeline) dispatch({ type: SET_TIMELINE, timeline })
 

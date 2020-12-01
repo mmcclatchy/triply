@@ -159,7 +159,7 @@ const TestForm = (props) => {
 
   const getTank = async () => {
     const data = await getTankSize(make, model, year);
-    console.log(data);
+    // console.log(data);
   };
 
   const resetForm = () => {

@@ -63,7 +63,7 @@ const InitMap = ({}) => {
         },
         (response, status) => {
           if (status === 'OK') {
-            console.log(response);
+            // console.log(response);
             setDirections(response);
             dispatch(
               setDurationAction(response.routes[0].legs[0].duration.text)
