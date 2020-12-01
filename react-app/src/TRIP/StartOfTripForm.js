@@ -9,14 +9,14 @@ import DirectionsCarIcon from '@material-ui/icons/DirectionsCar';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import './TripPage.css';
 import { useDispatch, useSelector } from 'react-redux';
-import { useHistory } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { putTrip } from '../store/actions/trips';
 import { setDuration } from '../store/actions/setDuration';
 import SuggestionStepper from '../Suggestions/SuggestionStepper';
 
 const StartOfTripForm = props => {
   const dispatch = useDispatch();
-  const history = useHistory();
+  const userName = useSelector(state => state.authentication.userName);
 
   const [car, setCar] = useState([]);
   const [selectedCar, setSelectedCar] = useState([]);
@@ -138,21 +138,29 @@ const StartOfTripForm = props => {
 
             <DirectionsCarIcon />
             <div>
-              <label>Which car will you be driving?</label>
-              <select value={selectedCar} onChange={handleCarChange}>
-                {/* {car && */}
-                {Object.keys(car).map(key => {
-                  const current = car[`${key}`];
-                  return (
-                    <option key={current.id} value={current.id}>
-                      {current.year}
-                      {current.make}
-                      {current.model}
-                    </option>
-                  );
-                })}
-                ,
-              </select>
+              {userName ? (
+                <>
+                  <label>Which car will you be driving?</label>
+                  <select value={selectedCar} onChange={handleCarChange}>
+                    {/* {car && */}
+                    {Object.keys(car).map(key => {
+                      const current = car[`${key}`];
+                      return (
+                        <option key={current.id} value={current.id}>
+                          {current.year}
+                          {current.make}
+                          {current.model}
+                        </option>
+                      );
+                    })}
+                    ,
+                  </select>
+                </>
+              ) : (
+                <Link to='/'>
+                  <label>Sign In To Choose a Vehicle</label>
+                </Link>
+              )}
             </div>
             <br />
             <LocalGasStationIcon />
