@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink, useHistory } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 // import {makeStyles} from '@material-ui/core/styles'
 import { TextField, Button } from '@material-ui/core';
 import {
@@ -8,6 +8,7 @@ import {
   setDestinationAction
 } from '../store/actions/directions';
 import './RouteForm.css';
+import { postTrip } from '../store/actions/trips';
 import TimePicker from '../Map/DateTimePicker';
 //  use withScriptjs and withGoogleMap to wrap the map in order to get the map to load correctly
 
@@ -21,6 +22,10 @@ const RouteForm = ({}) => {
   const destinationField = document.getElementById('destination');
   const dispatch = useDispatch();
   const history = useHistory();
+  const startTime = useSelector(state => state.directionsRedux.startTime);
+  const userId = useSelector(state => state.authentication.userId);
+  const or = useSelector(state => state.directionsRedux.origin);
+  const de = useSelector(state => state.directionsRedux.destination);
   // const autoOrigin = new google.maps.places.Autocomplete(originField);
   // const autoOrigin2 = new google.maps.places.Autocomplete(destinationField);
 
@@ -83,6 +88,14 @@ const RouteForm = ({}) => {
     setDestination(destinationFormContent);
     dispatch(setOriginAction(originFormContent));
     dispatch(setDestinationAction(destinationFormContent));
+    const new_trip = {
+      userId: userId,
+      startTime: startTime,
+      startLocation: or,
+      endLocation: de
+    };
+    console.log('ABOUT TO DISPATCH', new_trip);
+    dispatch(postTrip(new_trip, userId));
     return history.push(`/create-trip`);
   };
   const updateOriginFormContent = e => {

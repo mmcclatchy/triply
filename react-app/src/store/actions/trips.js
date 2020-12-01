@@ -1,18 +1,16 @@
 import { API, SET_TRIP, DELETE_TRIP } from '../constants/constants';
 
-
 export const getTrips = userId => {
-  console.log("made it in")
-  return{
+  console.log('made it in');
+  return {
     type: API,
     payload: {
       method: 'GET',
       endpoint: `/users/${userId}/trips`,
       actionConst: SET_TRIP
     }
-  }
-}
-
+  };
+};
 
 export const getTrip = tripId => ({
   type: API,
@@ -21,19 +19,20 @@ export const getTrip = tripId => ({
     endpoint: `/trips/${tripId}`,
     actionConst: SET_TRIP
   }
-})
-
-
-export const postTrip = (trip, userId) => ({
-  type: API,
-  payload: {
-    method: 'POST',
-    endpoint: `/users/${userId}/trips`,
-    body: JSON.stringify(trip),
-    actionConst: SET_TRIP
-  },
 });
 
+export const postTrip = (trip, userId) => {
+  console.log('POSTING TRIP!!!!!!!!!!!!!!!!!!!!');
+  return {
+    type: API,
+    payload: {
+      method: 'POST',
+      endpoint: `/users/${userId}/trips`,
+      body: JSON.stringify(trip),
+      actionConst: SET_TRIP
+    }
+  };
+};
 
 export const putTrip = (trip, tripId) => ({
   type: API,
@@ -43,8 +42,7 @@ export const putTrip = (trip, tripId) => ({
     body: JSON.stringify(trip),
     actionConst: SET_TRIP
   }
-})
-
+});
 
 export const deleteTrip = tripId => ({
   type: API,
@@ -53,4 +51,4 @@ export const deleteTrip = tripId => ({
     endpoint: `/trips/${tripId}`,
     actionConst: DELETE_TRIP
   }
-})
+});

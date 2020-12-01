@@ -17,6 +17,8 @@ import SuggestionStepper from '../Suggestions/SuggestionStepper';
 const StartOfTripForm = props => {
   const dispatch = useDispatch();
   const userName = useSelector(state => state.authentication.userName);
+  const trip = useSelector(state => state.trips.payload);
+  console.log(trip);
 
   const [car, setCar] = useState([]);
   const [selectedCar, setSelectedCar] = useState([]);
@@ -52,17 +54,20 @@ const StartOfTripForm = props => {
       }
     });
     dispatch(
-      putTrip({
-        db: {
-          carId: car.id,
-          dailyTimeLimit: sleepTime,
-          stopTimeLimit: stopTime,
-          avoidTolls: tolls
+      putTrip(
+        {
+          db: {
+            carId: selectedCar,
+            dailyTimeLimit: sleepTime,
+            stopTimeLimit: stopTime,
+            avoidTolls: tolls
+          },
+          preferences: {
+            foodQuery: selectedFood
+          }
         },
-        preferences: {
-          foodQuery: selectedFood
-        }
-      })
+        trip.currentId
+      )
     );
     setToggle(false);
   };
@@ -89,7 +94,6 @@ const StartOfTripForm = props => {
     const newBox = document.getElementById('options').lastChild.lastChild;
     // console.log(newBox);
     newBox.checked = true;
-
   }, [options.length]);
 
   const handleCheckOfFood = e => {
@@ -110,7 +114,6 @@ const StartOfTripForm = props => {
   };
 
   useEffect(() => {
-
     if (!userId) {
       return null;
     }
@@ -119,7 +122,6 @@ const StartOfTripForm = props => {
       const response = await fetch(`/api/users/${userId}/cars`);
       const data = await response.json();
       setCar(data.cars);
-
     };
     getCars();
   }, []);

@@ -9,19 +9,28 @@ import cars from './reducers/cars';
 import stops from './reducers/stops';
 import trips from './reducers/trips';
 import setDuration from './reducers/setDurations';
+import suggestions from './reducers/suggestions';
+import timeline from './reducers/timeline';
 
 const composeEnhancers =
   window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
-export const reducer = combineReducers({
-  authentication,
-  utilities,
-  directionsRedux,
-  trips,
-  stops,
-  cars,
-  setDuration,
-});
+  const initialState = {
+    
+  }
+  
+  export const reducer = combineReducers({
+    authentication,
+    utilities,
+    directionsRedux,
+    trips,
+    stops,
+    cars,
+    setDuration,
+    suggestions,
+    timeline,
+  });
+
 
 const persistedState = loadState();
 const store = createStore(
