@@ -3,7 +3,7 @@ from flask_login import login_required
 from app.models import Trip, User, Car, db
 from app.utils import (
     normalize, snake_case, get_place_coords, coords_to_str,
-    get_preferences
+    get_preferences, coords_from_str
 )
 from sqlalchemy.exc import SQLAlchemyError
 from ..Trip import TripClass
@@ -104,15 +104,28 @@ def modify_trip(trip_id):
     for key, value in data['db'].items():
         setattr(trip, snake_case(key), value)
 
-    # Reconstruct the Trip
-    trip_algo = TripClass()
+    car = Car.query.get(data['carId'])
+
+    # Recreate an instance of the Trip Algorithm
+    trip_algo = TripClass(
+        startCor=coords_from_str(trip.start_location),
+        endCor=coords_from_str(trip.end_location),
+        travelPerDay=data['dailyTimeLimit'],
+        travelPerIncrement=data['stopTimeLimit'],
+        milesToRefuel=car.miles_to_refuel,
+        avoidTolls=data['avoidTolls']
+    )
+
+    # Recreate the directions of the Algorithm
     trip_algo.constructFromDirections(trip['directions'])
 
-    # Get food preferences and search next stop for restaurants of that kind
-    food_query = data['preferences']['foodQuery']
-    trip_algo.getNextStopDetails(foodQuery=food_query)
+    # Get preferences and search next stop for places that match preferences
+    food_query, hotel, gas = get_preferences(data['preferences'])
+    suggestions = trip_algo.getNextStopDetails(foodQuery=food_query,
+                                               hotel=hotel,
+                                               gas=gas)
 
-    # Adjust the directions acc
+    # Adjust the directions and save to the database model
     trip_algo.getDirections()
     trip['directions'] = trip_algo['directions']
 
@@ -120,7 +133,7 @@ def modify_trip(trip_id):
         db.session.commit()
         trip_json = jsonify({
             'payload': {'trips': normalize(trip.to_dict())},
-            
+            'suggestions': {'suggestions': suggestions}
             'timeline': trip.get_timeline()
         })
         return trip_json
