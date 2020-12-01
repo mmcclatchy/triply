@@ -494,13 +494,30 @@ class TripClass:
             return None
         self.createDirection()
 
+    def setFoodPreferences(self, foodPreferences):
+        if not self.directionsFromGoogle:
+            return None
+        d = json.loads(self.directionsFromGoogle)
+        d["foodPreferences"] = foodPreferences
+        self.directionsFromGoogle = json.dumps(d)
+
+    def getFoodPreferences(self):
+        if not self.directionsFromGoogle:
+            return None
+        d = json.loads(self.directionsFromGoogle)
+        return d["foodPreferences"]
 
 
 
-t = TripClass()
-print(t.getFoodAndGasNearLocation("Mexican", "ChIJ_yI7V3BFI4gR4K98PVlIEiQ"))
+# t = TripClass()
+# # print(t.getFoodAndGasNearLocation("Mexican", "ChIJ_yI7V3BFI4gR4K98PVlIEiQ"))
 # t.setStartLocationFromString("Holland, mi")
 # t.setEndLocationFromString("California")
+# t.createDirection()
+# t.setFoodPreferences(["I want FOOOOOD!!", "and other stuff"])
+# n = TripClass()
+# n.constructFromDirections(t.getDirections())
+# print(n.getFoodPreferences())
 # t.travelPerDay = 21600
 # t.setTravelPerIncrement(20189)
 # t.createDirection()
