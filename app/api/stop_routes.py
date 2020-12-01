@@ -1,7 +1,10 @@
 from flask import Blueprint, jsonify, request
 from flask_login import login_required
 from app.models import Trip, Stop, Cuisine, db
-from app.utils import normalize, snake_case, coords_from_str
+from app.utils import (
+    normalize, snake_case, coords_from_str, create_place_id_list,
+    create_stop_keys, get_places
+)
 from sqlalchemy.exc import SQLAlchemyError
 from ..Trip import TripClass
 
@@ -15,7 +18,7 @@ stop_routes = Blueprint('stops', __name__)
 def get_stops(trip_id):
     stops = Stop.query.filter(Stop.trip_id == trip_id).all()
     if stops:
-        return {'stops': normalize([stop.to_dict() for stop in stops])}
+        return {'payload': normalize([stop.to_dict() for stop in stops])}
     else:
         return {}, 404
 
@@ -26,7 +29,7 @@ def get_stops(trip_id):
 def get_stop(stop_id):
     stop = Stop.query.get(stop_id)
     if stop:
-        return {'stops': normalize(stop.to_dict())}
+        return {'payload': normalize(stop.to_dict())}
     else:
         return {}, 404
 
@@ -36,21 +39,27 @@ def get_stop(stop_id):
 @login_required
 def post_stop(trip_id):
     data = request.json
-    
-    place_ids = create_place_id_list(data['placeIds'])
-    stop_keys = create_stop_keys(data['placeIds'])
-    trip_algo.addStop(place_ids, stop_keys)
-    
-    # If the place ids include a hotel,
-    # send suggestions for food and gas based on that location
-    if any([key for key in stop_keys if key == 'h']):
-        trip_algo = TripClass()
-        food_and_gas = trip_algo.getFoodAndGasNearLocation(data['placeIds']['hotel'])
-        return jsonify({
-            'suggestions': {'suggestions': food_and_gas, 'hotelChoice': hotel}
-        })
-    
+
+    # Find the trip in which this stop is associated
     trip = Trip.query.filter(Trip.id == trip_id).first()
+
+    # Extract the places from data and assign them the correct variables
+    restaurant, gas, hotel = get_places(data)
+
+    food_preference = trip.next_cuisine_option(data['cuisines'])
+
+    # If the place ids include a hotel, send suggestions
+    # for food and gas based on the location of the hotel
+    if any([place for place in data['places'] if place['type'] == 'hotel']):
+        trip_algo = TripClass()
+        food_and_gas = trip_algo.getFoodAndGasNearLocation(
+            searchQuery=food_preference,
+            coords=hotel['coordinates'])
+        return jsonify({
+            'suggestions': {'suggestions': food_and_gas, 'hotel': hotel}
+        })
+
+    # Construct a instance of the Trip Algorithm
     trip_algo = TripClass(
         startCor=coords_from_str(trip.start_location),
         endCor=coords_from_str(trip.end_location),
@@ -60,27 +69,42 @@ def post_stop(trip_id):
         avoidTolls=trip.tolls
     )
 
+    # Reconstruct the directions of the Trip
     trip_algo.constructFromDirections(trip.directions)
+
+    # Get the Google Maps Place Ids and create a list that keeps track
+    # of each waypoint type (gas, restaurant, and/or hotel)
+    places = create_place_id_list(data)
+    stop_keys = create_stop_keys(data)
+
+    # If a hotel was chosen prior to the food and/or gas,
+    # add the hotel to place_ids and stop_keys
+    if data['hotel']:
+        place_ids = [data['hotel']] + place_ids
+        stop_keys = ['h'] + stop_keys
+
+    # Create a new stop along the route based off the selections
+    trip_algo.addStop(place_ids, stop_keys)
 
     try:
         stop = Stop(
             trip_id=data['tripId'],
             trip_stop_num=data['tripStopNum'],
-            restaurant_id=data['restaurantId'],
-            hotel_id=data['hotelId'],
-            gas_station_id=data['gasStationId'],
+            restaurant=restaurant,
+            hotel=hotel,
+            gas_station=gas,
             coordinates=data['coordinates'],
             time=data['time'],
             star_min=data['starMin'],
             star_max=data['starMax'])
 
-        for cuisine in data['cuisines']:
-            c = Cuisine.query.filter(Cuisine.name == cuisine).first()
-            if isinstance(c, Cuisine):
-                stop.cuisines.append(c)
-            else:
-                cuisine_type = Cuisine(name=cuisine)
-                stop.cuisines.append(cuisine_type)
+        # for cuisine in data['cuisines']:
+        #     c = Cuisine.query.filter(Cuisine.name == cuisine).first()
+        #     if isinstance(c, Cuisine):
+        #         stop.cuisines.append(c)
+        #     else:
+        #         cuisine_type = Cuisine(name=cuisine)
+        #         stop.cuisines.append(cuisine_type)
 
         db.session.add(stop)
         db.session.commit()

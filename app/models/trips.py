@@ -19,7 +19,7 @@ class Trip(db.Model):
     directions = db.Column(db.Text)
 
     stops = db.relationship('Stop', back_populates='trip', lazy='joined')
-    car = db.relationship('Car', back_populates='trip', lazy='joined')
+    car = db.relationship('Car', back_populates='trips', lazy='joined')
 
     def to_dict(self):
         return {
