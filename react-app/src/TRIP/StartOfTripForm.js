@@ -7,7 +7,7 @@ import HotelIcon from '@material-ui/icons/Hotel';
 import FastfoodIcon from '@material-ui/icons/Fastfood';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import './TripPage.css';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector} from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { setDuration } from '../store/actions/setDuration';
 
@@ -15,6 +15,8 @@ const StartOfTripForm = props => {
   const dispatch = useDispatch();
   const history = useHistory();
 
+  const [car, setCar] = useState([])
+  // const [cars, setCars] = useState([]);
   const [stopTime, setStopTime] = useState(5400);
   const [sleepTime, setSleepTime] = useState(18000);
   const [tolls, setTolls] = useState(false);
@@ -27,7 +29,8 @@ const StartOfTripForm = props => {
   ]);
   const [additionalOption, setAdditionalOption] = useState('');
   const [selectedFoods, setSelectedFoods] = useState([]);
-
+  const userId = useSelector(state => state.authentication.userId);
+  const handleCarChange = e => setCar(e.target.value);
   const handleStopChange = e => setStopTime(e.target.value);
   const handleSleepChange = e => setSleepTime(e.target.value);
   const handleCheck = e => {
@@ -47,6 +50,7 @@ const StartOfTripForm = props => {
         stop_timelimit: stopTime,
         avoidTolls: tolls,
         selectedFoods: selectedFood
+        // tripCar: car
       })
     );
     history.push('/create-trip');
@@ -92,6 +96,22 @@ const StartOfTripForm = props => {
     }
   };
 
+  useEffect(() => {
+   console.log("useeffect ran")
+    if (!userId) {
+      return null;
+    }
+
+    const getCars = async () => {
+      const response = await fetch(`/api/users/${userId}/cars`);
+      const data = await response.json();
+      setCar(data.cars);
+      console.log(data.cars)
+      console.log(car)
+    };
+    getCars();
+  },[])
+
   return (
     <Paper variant='outlined' elevation={8}>
       <div className='StartOfTripForm'>
@@ -102,8 +122,22 @@ const StartOfTripForm = props => {
           </Typography>
 
           <br />
-          <LocalGasStationIcon />
 
+          <LocalGasStationIcon />
+          <div>
+            <label>Which car will you be driving?</label>
+            <select value={car} onChange={handleCarChange}>
+              {car &&
+                Object.keys(car).map(key => {
+                  const current = car[`${key}`]
+                  return (
+                    <option key={current.id} value={current.id}>{current.year}{current.make}{current.model}</option>
+                  )
+              })},
+            </select>
+          </div>
+          <br />
+          <LocalGasStationIcon />
           <div>
             <label>How often are we stopping?</label>
             <select value={stopTime} onChange={handleStopChange}>
