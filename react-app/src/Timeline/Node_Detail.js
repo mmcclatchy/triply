@@ -24,7 +24,7 @@ const Node_Detail = ({
               return (
                 <>
                   <Paper elevation={3} className={classes.paper}>
-                    {end[key] ? null : (
+                    {/* {end[key] ? null : (
                       <Button
                         onClick={clickHandler}
                         value={id}
@@ -32,7 +32,7 @@ const Node_Detail = ({
                         color='secondary'>
                         Edit/Delete
                       </Button>
-                    )}
+                    )} */}
                     <Typography variant='h6' component='h1'>
                       {info
                         ? getTagline(key, info.name)
@@ -59,14 +59,14 @@ const Node_Detail = ({
             })
           ) : (
             <Paper elevation={3} className={classes.paper}>
-              {end[data.type] ? null : (
+              {/* {end[data.type] ? null : (
                 <Button
                   onClick={clickHandler}
                   variant='outlined'
                   color='secondary'>
                   Edit/Delete
                 </Button>
-              )}
+              )} */}
               <Typography variant='h6' component='h1'>
                 {data.details
                   ? getTagline(data.type, data.details.name)

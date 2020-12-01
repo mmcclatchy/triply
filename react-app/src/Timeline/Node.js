@@ -28,7 +28,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const Node = ({ data, origin, destination }) => {
+const Node = ({ data, origin, destination, head, tail }) => {
   const classes = useStyles();
   const end = { Origin: origin, Destination: destination };
   const [view, setView] = useState(false);

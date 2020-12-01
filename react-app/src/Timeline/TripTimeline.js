@@ -19,11 +19,10 @@ const TripTimeline = () => {
     <Timeline align='left' className={classes.time}>
       {stops &&
         stops.map((node, i) => {
-          let tail = false;
-          if (i === 0 || i === stops.length - 1) tail = true;
           return (
             <Node
-              tail={tail}
+              head={i === 0}
+              tail={i === stops.length - 1}
               data={node}
               origin={trip.start_location}
               destination={trip.end_location}
