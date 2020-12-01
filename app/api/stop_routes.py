@@ -46,8 +46,8 @@ def post_stop(trip_id):
     # Extract the places from data and assign them the correct variables
     restaurant, gas, hotel = get_places(data)
 
+    # Determine cuisine based on preferences and what has already been eaten
     food_preference = trip.next_cuisine_option(data['cuisines'])
-    print('****************\n\n', food_preference, '\n\n**************')
 
     # If the place ids include a hotel, send suggestions
     # for food and gas based on the location of the hotel
@@ -55,7 +55,7 @@ def post_stop(trip_id):
         trip_algo = TripClass()
         food_and_gas = trip_algo.getFoodAndGasNearLocation(
             searchQuery=food_preference,
-            coords=hotel['coordinates'])
+            place_id=hotel['placeId'])
         return jsonify({
             'suggestions': {'suggestions': food_and_gas, 'hotel': hotel}
         })
