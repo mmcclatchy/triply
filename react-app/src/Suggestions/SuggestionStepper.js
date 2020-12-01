@@ -1,12 +1,32 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { algorithm } from './dummy_suggestions';
+import { useDispatch } from 'react-redux';
+import { postStop } from '../store/actions/stops';
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import SDetails from './SDetails';
+
+class Test {
+  constructor() {
+    this.output = [];
+  }
+
+  newNode(data) {
+    this.output.push(data);
+  }
+}
+
+let foo = new Test();
+foo.newNode(algorithm[0]);
+foo.newNode(algorithm[1]);
+foo.newNode(algorithm[2]);
+foo.newNode(algorithm[3]);
+
+const tripId = 1;
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -32,40 +52,122 @@ const generateContent = array => {
   return obj;
 };
 
-const content = generateContent(algorithm);
-
-function getSteps() {
-  const length = algorithm.length;
-  const steps = [];
-  for (let i = 0; i < length; i++) {
-    steps.push(`Stop Option ${i + 1}`);
-  }
-  return steps;
-}
-
-function getStepContent(step) {
-  const data = content[step + 1];
-  return (
-    <SDetails
-      node={{ coordinates: data.coordinates, time: data.time }}
-      hotels={data.suggestions.Hotel}
-      restaurants={data.suggestions.Restaurant}
-      gas={data.suggestions.Gas}
-    />
-  );
-}
-
 export default function SuggestionStepper() {
+  const [steps, setSteps] = useState([]);
+  const [activeStep, setActiveStep] = useState(0);
+  const [h, setH] = useState(new Set());
+  const [r, setR] = useState(new Set());
+  const [g, setG] = useState(new Set());
+  const [count, setCount] = useState(1);
+  const [data, setData] = useState({});
+  const [hotels, setHotels] = useState([]);
+  const [restaurants, setRestaurants] = useState([]);
+  const [gasStations, setGasStations] = useState([]);
+
   const classes = useStyles();
-  const [activeStep, setActiveStep] = React.useState(0);
-  const steps = getSteps();
+  const content = generateContent(foo.output);
+
+  useEffect(() => {
+    function getSteps() {
+      const length = foo.output.length;
+      const steps = [];
+      for (let i = 0; i < length; i++) {
+        steps.push(`Stop Option ${i + 1}`);
+      }
+      setSteps(steps);
+    }
+    getSteps();
+  }, []);
+
+  useEffect(() => {
+    function getContent() {
+      const info = content[activeStep + 1];
+      if (info) {
+        setData(info);
+        setHotels(info.suggestions.Hotel);
+        setRestaurants(info.suggestions.Restaurant);
+        setGasStations(info.suggestions.Gas);
+      }
+    }
+    getContent();
+  }, [steps]);
+
+  function getStepContent() {
+    return (
+      <SDetails
+        node={{ time: data.time }}
+        hotels={hotels}
+        restaurants={restaurants}
+        gasStations={gasStations}
+        h={h}
+        setH={setH}
+        r={r}
+        setR={setR}
+        g={g}
+        setG={setG}
+      />
+    );
+  }
+
+  const submitHandler = () => {
+    console.log([...h, ...r, ...g]);
+    if (h.size) {
+      h.forEach(e => {
+        const info = hotels[e];
+        const new_stop = {
+          trip_id: tripId,
+          trip_stop_num: count,
+          coordinates: data.coordinates,
+          time: data.time
+        };
+        console.log(new_stop);
+        // setStop(new_stop);
+      });
+    }
+    if (r.size) {
+      r.forEach(e => {
+        const info = restaurants[e];
+        const new_stop = {
+          trip_id: tripId,
+          trip_stop_num: count,
+          coordinates: data.coordinates,
+          time: data.time
+        };
+        console.log(new_stop);
+        // setStop(new_stop);
+      });
+    }
+    if (g.size) {
+      g.forEach(e => {
+        const info = gasStations[e];
+        const new_stop = {
+          trip_id: tripId,
+          trip_stop_num: count,
+          coordinates: data.coordinates,
+          time: data.time
+        };
+        console.log(new_stop);
+        // setStop(new_stop);
+      });
+    }
+
+    setCount(prev => prev + 1);
+    clearState();
+  };
+
+  // useEffect(() => {
+  //   console.log(stop);
+  //   //dispatch(postStop(stop, tripId));
+  // }, [stop]);
+
+  const clearState = () => {
+    setH(() => new Set());
+    setR(() => new Set());
+    setG(() => new Set());
+  };
 
   const handleNext = () => {
     setActiveStep(prevActiveStep => prevActiveStep + 1);
-  };
-
-  const handleBack = () => {
-    setActiveStep(prevActiveStep => prevActiveStep - 1);
   };
 
   const handleReset = () => {
@@ -90,7 +192,7 @@ export default function SuggestionStepper() {
         {activeStep === steps.length ? (
           <div>
             <Typography className={classes.instructions}>
-              All stops booked - enjoy your trip!
+              Generating Your Next Stop...
             </Typography>
             <Button onClick={handleReset} className={classes.button}>
               Reset
@@ -103,18 +205,14 @@ export default function SuggestionStepper() {
             </Typography>
             <div>
               <Button
-                disabled={activeStep === 0}
-                onClick={handleBack}
-                className={classes.button}>
-                Back
-              </Button>
-
-              <Button
                 variant='contained'
                 color='primary'
-                onClick={handleNext}
+                onClick={() => {
+                  handleNext();
+                  submitHandler();
+                }}
                 className={classes.button}>
-                {activeStep === steps.length - 1 ? 'Register Stops' : 'Next'}
+                Register Stops
               </Button>
             </div>
           </div>

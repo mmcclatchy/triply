@@ -61,11 +61,11 @@ export const algorithm = [
   },
   {
     coordinates: '23498, 13890',
-    time: '2020-12-23 06:30 AM',
+    time: '2020-12-23 04:30 PM',
     suggestions: {
       Hotel: [
         {
-          name: 'Four Seasons',
+          name: 'Four Seasons2',
           place_id: 238490,
           type: 'Hotel',
           city: 'Ottawa',
