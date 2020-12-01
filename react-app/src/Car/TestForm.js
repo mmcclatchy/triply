@@ -44,7 +44,7 @@ function getSteps() {
   ];
 }
 
-const TestForm = () => {
+const TestForm = (props) => {
   const [activeStep, setActiveStep] = useState(0);
   const [year, setYear] = useState('');
   const [make, setMake] = useState('');
@@ -70,12 +70,14 @@ const TestForm = () => {
       tankSize: tankSize
     };
     setCar(new_car);
+
   };
-  
+
   useEffect(() => {
     if (Object.keys(car).length === 0) return
     dispatch(postCar(car, userId));
     dispatch(hideForm());
+    props.setGettingCars(2)
   }, [car]);
 
   const getStepContent = step => {
