@@ -15,18 +15,19 @@ const useStyles = makeStyles({
     boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
     color: 'Black',
     height: 48,
-    padding: '0 30px',
+    padding: '0 30px'
   },
   login_header: {
-    fontFamily: "Circular, -apple-system, BlinkMacSystemFont, Roboto, Helvetica Neue, sans-serif",
-    fontSize: "60px"
+    fontFamily:
+      'Circular, -apple-system, BlinkMacSystemFont, Roboto, Helvetica Neue, sans-serif',
+    fontSize: '60px'
   },
   email_input: {
-    marginTop: "2em",
-    marginBottom: "2em"
+    marginTop: '2em',
+    marginBottom: '2em'
   },
   password_input: {
-    marginBottom: "2em"
+    marginBottom: '2em'
   }
 });
 
@@ -67,14 +68,14 @@ const LoginForm = () => {
       <div className='login__logo' />
       <div className={classes.login_header}>Welcome Back!</div>
       <form onSubmit={onLogin}>
-        <div style={{color:"red"}}>
+        <div style={{ color: 'red' }}>
           {errors.map(error => (
             <div>{error}</div>
           ))}
         </div>
         <div>
           <TextField
-            label="Email"
+            label='Email'
             name='email'
             className={classes.email_input}
             type='text'
@@ -86,7 +87,7 @@ const LoginForm = () => {
         </div>
         <div>
           <TextField
-            label= "Password"
+            label='Password'
             className={classes.password_input}
             name='password'
             type='password'
@@ -96,10 +97,7 @@ const LoginForm = () => {
             required={true}
           />
           <div></div>
-          <Button
-            variant="contained"
-            type='submit'
-            className={classes.button}>
+          <Button variant='contained' type='submit' className={classes.button}>
             Login
           </Button>
         </div>

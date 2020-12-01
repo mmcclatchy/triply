@@ -7,6 +7,7 @@ import './TripPage.css';
 const TripSummary = () => {
   const [details, setDetails] = useState(false);
   const userName = useSelector(state => state.authentication.userName);
+  console.log(userName);
   const distance = useSelector(state => state.directionsRedux.distance);
   const duration = useSelector(state => state.directionsRedux.duration);
   const origin = useSelector(state => state.directionsRedux.origin);
@@ -22,7 +23,7 @@ const TripSummary = () => {
       <Paper variant='outlined' elevation={8}>
         <div className='trip_summary_container'>
           <Typography variant='h4' component='h1'>
-            {userName}'s Trip
+            {userName ? `${userName}'s Trip` : `Triply Roadtrip`}
           </Typography>
 
           {details ? (
