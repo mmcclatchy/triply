@@ -113,6 +113,7 @@ function User({ userId }) {
   const dispatch = useDispatch();
   const visible = useSelector(state => state.utilities.formVisible);
   const trips = useSelector(state => state.trips.payload.trips)
+  // const trips = ""
 
   useEffect(() => {
     (async () => {

@@ -110,11 +110,7 @@ const StartOfTripForm = props => {
   };
 
   useEffect(() => {
-<<<<<<< HEAD
   //  console.log("useeffect ran")
-=======
-    console.log('useeffect ran');
->>>>>>> main
     if (!userId) {
       return null;
     }
@@ -123,13 +119,8 @@ const StartOfTripForm = props => {
       const response = await fetch(`/api/users/${userId}/cars`);
       const data = await response.json();
       setCar(data.cars);
-<<<<<<< HEAD
       // console.log(data.cars)
       // console.log(car)
-=======
-      console.log(data.cars);
-      console.log(car);
->>>>>>> main
     };
     getCars();
   }, []);
