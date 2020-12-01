@@ -1,14 +1,17 @@
 import { API, SET_TRIP, DELETE_TRIP } from '../constants/constants';
 
 
-export const getTrips = userId => ({
-  type: API,
-  payload: {
-    method: 'GET',
-    endpoint: `/users/${userId}/trips`,
-    actionConst: SET_TRIP
+export const getTrips = userId => {
+  console.log("made it in")
+  return{
+    type: API,
+    payload: {
+      method: 'GET',
+      endpoint: `/users/${userId}/trips`,
+      actionConst: SET_TRIP
+    }
   }
-})
+}
 
 
 export const getTrip = tripId => ({

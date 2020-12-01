@@ -65,12 +65,17 @@ class Trip(db.Model):
         ]
 
     def get_cuisines(self):
-        return [stop.restaurant.get_cuisines() for stop in self.stops]
+        return [stop.restaurant.get_cuisines() for stop in self.stops][0]
 
     def next_cuisine_option(self, cuisines_from_front_end):
         if len(cuisines_from_front_end) == 1:
             return cuisines_from_front_end[0]
-        db_cuisines = set(self.get_cuisines())
+        db_cuisines = self.get_cuisines()
+        db_cuisines = set(db_cuisines)
         fe_cuisines = set(cuisines_from_front_end)
-        return fe_cuisines.difference(db_cuisines).pop()
+        cuisine = fe_cuisines.difference(db_cuisines).pop()
+        if cuisine:
+            return cuisine
+        else:
+            return None
 
