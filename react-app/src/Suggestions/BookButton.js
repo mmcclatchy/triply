@@ -20,17 +20,17 @@ const BookButton = ({
   return (
     <>
       {reg ? (
-        <Button color='primary'>Booked</Button>
+        <Button variant="contained" color='primary'>Booked</Button>
       ) : (
         <>
           {type === 'Restaurant' ? (
-            <Button onClick={() => registerRestaurant(index)}>Book</Button>
+            <Button variant="contained" onClick={() => registerRestaurant(index)}>Book</Button>
           ) : null}
           {type === 'GasStation' ? (
-            <Button onClick={() => registerGas(index)}>Book</Button>
+            <Button variant="contained" onClick={() => registerGas(index)}>Book</Button>
           ) : null}
           {type === 'Hotel' ? (
-            <Button onClick={() => registerHotel(index)}>Book</Button>
+            <Button variant="contained" onClick={() => registerHotel(index)}>Book</Button>
           ) : null}{' '}
         </>
       )}

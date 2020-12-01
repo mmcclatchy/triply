@@ -70,7 +70,7 @@ const SDetails = ({
                           {e.name}
                         </Typography>
                         <Typography>
-                          {e.city}, {e.state}
+                          {e.city} {e.state}
                         </Typography>
                         <BookButton
                         registerRestaurant={registerRestaurant}
@@ -79,6 +79,7 @@ const SDetails = ({
                         index={i}
                         type={e.type}
                         booked={checkBooked(e.type, i)}
+                        variant="contained"
                       />
                       </div>
 
@@ -107,7 +108,7 @@ const SDetails = ({
                           {e.name}
                         </Typography>
                         <Typography>
-                          {e.city}, {e.state}
+                          {e.city}{e.state}
                         </Typography>
                       </div>
 
@@ -118,6 +119,7 @@ const SDetails = ({
                         index={i}
                         type={e.type}
                         booked={checkBooked(e.type, i)}
+                        variant="contained"
                       />
                     </div>
                   </>

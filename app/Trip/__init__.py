@@ -412,11 +412,11 @@ class TripClass:
         timeOfStop = self.convertSecondsTravelSecondsToDTOfStop(self.stopTimeIndex[-1] + self.travelPerIncrement[0])
         if gas and not hotel:
             gasOptions = self.getGasNearLocation("placeholder", cords=listOfFoundSpots[0]["geometry"]["location"])
-            listOfFoundSpots = {"time": timeOfStop, 'suggestions': {"Restaurant": [self.convertToFrontEndFormat(x, "food") for x in listOfFoundSpots], "Gas": [self.convertToFrontEndFormat(x, gas) for x in gasOptions["gas"]]}}
+            listOfFoundSpots = {"time": timeOfStop, 'suggestions': {"Restaurant": [self.convertToFrontEndFormat(x, "Restaurant") for x in listOfFoundSpots], "Gas": [self.convertToFrontEndFormat(x, "GasStation") for x in gasOptions["gas"]]}}
         elif hotel:
-            listOfFoundSpots = {"time": timeOfStop, 'suggestions': {"Hotel": [self.convertToFrontEndFormat(x, "hotel") for x in listOfFoundSpots]}}
+            listOfFoundSpots = {"time": timeOfStop, 'suggestions': {"Hotel": [self.convertToFrontEndFormat(x, "Hotel") for x in listOfFoundSpots]}}
         else:
-            listOfFoundSpots = {"time": timeOfStop, 'suggestions': {"Restaurant": [self.convertToFrontEndFormat(x, "food") for x in listOfFoundSpots]}}
+            listOfFoundSpots = {"time": timeOfStop, 'suggestions': {"Restaurant": [self.convertToFrontEndFormat(x, "Restaurant") for x in listOfFoundSpots]}}
         return listOfFoundSpots
 
 
