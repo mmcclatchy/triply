@@ -72,10 +72,11 @@ export default function TemporaryDrawer({
   return (
     <>
       <Button
-        variant="contained"
+        variant="outline"
         style={{
           backgroundColor: "yellow",
           fontWeight: "bold",
+          border: "none"
         }}
         color={color}
         onClick={toggleDrawer(anchor, true)}
