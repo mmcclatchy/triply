@@ -108,9 +108,11 @@ def modify_trip(trip_id):
     trip_algo = TripClass()
     trip_algo.constructFromDirections(trip['directions'])
 
+    # Get food preferences and search next stop for restaurants of that kind
     food_query = data['preferences']['foodQuery']
-    trip_algo.getNextStopDetails()
+    trip_algo.getNextStopDetails(foodQuery=food_query)
 
+    # Adjust the directions acc
     trip_algo.getDirections()
     trip['directions'] = trip_algo['directions']
 
