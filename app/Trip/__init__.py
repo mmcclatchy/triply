@@ -327,22 +327,30 @@ class TripClass:
     def getCordsFromPlaceId(self, placeId):
         url = "https://maps.googleapis.com/maps/api/place/details/json?fields=geometry&key=" + os.environ.get("BACKEND_API_KEY")
         r = requests.get(url + "&place_id=" + placeId)
-        return r.json()
+        r = r.json()
+        return r["result"]["geometry"]["location"]
 
-    def getFoodAndGasNearLocation(self, searchQuery, cords):
-        food = self.placeSearchUrlGenerator(searchQuery, cords)
-        gas = self.getGasNearLocation(cords)
-        r = []
-        for item in food:
-            r.append(item)
+    def getFoodAndGasNearLocation(self, searchQuery, place_Id):
+        cords = self.getCordsFromPlaceId(place_Id)
+        food = requests.get(self.placeSearchUrlGenerator(searchQuery, cords))
+        food = food.json()
+        gas = self.getGasNearLocation(place_Id, cords=cords)
+        f = []
+        g = []
+        for item in food["results"]:
+            f.append(item)
         for item in gas:
-            r.append(item)
-        return r
+            g.append(item)
+        return {"food": f, "gas": g}
 
-    def getGasNearLocation(self, cords):
+    def getGasNearLocation(self, place_Id, **kwargs):
+        cords = kwargs.get("cords")
+        if not cords:
+            cords = self.getCordsFromPlaceId(place_Id)
         r = requests.get(self.placeSearchUrlGenerator("gas station", cords, type="gas_station"))
         r = r.json()
-        return r
+        r = [i for i in r["results"]]
+        return {"gas": r}
 
 
     def getNextStopDetails(self, **kwargs):
@@ -490,7 +498,7 @@ class TripClass:
 
 
 t = TripClass()
-print(t.getCordsFromPlaceId("ChIJ_yI7V3BFI4gR4K98PVlIEiQ"))
+print(t.getFoodAndGasNearLocation("Mexican", "ChIJ_yI7V3BFI4gR4K98PVlIEiQ"))
 # t.setStartLocationFromString("Holland, mi")
 # t.setEndLocationFromString("California")
 # t.travelPerDay = 21600
