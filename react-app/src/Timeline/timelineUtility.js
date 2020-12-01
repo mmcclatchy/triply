@@ -38,7 +38,7 @@ export const getIcon = type => {
 
 export const getTagline = (key, name) => {
   if (key === 'Restaurant') return `Meal at ${name}`;
-  if (key === 'Hotel') return `Staying at ${name}`;
+  if (key === 'Hotel') return `Stay at ${name}`;
   if (key === 'GasStation') return `Refill at ${name}`;
   if (key === 'Origin') return `Departing from ${name}`;
   if (key === 'Destination') return `Arriving at ${name}`;

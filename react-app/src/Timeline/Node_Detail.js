@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { getTagline } from './timelineUtility';
 import { Typography, Paper, Button } from '@material-ui/core';
 import './Node_Detail.css';
-import DateAndTimePickers from '../Map/DateTimePicker';
 
 const Node_Detail = ({
   clickHandler,
