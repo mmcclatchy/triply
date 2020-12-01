@@ -31,7 +31,8 @@ function User({ userId }) {
   }, []);
 
   useEffect(() => {
-   dispatch(getTrips(userId))
+    dispatch(getTrips(userId))
+    console.log("getting trips")
   }, []);
 
   if (!user) {
