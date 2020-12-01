@@ -63,7 +63,7 @@ export default function SuggestionStepper() {
   const [hotels, setHotels] = useState([]);
   const [restaurants, setRestaurants] = useState([]);
   const [gasStations, setGasStations] = useState([]);
-  const suggestions = useSelector(state => state.suggestions.suggestions)
+  const suggestions = useSelector(state => state.suggestions)
   
   const classes = useStyles();
   let content;
