@@ -14,3 +14,4 @@ export const SET_AUTH = 'triply/authentication/SET_AUTH';
 export const SET_DURATIONS = 'triply/StartOfTripForm/SET_DURATIONS';
 export const SET_SUGGESTIONS = 'triply/tripForm/SET_SUGGESTIONS';
 export const SET_TIMELINE = 'triply/timeline/SET_TIMELINE';
+export const SET_ROUTE = 'triply/route/SET_ROUTE';

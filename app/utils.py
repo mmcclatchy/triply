@@ -1,9 +1,9 @@
-from urllib import parse
-import requests
-import os
+# from urllib import parse
+# import requests
+# import os
 
 
-api_key = os.environ['FRONTEND_API_KEY']
+# api_key = os.environ['FRONTEND_API_KEY']
 
 
 def camelCase(string):
@@ -57,14 +57,14 @@ def to_dict(inst):
     return inst_dict
 
 
-def get_place_coords(place):
-    formatted_place = parse.quote(place)
-    url = f'https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input={formatted_place}&inputtype=textquery&fields=formatted_address,name,geometry,place_id&key={api_key}'
-    res = requests.get(url)
-    res = res.json()
-    lat = res['candidates'][0]['geometry']['location']['lat']
-    lng = res['candidates'][0]['geometry']['location']['lng']
-    return {'lat': lat, 'lng': lng}
+# def get_place_coords(place):
+#     formatted_place = parse.quote(place)
+#     url = f'https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input={formatted_place}&inputtype=textquery&fields=formatted_address,name,geometry,place_id&key={api_key}'
+#     res = requests.get(url)
+#     res = res.json()
+#     lat = res['candidates'][0]['geometry']['location']['lat']
+#     lng = res['candidates'][0]['geometry']['location']['lng']
+#     return {'lat': lat, 'lng': lng}
 
 
 def coords_to_str(coords):
@@ -72,15 +72,17 @@ def coords_to_str(coords):
 
 
 def coords_from_str(coords):
+    if coords is None:
+        return None
     return coords.split(',')
 
 
 def create_stop_keys(data):
-    return [place_id[0].lower() for place_id in data['placeIds']]
+    return [place['type'][0].lower() for place in data['places']]
 
 
 def create_place_id_list(data):
-    return [data['placeIds'][key] for key in data['placeIds']]
+    return [place['placeId'] for place in data['places']]
 
 
 def get_preferences(data):
@@ -90,3 +92,13 @@ def get_preferences(data):
         data['preferences']['gas']
     ]
 
+
+def get_places(data):
+    for place in data['places']:
+        if place['type'] == 'restaurant':
+            r = place
+        elif place['type'] == 'gasStation':
+            g = place
+        elif place['type'] == 'hotel':
+            h = place
+    return [r, g, h]
