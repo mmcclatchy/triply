@@ -49,9 +49,9 @@ const StartOfTripForm = props => {
     dispatch(putTrip(
       {
         db: {
-          // carId: carId,
-          dailyTimelimit: sleepTime,
-          stopTimelimit: stopTime,
+          carId: car.id,
+          dailyTimeLimit: sleepTime,
+          stopTimeLimit: stopTime,
           avoidTolls: tolls,
         },
         preferences: {
