@@ -10,6 +10,7 @@ car_routes = Blueprint('cars', __name__)
 
 # GET all cars owned by the specific user
 @car_routes.route('/users/<int:user_id>/cars', methods=['GET'])
+@login_required
 def get_cars(user_id):
     try:
         cars = Car.query.filter(Car.user_id == user_id).all()
@@ -38,7 +39,7 @@ def get_car(car_id):
 
 # POST a new car for a specific user
 @car_routes.route('/users/<int:user_id>/cars', methods=['POST'])
-# @login_required
+@login_required
 def post_car(user_id):
     data = request.json
     car = Car(

@@ -6,7 +6,9 @@ import Node from './Node';
 
 const useStyles = makeStyles(theme => ({
   time: {
-    width: '180px'
+    width: '180px',
+    height: 'auto',
+    marginTop: '30px'
   }
 }));
 

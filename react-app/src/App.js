@@ -7,10 +7,10 @@ import { useDispatch } from 'react-redux';
 import View from './shared_components/Drawer';
 import Homepage from './Homepage/Homepage';
 import { authenticate } from './services/auth';
-import TripPage from './Map/TripPage';
+import TripPage from './TRIP/TripPage';
 import TripTimeline from './Timeline/TripTimeline';
 import { setAuth } from './store/actions/authentication';
-import StartOfTripForm from "./StartOfTripForm/StartOfTripForm"
+import StartOfTripForm from './TRIP/StartOfTripForm';
 
 function App() {
   const [authenticated, setAuthenticated] = useState(false);

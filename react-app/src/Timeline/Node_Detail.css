@@ -1,0 +1,16 @@
+.node__detail {
+  width: 200px;
+  position: absolute;
+  width: 300px;
+  margin-left: 180px;
+  margin-top: -65px;
+  z-index: 99999;
+}
+
+.node__inner__details {
+  display: flex;
+}
+
+.node__detail--container {
+  position: relative;
+}
