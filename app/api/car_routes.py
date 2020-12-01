@@ -42,7 +42,6 @@ def get_car(car_id):
 @login_required
 def post_car(user_id):
     data = request.json
-    print('*********************\n\nDATA: ', data)
     car = Car(
         user_id=user_id,
         api_id=data['apiId'],
