@@ -20,7 +20,7 @@ class TripClass:
         self.buffer = []
         return None
     
-    def createNewTrip(self, start, end, metersToRefuel, timeBetweenStops, endTimeForDay, startDateTime, avoidTolls):
+    def createNewTrip(self, start, end, metersToRefuel, timeBetweenStops, endTimeForDay, startISO, avoidTolls):
         # get the start coordinates for the trip from a string
         url = self.useThisUrlToGetCordsForAPoint + parse.quote(start)
         r = requests.get(url)
@@ -49,8 +49,11 @@ class TripClass:
         r = requests.get(url)
         r = r.json()
 
+        def addFormData()
+
         # set up cache
         cache = {
+            "startISO": startISO,
             "metersToRefuel": metersToRefuel,
             "timeBetweenStops": timeBetweenStops,
             "endTimeForDay": endTimeForDay,
