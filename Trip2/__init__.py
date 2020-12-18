@@ -56,7 +56,8 @@ class TripClass:
             "endTimeForDay": endTimeForDay,
             "stopArray": [{"time": startDateTime, "gas": True}],
             "startLocation": startCor,
-            "endLocation": endCor
+            "endLocation": endCor,
+            "avoidTolls": avoidTolls
         }
         self.cache = cache
 
@@ -143,11 +144,14 @@ class TripClass:
         }
 
     def getTimeTillNextHotel(self):
+        print("YOU NEED TO CALCULATE TIME TILL NEXT STOP")
         return 100000000
 
 
     # kwargs: hotel as bool, gas as bool
+    
     def getNextStopDetails(self, foodQuery, **kwargs):
+        self.updateDirections()
         queries = self.getNextStopLocation()
         if kwargs.get("hotel"):
             queries["hotelStop"] = kwargs.get("hotel")
@@ -176,17 +180,18 @@ class TripClass:
         }
 
     def addGasStation(self, placeId):
-        self.buffer.append(placeId)
+        self.buffer.append((placeId), "gas")
     
     def addFood(self, placeId):
-        self.buffer.append(placeId)
+        self.buffer.append((placeId), "food")
 
     def addHotel(self, placeId):
-        self.buffer.insert(0, placeId)
+        self.buffer.insert(0, ((placeId), "hotel"))
 
     def updateDirections(self):
         if len(self.buffer) == 0:
             return
+
         placeIds = []
         for i in range(len(self.cache["stopArray"])):
             if i == 0:
@@ -197,9 +202,41 @@ class TripClass:
                 if id == "stopDateTime":
                     continue
                 placeIds.append(stop[id])
-
-        placeIds.extend(self.buffer)
         
+        newStop = {}
+        for stop in self.buffer:
+            placeIds.append(stop[1])
+            if stop[0] == "food":
+                newStop["food"] = stop[1]
+            if stop[0] == "gas":
+                newStop["gas"] = stop[1]
+            if stop[0] == "hotel":
+                newStop["hotel"] = stop[1]
+
+        print("YOU NEED TO ADD IN THE TIME FOR THE NEXT STOP")
+        
+        url = self.basicDirectionUrl + "&origin=" + str(self.cache['startLocation']["lat"]) + "," + str(self.cache['startLocation']["lng"])
+        url += "&destination=" + str(self.cache['endLocation']["lat"]) + "," + str(self.cache['endLocation']["lng"])
+        if self.cache["avoidTolls"]:
+            url += "&avoid=tolls"
+        url += "&waypoints="
+        for waypoint in placeIds:
+            url += "place_id:" + waypoint + "|"
+        url = url[:-1]
+        r = requests.get(url)
+        r = r.json()
+
+        self.cache["stopArray"].append[newStop]
+
+        r["cache"] = self.cache
+
+        self.directions = r
+
+    def getDirections(self):
+        self.updateDirections()
+        return json.dumps(self.directions)
+        
+
 
 
         
@@ -211,6 +248,6 @@ class TripClass:
 t = TripClass()
 # t.createNewTrip("Santa Rosa, California", "Petaluma, California", 100, 2, 2, 2, False) 
 t.createFromJson(t.createNewTrip("4625 Parktrail ct, santa rosa, ca", "San Diego, California", 100, 5555, 2, 2, False))
-# print(json.dumps(t.getNextStopDetails("mexican")))
-t.addFood("asdfasdf")
-t.updateDirections()
+results = t.getNextStopDetails("mexican")
+t.addFood(results["foodResults"]["results"][0]["place_id"])
+print(t.updateDirections())
