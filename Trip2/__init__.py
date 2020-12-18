@@ -5,6 +5,7 @@ import requests
 import copy
 import json
 import os
+import datetime
 
 
 class TripClass:
@@ -41,7 +42,26 @@ class TripClass:
             url += "&avoid=tolls"
         r = requests.get(url)
         r = r.json()
-        print(r)
+
+        # set up cache
+        cache = {
+            "milesToRefuel": milesToRefuel,
+            "timeBetweenStops": timeBetweenStops,
+            "endTimeForDay": endTimeForDay,
+            "stopArray": [{"time": startDateTime, "gas": True}],
+            "startLocation" : startCor,
+            "endLocation": endCor
+        }
+        self.cache = cache
+
+        # attach cache to directions and return directions
+        r["cache"] = cache
+        return json.dumps(r)
+
+    def createFromJson(self, json):
+        info = json.loads(json)
+        self.cache = info[cache]
+        
 
 
 
