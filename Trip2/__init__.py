@@ -90,33 +90,24 @@ class TripClass:
         return distance
 
     def getNextStopLocation(self):
-        legs = self.directions["routes"][0]["legs"]
+        leg = self.directions["routes"][0]["legs"][-1]
         buffer = 0
         distance = 0
         timeTillNextHotel = self.getTimeTillNextHotel()
-        # to figure out if there is another stop
+
+        # "end" to signify that the trip is ending
         end = False
-        for leg in legs:
-            end = False
-            if leg["duration"]["value"] + buffer > self.cache["timeBetweenStops"]:
-                break
-            if leg["duration"]["value"] + buffer > timeTillNextHotel:
-                break
-            buffer += leg["duration"]["value"]
-            distance += leg["distance"]["value"]
-            end = True
-        if end:
-            return None
-
-        # at this point, we have the correct leg and know there will be another stop
-
         for step in leg["steps"]:
+            end = False
             if step["duration"]["value"] + buffer > self.cache["timeBetweenStops"]:
                 break
             if step["duration"]["value"] + buffer > timeTillNextHotel:
                 break
             buffer += step["duration"]["value"]
             distance += step["distance"]["value"]
+            end = True
+        if end:
+            return None
         
         averageMetersPerMileInStep = step["distance"]["value"] / step["duration"]["value"]
         vertextes = decodePolyline(step["polyline"]["points"])
@@ -135,7 +126,7 @@ class TripClass:
             distance += distanceToNextVertext
             lastVertext = vertext
 
-        #we now have the vertext. Now we need to look for the places nearby
+        # we now have the vertext. Now we need to look for the places nearby
         needGas = distance * 2 > self.cache["metersToRefuel"]
         return{
             "location": vertext,
@@ -147,9 +138,8 @@ class TripClass:
         print("YOU NEED TO CALCULATE TIME TILL NEXT STOP")
         return 100000000
 
-
     # kwargs: hotel as bool, gas as bool
-    
+
     def getNextStopDetails(self, foodQuery, **kwargs):
         self.updateDirections()
         queries = self.getNextStopLocation()
@@ -180,13 +170,13 @@ class TripClass:
         }
 
     def addGasStation(self, placeId):
-        self.buffer.append((placeId), "gas")
+        self.buffer.append((placeId, "gas"))
     
     def addFood(self, placeId):
-        self.buffer.append((placeId), "food")
+        self.buffer.append((placeId, "food"))
 
     def addHotel(self, placeId):
-        self.buffer.insert(0, ((placeId), "hotel"))
+        self.buffer.insert(0, (placeId, "hotel"))
 
     def updateDirections(self):
         if len(self.buffer) == 0:
@@ -205,16 +195,16 @@ class TripClass:
         
         newStop = {}
         for stop in self.buffer:
-            placeIds.append(stop[1])
-            if stop[0] == "food":
-                newStop["food"] = stop[1]
-            if stop[0] == "gas":
-                newStop["gas"] = stop[1]
-            if stop[0] == "hotel":
-                newStop["hotel"] = stop[1]
+            placeIds.append(stop[0])
+            if stop[1] == "food":
+                newStop["food"] = stop[0]
+            if stop[1] == "gas":
+                newStop["gas"] = stop[0]
+            if stop[1] == "hotel":
+                newStop["hotel"] = stop[0]
 
         print("YOU NEED TO ADD IN THE TIME FOR THE NEXT STOP")
-        
+        print(self.buffer, placeIds)
         url = self.basicDirectionUrl + "&origin=" + str(self.cache['startLocation']["lat"]) + "," + str(self.cache['startLocation']["lng"])
         url += "&destination=" + str(self.cache['endLocation']["lat"]) + "," + str(self.cache['endLocation']["lng"])
         if self.cache["avoidTolls"]:
@@ -226,15 +216,18 @@ class TripClass:
         r = requests.get(url)
         r = r.json()
 
-        self.cache["stopArray"].append[newStop]
+        self.cache["stopArray"].append(newStop)
 
         r["cache"] = self.cache
 
         self.directions = r
 
+    # returns directions as json
     def getDirections(self):
         self.updateDirections()
         return json.dumps(self.directions)
+
+    
         
 
 
@@ -250,4 +243,4 @@ t = TripClass()
 t.createFromJson(t.createNewTrip("4625 Parktrail ct, santa rosa, ca", "San Diego, California", 100, 5555, 2, 2, False))
 results = t.getNextStopDetails("mexican")
 t.addFood(results["foodResults"]["results"][0]["place_id"])
-print(t.updateDirections())
+print(t.getDirections())
