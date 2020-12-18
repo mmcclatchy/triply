@@ -239,9 +239,10 @@ class TripClass:
 
 
 
-t = TripClass()
+# t = TripClass()
 # t.createNewTrip("Santa Rosa, California", "Petaluma, California", 100, 2, 2, 2, False) 
-t.createFromJson(t.createNewTrip("4625 Parktrail ct, santa rosa, ca", "San Diego, California", 100, 5555, 2, 2, False))
-results = t.getNextStopDetails("mexican")
-t.addFood(results["foodResults"]["results"][0]["place_id"])
-print(t.getDirections())
+# t.createFromJson(t.createNewTrip("4625 Parktrail ct, santa rosa, ca", "San Diego, California", 100, 5555, 2, 2, False))
+# results = t.getNextStopDetails("mexican")
+# print(json.dumps(results))
+# t.addFood(results["foodResults"]["results"][0]["place_id"])
+# print(t.getDirections())
