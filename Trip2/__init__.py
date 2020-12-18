@@ -16,9 +16,11 @@ class TripClass:
     def __init__(self, **kwargs):
         self.useThisUrlToGetCordsForAPoint = "https://maps.googleapis.com/maps/api/place/findplacefromtext/json?inputtype=textquery&fields=place_id,geometry&key=" + os.environ.get("BACKEND_API_KEY") + "&input="
         self.basicDirectionUrl = "https://maps.googleapis.com/maps/api/directions/json?key=" + os.environ.get("BACKEND_API_KEY")
+        self.basicLocalSearch = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?key=" + os.environ.get("BACKEND_API_KEY")
+        self.buffer = []
         return None
     
-    def createNewTrip(self, start, end, milesToRefuel, timeBetweenStops, endTimeForDay, startDateTime, avoidTolls):
+    def createNewTrip(self, start, end, metersToRefuel, timeBetweenStops, endTimeForDay, startDateTime, avoidTolls):
         # get the start coordinates for the trip from a string
         url = self.useThisUrlToGetCordsForAPoint + parse.quote(start)
         r = requests.get(url)
@@ -34,10 +36,10 @@ class TripClass:
         # gets or estimates miles till refuel
         #  a safe bet for distance between refules by default
         self.cache = {}
-        if milesToRefuel:
-            self.cache["milesToRefuel"] = milesToRefuel
+        if metersToRefuel:
+            self.cache["metersToRefuel"] = metersToRefuel
         else:
-            self.cache["milesToRefuel"] = 12 * 25
+            self.cache["metersToRefuel"] = 12 * 25
 
         # generate direction from google
         url = self.basicDirectionUrl + "&origin=" + str(startCor["lat"]) + "," + str(startCor["lng"])
@@ -90,7 +92,7 @@ class TripClass:
         legs = self.directions["routes"][0]["legs"]
         buffer = 0
         distance = 0
-        timeTillNextHotel = self.getTimeTillNextHotel
+        timeTillNextHotel = self.getTimeTillNextHotel()
         # to figure out if there is another stop
         end = False
         for leg in legs:
@@ -143,10 +145,60 @@ class TripClass:
     def getTimeTillNextHotel(self):
         return 100000000
 
-    def nextNextStopDetails(self, foodQuery):
-        
 
+    # kwargs: hotel as bool, gas as bool
+    def getNextStopDetails(self, foodQuery, **kwargs):
+        queries = self.getNextStopLocation()
+        if kwargs.get("hotel"):
+            queries["hotelStop"] = kwargs.get("hotel")
+        if kwargs.get("gas"):
+            queries["gasStop"] = kwargs.get("gas")
+        url = self.basicLocalSearch + "&location="+str(queries["location"]["lat"]) + "," + str(queries["location"]["lng"])
+        
+        hotelResults = False
+        if queries["hotelStop"]:
+            r = requests.get(url + "&rankby=distance&type=lodging")
+            hotelResults = r.json()
+
+        gasResults = False
+        if queries["gasStop"] or hotelResults:
+            r = requests.get(url + "&rankby=distance&keyword=gasstation")
+            gasResults = r.json()
+        
+        r = requests.get(url + "&rankby=distance&keyword=" + parse.quote(foodQuery))
+        foodResults = r.json()
+
+        return {
+            "ceterOfSearch": queries["location"],
+            'foodResults': foodResults,
+            'gasResults': gasResults,
+            'hotelResults': hotelResults
+        }
+
+    def addGasStation(self, placeId):
+        self.buffer.append(placeId)
     
+    def addFood(self, placeId):
+        self.buffer.append(placeId)
+
+    def addHotel(self, placeId):
+        self.buffer.insert(0, placeId)
+
+    def updateDirections(self):
+        if len(self.buffer) == 0:
+            return
+        placeIds = []
+        for i in range(len(self.cache["stopArray"])):
+            if i == 0:
+                continue
+            stop = self.cache["stopArray"][i]
+            print(stop)
+            for id in stop:
+                if id == "stopDateTime":
+                    continue
+                placeIds.append(stop[id])
+
+        placeIds.extend(self.buffer)
         
 
 
@@ -159,4 +211,6 @@ class TripClass:
 t = TripClass()
 # t.createNewTrip("Santa Rosa, California", "Petaluma, California", 100, 2, 2, 2, False) 
 t.createFromJson(t.createNewTrip("4625 Parktrail ct, santa rosa, ca", "San Diego, California", 100, 5555, 2, 2, False))
-t.getNextStopDetails("mexican")
+# print(json.dumps(t.getNextStopDetails("mexican")))
+t.addFood("asdfasdf")
+t.updateDirections()
