@@ -49,15 +49,13 @@ class TripClass:
         r = requests.get(url)
         r = r.json()
 
-        def addFormData()
-
         # set up cache
         cache = {
             "startISO": startISO,
             "metersToRefuel": metersToRefuel,
             "timeBetweenStops": timeBetweenStops,
             "endTimeForDay": endTimeForDay,
-            "stopArray": [{"time": startDateTime, "gas": True}],
+            "stopArray": [{"time": startISO, "gas": True}],
             "startLocation": startCor,
             "endLocation": endCor,
             "avoidTolls": avoidTolls
