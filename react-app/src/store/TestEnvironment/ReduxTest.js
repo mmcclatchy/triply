@@ -31,18 +31,23 @@ export const setSuggestion = payload => async dispatch => {
 
 // REDUCERS
 export default function testenv(
-  state = { suggestions: {}, nodes: {}, step: '1' },
+  state = { suggestions: {}, nodes: {}, step: 1 },
   action
 ) {
   switch (action.type) {
     case ADD_SUG: {
-      const newSuggestion = state.suggestions;
-      newSuggestion[state.step] = action.payload;
-      return { ...state, suggestions: newSuggestion };
+      const newSuggestions = {
+        ...state.suggestions,
+        [state.step]: action.payload
+      };
+      return { ...state, suggestions: newSuggestions };
     }
     case ADD_NODE: {
-      state.nodes[state.step] = action.payload;
-      return state;
+      const newNodes = {
+        ...state.nodes,
+        [state.step]: action.payload
+      };
+      return { ...state, nodes: newNodes };
     }
     case EDIT_NODE: {
       const newState = state.nodes;
