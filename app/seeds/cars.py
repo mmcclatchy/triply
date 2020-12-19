@@ -27,5 +27,5 @@ def seed_cars():
 
 
 def undo_cars():
-    db.session.execute('TRUNCATE cars;')
+    db.session.execute('TRUNCATE cars RESTART IDENTITY CASCADE;')
     db.session.commit()
