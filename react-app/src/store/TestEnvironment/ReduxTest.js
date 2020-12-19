@@ -3,6 +3,8 @@ const ADD_SUG = 'Triply/Trip/ADD_SUG';
 const ADD_NODE = 'Triply/Trip/ADD_NODE';
 const EDIT_NODE = 'Triply/Trip/EDIT_NODE';
 const DELETE_NODE = 'Triply/Trip/DELETE_NODE';
+const GET_STEP = 'Triply/Trip/GET_STEP';
+const UPDATE_STEP = 'Triply/Trip/UPDATE_STEP';
 
 export const addSuggestion = (payload, stepNum) => ({
   type: ADD_SUG,
@@ -20,6 +22,8 @@ export const editNode = (payload, nodeIndex) => ({
   nodeIndex
 });
 export const deleteNode = nodeIndex => ({ type: DELETE_NODE, nodeIndex });
+export const getStep = () => ({ type: GET_STEP });
+export const updateStep = step => ({ type: UPDATE_STEP, step });
 
 // "Fetches";
 export const setSuggestion = (stepNum, payload) => async dispatch => {
@@ -28,7 +32,7 @@ export const setSuggestion = (stepNum, payload) => async dispatch => {
 
 // REDUCERS
 export default function testenv(
-  state = { suggestions: {}, nodes: {} },
+  state = { suggestions: {}, nodes: {}, step: 1 },
   action
 ) {
   switch (action.type) {
@@ -49,6 +53,13 @@ export default function testenv(
       const newState = state.nodes;
       newState[action.nodeIndex] = null;
       return newState;
+    }
+    case GET_STEP: {
+      return state.step;
+    }
+    case UPDATE_STEP: {
+      state.step = action.step;
+      return state;
     }
     default:
       return state;

@@ -14,7 +14,7 @@ import { putTrip } from '../store/actions/trips';
 import { setDuration } from '../store/actions/setDuration';
 import SuggestionStepper from '../Suggestions/SuggestionStepper';
 
-const StartOfTripForm = props => {
+const StartOfTripForm = ({ showForm }) => {
   const dispatch = useDispatch();
   const userName = useSelector(state => state.authentication.userName);
   const trip = useSelector(state => state.trips.payload);
@@ -70,6 +70,7 @@ const StartOfTripForm = props => {
       )
     );
     setToggle(false);
+    showForm(false);
   };
 
   const handleAdditionalOptionChange = e =>
