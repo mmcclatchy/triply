@@ -3,10 +3,21 @@ import { authenticate } from '../services/auth';
 import NavBar from '../shared_components/NavBar';
 import './Homepage.css';
 import RouteForm from '../Map/RouteForm'
+import { getTrips } from '../store/actions/trips'
+import { useSelector, useDispatch } from 'react-redux';
 
 
-const Homepage = ({ authenticated, setAuthenticated, userId }) => {
-  useEffect(() => {}, []);
+const Homepage = ({ authenticated, setAuthenticated }) => {
+  const userId = useSelector(state => state.authentication.userId);
+  const trips = useSelector(state => state.trips.payload.trips)
+  const dispatch = useDispatch();
+  useEffect(() => { }, []);
+  useEffect(() => {
+    console.log(userId)
+    console.log("trippppppssss",trips)
+    dispatch(getTrips(userId))
+
+  }, []);
 
   return (
       <div className='homepage_body'>

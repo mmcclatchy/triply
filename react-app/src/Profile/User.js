@@ -117,6 +117,7 @@ function User({ userId }) {
 
   useEffect(() => {
     (async () => {
+      console.log("getting users")
       const response = await fetch(`/api/users/${userId}`);
       const user = await response.json();
       setUser(user);
@@ -125,6 +126,7 @@ function User({ userId }) {
 
   useEffect(() => {
     const getCars = async () => {
+      console.log("check here")
       const response = await fetch(`/api/users/${userId}/cars`);
       const data = await response.json();
       setCars(data.cars);
@@ -133,7 +135,9 @@ function User({ userId }) {
   }, [gettingCars]);
 
   useEffect(() => {
+    console.log("trippppppssss",trips)
     dispatch(getTrips(userId))
+
   }, []);
 
   if (!user) {
