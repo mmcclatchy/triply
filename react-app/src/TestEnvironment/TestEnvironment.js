@@ -3,14 +3,22 @@ import { algorithm } from './TestData';
 import { useSelector, useDispatch } from 'react-redux';
 import FakeStepper from './FakeStepper';
 import FakeTimeline from './FakeTimeline';
+import { setSuggestion } from '../store/TestEnvironment/ReduxTest';
 import StartOfTripForm from '../TRIP/StartOfTripForm';
 
 const TestEnvironment = () => {
   const suggestions = useSelector(state => state.testenv.suggestions);
   const nodes = useSelector(state => state.testenv.nodes);
-  const [step, setStep] = useState('1');
-  const [form, showForm] = useState(false);
-  console.log(step);
+  const step = useSelector(state => state.testenv.step);
+  const dispatch = useDispatch();
+
+  console.log(suggestions, Object.values(suggestions));
+
+  const [form, showForm] = useState(true);
+
+  const submitForm = () => {
+    showForm(false);
+  };
 
   return (
     <>
@@ -21,11 +29,11 @@ const TestEnvironment = () => {
           width: '1000px',
           textAlign: 'center'
         }}>
-        <FakeTimeline nodes={nodes} step={step} setStep={setStep} />
+        <FakeTimeline nodes={nodes} />
         {form ? (
-          <StartOfTripForm showForm={showForm} />
+          <button onClick={submitForm}>Submit Form</button>
         ) : (
-          <FakeStepper suggestions={suggestions} />
+          <FakeStepper suggestions={suggestions} step={step} />
         )}
       </div>
     </>

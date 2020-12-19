@@ -6,15 +6,13 @@ const DELETE_NODE = 'Triply/Trip/DELETE_NODE';
 const GET_STEP = 'Triply/Trip/GET_STEP';
 const UPDATE_STEP = 'Triply/Trip/UPDATE_STEP';
 
-export const addSuggestion = (payload, stepNum) => ({
+export const addSuggestion = payload => ({
   type: ADD_SUG,
-  payload,
-  stepNum
+  payload
 });
-export const addNode = (payload, stepNum) => ({
+export const addNode = payload => ({
   type: ADD_NODE,
-  payload,
-  stepNum
+  payload
 });
 export const editNode = (payload, nodeIndex) => ({
   type: EDIT_NODE,
@@ -26,22 +24,24 @@ export const getStep = () => ({ type: GET_STEP });
 export const updateStep = step => ({ type: UPDATE_STEP, step });
 
 // "Fetches";
-export const setSuggestion = (stepNum, payload) => async dispatch => {
-  dispatch(addSuggestion(stepNum, payload));
+export const setSuggestion = payload => async dispatch => {
+  // fetch to algorithm will go here;
+  dispatch(addSuggestion(payload));
 };
 
 // REDUCERS
 export default function testenv(
-  state = { suggestions: {}, nodes: {}, step: 1 },
+  state = { suggestions: {}, nodes: {}, step: '1' },
   action
 ) {
   switch (action.type) {
     case ADD_SUG: {
-      state.suggestions[action.stepNum] = action.payload;
-      return state;
+      const newSuggestion = state.suggestions;
+      newSuggestion[state.step] = action.payload;
+      return { ...state, suggestions: newSuggestion };
     }
     case ADD_NODE: {
-      state.nodes[action.stepNum] = action.payload;
+      state.nodes[state.step] = action.payload;
       return state;
     }
     case EDIT_NODE: {
