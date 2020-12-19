@@ -74,7 +74,7 @@ class TripClass:
         url = self.useThisUrlToGetCordsForAPoint + parse.quote(startLocationString)
         r = requests.get(url)
         r = r.json()
-        print('*******\n\n', r, '\n\n')
+        # print('*******\n\n', r, '\n\n')
         self.startCor = r["candidates"][0]["geometry"]["location"]
 
     def setEndLocationFromString(self, endLocationString):
@@ -100,7 +100,7 @@ class TripClass:
                 url += kwargs.get("waypoints")
             r = requests.get(url)
             r = r.json()
-            
+
             legs = [i for i in r["routes"][0]["legs"]]
             directions = []
             for i in range(len(legs)):
@@ -140,7 +140,7 @@ class TripClass:
         if self.timeBeforeRunningOutOfGas < self.travelPerIncrement[0]:
             self.travelPerIncrement = (self.timeBeforeRunningOutOfGas, "placeholder...lol")
             self.gasEveryStop = True
-        
+
 
     def indexSteps(self):
         index = []
@@ -339,7 +339,7 @@ class TripClass:
             return (2, 4)
         else:
             return False
-        
+
     def getCordsFromPlaceId(self, placeId):
         url = "https://maps.googleapis.com/maps/api/place/details/json?fields=geometry&key=" + os.environ.get("BACKEND_API_KEY")
         r = requests.get(url + "&place_id=" + placeId)
@@ -398,7 +398,7 @@ class TripClass:
             searchQuery = foodQuery
             url = self.placeSearchUrlGenerator(searchQuery, searchBuffer[len(searchBuffer) - 1])
             if hotel:
-                searchQuery = str(int((hotel[0]+hotel[1])/2)) + " star hotel" 
+                searchQuery = str(int((hotel[0]+hotel[1])/2)) + " star hotel"
                 url = self.placeSearchUrlGenerator(searchQuery, searchBuffer[len(searchBuffer) - 1], type="lodging")
                 # print(url)
             r = requests.get(url)
@@ -438,7 +438,7 @@ class TripClass:
         d = json.loads(self.directionsFromGoogle)
         d["stopKey"] = self.stopKey
         return json.dumps(d)
-    
+
     def constructFromDirections(self, directionsAsJson):
         directionsFromGoogle = directionsAsJson
         self.directionsFromGoogle = directionsFromGoogle
@@ -464,7 +464,7 @@ class TripClass:
         self.totalTravelTime = time
         if not self.travelPerDay:
             self.travelPerDay = self.totalTravelDistance * 1.5
-  
+
         for waypointsInclusive in range(len(d["geocoded_waypoints"])):
             if waypointsInclusive == 0:
                 continue
@@ -490,7 +490,7 @@ class TripClass:
     def prettyPrintDuration(self):
         miles = round(self.totalTravelDistance * 0.000621371)
         return str(miles) + " miles"
-    
+
     def prettyPrintTime(self):
         totalDuration = self.totalTravelTime
         totalMinutes = round(totalDuration / 60)

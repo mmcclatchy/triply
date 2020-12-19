@@ -6,14 +6,14 @@ export default function reducer(state = {tripId: 0, payload: {},trips: {}}, { ty
   Object.freeze(state);
   console.log('TRIP REDUCER: ', type, payload)
   switch (type) {
-    case SET_TRIP: 
+    case SET_TRIP:
       return { ...state, payload };
-    
+
     case DELETE_TRIP:
       const newState = { ...state };
       delete newState[payload.id];
       return newState
-    
+
     default:
       return state;
   }
