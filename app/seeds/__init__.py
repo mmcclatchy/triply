@@ -1,6 +1,7 @@
 from flask.cli import AppGroup
 from .users import seed_users, undo_users
 from .cars import seed_cars, undo_cars
+from .trips import seed_trips, undo_trips
 
 # Creates a seed group to hold our commands
 # So we can type `flask seed --help`
@@ -13,6 +14,8 @@ seed_commands = AppGroup('seed')
 def seed():
     seed_users()
     seed_cars()
+    seed_trips()
+
     # Add other seed functions here
 
 # Creates the `flask seed undo` command
@@ -22,4 +25,5 @@ def seed():
 def undo():
     undo_users()
     undo_cars()
+    undo_trips()
     # Add other undo functions here
