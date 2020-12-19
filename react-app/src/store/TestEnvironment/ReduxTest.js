@@ -4,14 +4,27 @@ const ADD_NODE = 'Triply/Trip/ADD_NODE';
 const EDIT_NODE = 'Triply/Trip/EDIT_NODE';
 const DELETE_NODE = 'Triply/Trip/DELETE_NODE';
 
-export const ADD_SUG = payload => ({ type: ADD_SUG, payload });
-export const ADD_NODE = payload => ({ type: ADD_NODE, payload });
-export const EDIT_NODE = (payload, nodeIndex) => ({
+export const addSuggestion = (payload, stepNum) => ({
+  type: ADD_SUG,
+  payload,
+  stepNum
+});
+export const addNode = (payload, stepNum) => ({
+  type: ADD_NODE,
+  payload,
+  stepNum
+});
+export const editNode = (payload, nodeIndex) => ({
   type: EDIT_NODE,
   payload,
   nodeIndex
 });
-export const DELETE_NODE = nodeIndex => ({ type: DELETE_NODE, nodeIndex });
+export const deleteNode = nodeIndex => ({ type: DELETE_NODE, nodeIndex });
+
+// "Fetches";
+export const setSuggestion = (stepNum, payload) => async dispatch => {
+  dispatch(addSuggestion(stepNum, payload));
+};
 
 // REDUCERS
 export default function testenv(
@@ -20,10 +33,12 @@ export default function testenv(
 ) {
   switch (action.type) {
     case ADD_SUG: {
-      return { ...state, suggestions: action.payload };
+      state.suggestions[action.stepNum] = action.payload;
+      return state;
     }
     case ADD_NODE: {
-      return { ...state, nodes: action.payload };
+      state.nodes[action.stepNum] = action.payload;
+      return state;
     }
     case EDIT_NODE: {
       const newState = state.nodes;
