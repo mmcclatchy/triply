@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { setSuggestion, updateStep } from '../store/TestEnvironment/ReduxTest';
 import { algorithm } from './TestData';
+import FakeStepperForm from './FakeStepperForm';
 
 const FakeStepper = ({ suggestions, step }) => {
   const dispatch = useDispatch();
@@ -28,7 +29,14 @@ const FakeStepper = ({ suggestions, step }) => {
       {suggestions[step] ? (
         <>
           <h2>Stop {step}</h2>
-          <div>{JSON.stringify(suggestions[step])}</div>
+
+          {suggestions[step].suggestions.Hotel ? (
+            <FakeStepperForm
+              type='Hotel'
+              data={suggestions[step].suggestions.Hotel}
+            />
+          ) : null}
+
           <button disabled={back} onClick={prevHandler}>
             Back
           </button>

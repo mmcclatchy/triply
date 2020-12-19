@@ -7,6 +7,7 @@ export const algorithm = [
         {
           name: 'Four Seasons',
           place_id: 238490,
+          coordinates: '24323, 1382290',
           type: 'Hotel',
           city: 'Ottawa',
           img_url:
@@ -19,6 +20,7 @@ export const algorithm = [
         {
           name: 'Roadside Motel',
           place_id: 238490,
+          coordinates: '2343298, 1311890',
           type: 'Hotel',
           city: 'Ottawa',
           img_url:
@@ -67,6 +69,82 @@ export const algorithm = [
         {
           name: 'Four Seasons2',
           place_id: 238490,
+          coordinates: '23123498, 1313890',
+          type: 'Hotel',
+          city: 'Ottawa',
+          img_url:
+            'https://m.fourseasons.com/alt/img-opt/~70.1530.0,0000-184,3327-3000,0000-1687,5000/publish/content/dam/fourseasons/images/web/JKR/JKR_083_original.jpg',
+          phone_num: '(403)-293-1939',
+          state: 'Ontario',
+          street_address: '10 Cherry Lane',
+          zip_code: '09921'
+        },
+        {
+          name: 'Days Inn Motel',
+          place_id: 238490,
+          coordinates: '2349118, 1333890',
+          type: 'Hotel',
+          city: 'Ottawa',
+          img_url:
+            'https://m.fourseasons.com/alt/img-opt/~70.1530.0,0000-184,3327-3000,0000-1687,5000/publish/content/dam/fourseasons/images/web/JKR/JKR_083_original.jpg',
+          phone_num: '(403)-293-1939',
+          state: 'Ontario',
+          street_address: '10 Cherry Lane',
+          zip_code: '09921'
+        }
+      ],
+      Restaurant: [
+        {
+          name: 'Chipotle',
+          place_id: 238490,
+          type: 'Restaurant',
+          city: 'State College',
+          img_url:
+            'https://media-cdn.tripadvisor.com/media/photo-s/14/ea/c3/95/outside-and-outdoor-seating.jpg',
+          phone_num: '(403)-293-1939',
+          state: 'Pennsylvania',
+          street_address: '10 Cherry Lane',
+          zip_code: '09921'
+        }
+      ],
+      Gas: [
+        {
+          name: 'Shell',
+          place_id: 238490,
+          type: 'GasStation',
+          city: 'Toronto',
+          img_url:
+            'https://assets1.csnews.com/files/styles/content_sm/s3/2018-03/shell-gas-station500x400.jpg?itok=r_plwGa9',
+          phone_num: '(403)-293-1939',
+          state: 'Ontario',
+          street_address: '10 Cherry Lane',
+          zip_code: '09921'
+        }
+      ]
+    }
+  },
+  {
+    coordinates: '23498, 13890',
+    time: '2020-12-23 06:30 AM',
+    suggestions: {
+      Hotel: [
+        {
+          name: 'Four Seasons',
+          place_id: 238490,
+          coordinates: '234398, 131890',
+          type: 'Hotel',
+          city: 'Ottawa',
+          img_url:
+            'https://m.fourseasons.com/alt/img-opt/~70.1530.0,0000-184,3327-3000,0000-1687,5000/publish/content/dam/fourseasons/images/web/JKR/JKR_083_original.jpg',
+          phone_num: '(403)-293-1939',
+          state: 'Ontario',
+          street_address: '10 Cherry Lane',
+          zip_code: '09921'
+        },
+        {
+          name: 'Deluxe 8 Motel',
+          place_id: 238490,
+          coordinates: '2343298, 1389120',
           type: 'Hotel',
           city: 'Ottawa',
           img_url:
@@ -123,45 +201,9 @@ export const algorithm = [
           state: 'Ontario',
           street_address: '10 Cherry Lane',
           zip_code: '09921'
-        }
-      ],
-      Restaurant: [
+        },
         {
-          name: 'Chipotle',
-          place_id: 238490,
-          type: 'Restaurant',
-          city: 'State College',
-          img_url:
-            'https://media-cdn.tripadvisor.com/media/photo-s/14/ea/c3/95/outside-and-outdoor-seating.jpg',
-          phone_num: '(403)-293-1939',
-          state: 'Pennsylvania',
-          street_address: '10 Cherry Lane',
-          zip_code: '09921'
-        }
-      ],
-      Gas: [
-        {
-          name: 'Shell',
-          place_id: 238490,
-          type: 'GasStation',
-          city: 'Toronto',
-          img_url:
-            'https://assets1.csnews.com/files/styles/content_sm/s3/2018-03/shell-gas-station500x400.jpg?itok=r_plwGa9',
-          phone_num: '(403)-293-1939',
-          state: 'Ontario',
-          street_address: '10 Cherry Lane',
-          zip_code: '09921'
-        }
-      ]
-    }
-  },
-  {
-    coordinates: '23498, 13890',
-    time: '2020-12-23 06:30 AM',
-    suggestions: {
-      Hotel: [
-        {
-          name: 'Four Seasons',
+          name: 'Mariott',
           place_id: 238490,
           type: 'Hotel',
           city: 'Ottawa',
