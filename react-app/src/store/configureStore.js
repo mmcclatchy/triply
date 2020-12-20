@@ -1,5 +1,5 @@
 import { createStore, applyMiddleware, combineReducers, compose } from 'redux';
-import { loadState, saveState } from '../services/utilities'
+import { loadState, saveState } from '../services/utilities';
 import thunk from 'redux-thunk';
 import utilities from './reducers/utilities';
 import authentication from './reducers/authentication';
@@ -11,26 +11,25 @@ import trips from './reducers/trips';
 import setDuration from './reducers/setDurations';
 import suggestions from './reducers/suggestions';
 import timeline from './reducers/timeline';
+import testenv from './TestEnvironment/ReduxTest';
 
 const composeEnhancers =
   window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
-  const initialState = {
-    
-  }
-  
-  export const reducer = combineReducers({
-    authentication,
-    utilities,
-    directionsRedux,
-    trips,
-    stops,
-    cars,
-    setDuration,
-    suggestions,
-    timeline,
-  });
+const initialState = {};
 
+export const reducer = combineReducers({
+  authentication,
+  utilities,
+  directionsRedux,
+  trips,
+  stops,
+  cars,
+  setDuration,
+  suggestions,
+  timeline,
+  testenv
+});
 
 const persistedState = loadState();
 const store = createStore(
@@ -48,8 +47,8 @@ store.subscribe(() => {
     trips: store.getState().trips,
     stops: store.getState().stops,
     cars: store.getState().cars,
-    setDuration: store.getState().setDuration,
+    setDuration: store.getState().setDuration
   });
 });
 
-export default store
+export default store;
