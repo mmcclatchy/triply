@@ -17,6 +17,10 @@ const Stepper = ({ suggestions, step }) => {
     dispatch(updateStep(step - 1));
   };
 
+  const submitTrip = () => {
+    console.log(data);
+  };
+
   useEffect(() => {
     if (step === 1) disableBack(true);
     if (step > 1) disableBack(false);
@@ -31,7 +35,14 @@ const Stepper = ({ suggestions, step }) => {
         <>
           <h2>Stop {step}</h2>
           <h3>Selected</h3>
-          {JSON.stringify(data[step])}
+          {data[step] &&
+            data[step].map(e => {
+              return (
+                <div>
+                  {e.type}: {e.name}
+                </div>
+              );
+            })}
 
           <Suggestions data={suggestions[step]} />
 
@@ -46,7 +57,7 @@ const Stepper = ({ suggestions, step }) => {
           <button disabled={back} onClick={prevHandler}>
             Back
           </button>
-          <button>Complete</button>
+          <button onClick={submitTrip}>Complete</button>
         </>
       )}
     </div>
