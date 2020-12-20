@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { setSuggestion, updateStep } from '../store/TestEnvironment/ReduxTest';
 import { algorithm } from './TestData';
-import FakeStepperForm from './FakeStepperForm';
+import Suggestions from './Suggestions';
 
-const FakeStepper = ({ suggestions, step }) => {
+const Stepper = ({ suggestions, step }) => {
   const dispatch = useDispatch();
   const [back, disableBack] = useState(false);
 
@@ -24,18 +24,13 @@ const FakeStepper = ({ suggestions, step }) => {
 
   return (
     <div style={{ border: '1px solid black', width: '75%' }}>
-      <h1>Fake Stepper</h1>
+      <h1>Stepper</h1>
 
       {suggestions[step] ? (
         <>
           <h2>Stop {step}</h2>
 
-          {suggestions[step].suggestions.Hotel ? (
-            <FakeStepperForm
-              type='Hotel'
-              data={suggestions[step].suggestions.Hotel}
-            />
-          ) : null}
+          <Suggestions data={suggestions[step]} />
 
           <button disabled={back} onClick={prevHandler}>
             Back
@@ -55,4 +50,4 @@ const FakeStepper = ({ suggestions, step }) => {
   );
 };
 
-export default FakeStepper;
+export default Stepper;

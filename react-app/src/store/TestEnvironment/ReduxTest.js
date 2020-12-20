@@ -29,6 +29,11 @@ export const setSuggestion = payload => async dispatch => {
   dispatch(addSuggestion(payload));
 };
 
+export const setNode = payload => async dispatch => {
+  // fetch to algorithm will go here;
+  dispatch(addNode(payload));
+};
+
 // REDUCERS
 export default function testenv(
   state = { suggestions: {}, nodes: {}, step: 1 },

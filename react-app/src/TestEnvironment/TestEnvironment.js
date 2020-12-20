@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { algorithm } from './TestData';
 import { useSelector, useDispatch } from 'react-redux';
-import FakeStepper from './FakeStepper';
-import FakeTimeline from './FakeTimeline';
+import Stepper from './Stepper';
+import Timeline from './Timeline';
 import { setSuggestion } from '../store/TestEnvironment/ReduxTest';
 import StartOfTripForm from '../TRIP/StartOfTripForm';
 
@@ -29,11 +29,11 @@ const TestEnvironment = () => {
           width: '1000px',
           textAlign: 'center'
         }}>
-        <FakeTimeline nodes={nodes} />
+        <Timeline nodes={nodes} />
         {form ? (
           <button onClick={submitForm}>Submit Form</button>
         ) : (
-          <FakeStepper suggestions={suggestions} step={step} />
+          <Stepper suggestions={suggestions} step={step} />
         )}
       </div>
     </>
