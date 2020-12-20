@@ -51,10 +51,8 @@ def get_trip(trip_id):
 @login_required
 def post_trip(user_id):
     data = request.json
-    print(data, '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
     origin = data['startLocation']
     destination = data['endLocation']
-    print('********\n\nORIGIN', origin, destination, '\n\n\n')
 
     # Create an instance of the Trip Algorithm
     # and set the origin and destination
@@ -66,7 +64,6 @@ def post_trip(user_id):
     # and create a dictionary of the information the Frontend needs
     trip_algo.createDirection()
     trip_dict = trip_algo.toDictForDatabase()
-    print(data, "\n\n\n\n\n\n\n")
     # Create a model of the Trip for the DB
     trip = Trip(
         user_id=data['userId'],
