@@ -10,6 +10,7 @@ import { authenticate } from './services/auth';
 import TripPage from './TRIP/TripPage';
 import { setAuth } from './store/actions/authentication';
 import SuggestionStepper from './Suggestions/SuggestionStepper';
+import TestEnvironment from './TestEnvironment/TestEnvironment';
 
 function App() {
   const [authenticated, setAuthenticated] = useState(false);
@@ -50,8 +51,8 @@ function App() {
         <TripPage />
       </Route>
 
-      <Route path='/stepper' exact={true}>
-        <SuggestionStepper />
+      <Route path='/test-environment' exact={true}>
+        <TestEnvironment />
       </Route>
 
       <Route path='/profile/:userId' authenticated={authenticated}>
