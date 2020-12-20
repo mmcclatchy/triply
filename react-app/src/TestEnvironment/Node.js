@@ -1,11 +1,23 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { setNode, unsetNode } from '../store/TestEnvironment/ReduxTest';
 
 const Node = ({ data }) => {
   const step = useSelector(state => state.testenv.step);
+  const nodes = useSelector(state => state.testenv.nodes);
   const [booked, setBooked] = useState(false);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    setBooked(false);
+    if (nodes[step]) {
+      nodes[step].map(e => {
+        if (e.place_id === data.place_id) {
+          return setBooked(true);
+        }
+      });
+    }
+  }, [step, nodes]);
 
   const registerNode = async () => {
     await dispatch(setNode(data));

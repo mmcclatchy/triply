@@ -6,7 +6,7 @@ export const algorithm = [
       Hotel: [
         {
           name: 'Four Seasons',
-          place_id: 238431290,
+          place_id: 1,
           coordinates: '24323, 1382290',
           type: 'Hotel',
           city: 'Ottawa',
@@ -19,7 +19,7 @@ export const algorithm = [
         },
         {
           name: 'Roadside Motel',
-          place_id: 2381490,
+          place_id: 2,
           coordinates: '2343298, 1311890',
           type: 'Hotel',
           city: 'Ottawa',
@@ -34,7 +34,7 @@ export const algorithm = [
       Restaurant: [
         {
           name: 'Chipotle',
-          place_id: 23833490,
+          place_id: 3,
           type: 'Restaurant',
           city: 'State College',
           img_url:
@@ -48,7 +48,7 @@ export const algorithm = [
       Gas: [
         {
           name: 'Shell',
-          place_id: 238490,
+          place_id: 4,
           type: 'GasStation',
           city: 'Toronto',
           img_url:
@@ -68,7 +68,7 @@ export const algorithm = [
       Hotel: [
         {
           name: 'Four Seasons2',
-          place_id: 238490,
+          place_id: 5,
           coordinates: '23123498, 1313890',
           type: 'Hotel',
           city: 'Ottawa',
@@ -81,7 +81,7 @@ export const algorithm = [
         },
         {
           name: 'Days Inn Motel',
-          place_id: 238490,
+          place_id: 6,
           coordinates: '2349118, 1333890',
           type: 'Hotel',
           city: 'Ottawa',
@@ -96,7 +96,7 @@ export const algorithm = [
       Restaurant: [
         {
           name: 'Chipotle',
-          place_id: 238490,
+          place_id: 7,
           type: 'Restaurant',
           city: 'State College',
           img_url:
@@ -110,7 +110,7 @@ export const algorithm = [
       Gas: [
         {
           name: 'Shell',
-          place_id: 238123490,
+          place_id: 8,
           type: 'GasStation',
           city: 'Toronto',
           img_url:
@@ -130,7 +130,7 @@ export const algorithm = [
       Hotel: [
         {
           name: 'Four Seasons',
-          place_id: 232348490,
+          place_id: 9,
           coordinates: '234398, 131890',
           type: 'Hotel',
           city: 'Ottawa',
@@ -143,7 +143,7 @@ export const algorithm = [
         },
         {
           name: 'Deluxe 8 Motel',
-          place_id: 23338490,
+          place_id: 10,
           coordinates: '2343298, 1389120',
           type: 'Hotel',
           city: 'Ottawa',
@@ -158,7 +158,7 @@ export const algorithm = [
       Restaurant: [
         {
           name: 'Chipotle',
-          place_id: 238234490,
+          place_id: 11,
           type: 'Restaurant',
           city: 'State College',
           img_url:
@@ -172,7 +172,7 @@ export const algorithm = [
       Gas: [
         {
           name: 'Shell',
-          place_id: 238490,
+          place_id: 12,
           type: 'GasStation',
           city: 'Toronto',
           img_url:
@@ -192,7 +192,7 @@ export const algorithm = [
       Hotel: [
         {
           name: 'Four Seasons',
-          place_id: 238490,
+          place_id: 13,
           type: 'Hotel',
           city: 'Ottawa',
           img_url:
@@ -204,7 +204,7 @@ export const algorithm = [
         },
         {
           name: 'Mariott',
-          place_id: 238490,
+          place_id: 14,
           type: 'Hotel',
           city: 'Ottawa',
           img_url:
@@ -218,7 +218,7 @@ export const algorithm = [
       Restaurant: [
         {
           name: 'Chipotle',
-          place_id: 238490,
+          place_id: 15,
           type: 'Restaurant',
           city: 'State College',
           img_url:
@@ -232,7 +232,7 @@ export const algorithm = [
       Gas: [
         {
           name: 'Shell',
-          place_id: 238490,
+          place_id: 16,
           type: 'GasStation',
           city: 'Toronto',
           img_url:
