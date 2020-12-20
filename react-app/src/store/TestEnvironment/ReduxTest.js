@@ -48,9 +48,17 @@ export default function testenv(
       return { ...state, suggestions: newSuggestions };
     }
     case ADD_NODE: {
+      const array = state.nodes[state.step];
+      let data = action.payload;
+
+      if (!array) {
+        data = [action.payload];
+      } else {
+        data = [...array, action.payload];
+      }
       const newNodes = {
         ...state.nodes,
-        [state.step]: action.payload
+        [state.step]: data
       };
       return { ...state, nodes: newNodes };
     }

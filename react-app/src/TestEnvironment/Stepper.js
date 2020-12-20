@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setSuggestion, updateStep } from '../store/TestEnvironment/ReduxTest';
 import { algorithm } from './TestData';
 import Suggestions from './Suggestions';
 
 const Stepper = ({ suggestions, step }) => {
   const dispatch = useDispatch();
+  const data = useSelector(state => state.testenv.nodes);
   const [back, disableBack] = useState(false);
 
   const nextHandler = () => {
@@ -29,6 +30,8 @@ const Stepper = ({ suggestions, step }) => {
       {suggestions[step] ? (
         <>
           <h2>Stop {step}</h2>
+          <h3>Selected</h3>
+          {JSON.stringify(data[step])}
 
           <Suggestions data={suggestions[step]} />
 

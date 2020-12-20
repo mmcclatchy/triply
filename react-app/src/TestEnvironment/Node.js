@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { setNode } from '../store/TestEnvironment/ReduxTest';
 
-const Node = ({ data, type, id }) => {
+const Node = ({ data }) => {
   const step = useSelector(state => state.testenv.step);
   const [disable, setDisable] = useState(false);
+  const dispatch = useDispatch();
 
   const registerNode = async () => {
-    console.log(step);
-    const newNode = {};
+    console.log(data);
+    dispatch(setNode(data));
   };
 
   return (
