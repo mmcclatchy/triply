@@ -27,7 +27,7 @@ export const reducer = combineReducers({
   cars,
   setDuration,
   suggestions,
-  timeline,
+  // timeline,
   testenv
 });
 

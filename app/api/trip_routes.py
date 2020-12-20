@@ -51,14 +51,20 @@ def get_trip(trip_id):
 @login_required
 def post_trip(user_id):
     data = request.json
+    miles = data['milesToRefuel']
+    # Default distance for a tank is 350 miles or 563270 meters
+    fuel_distance = math.floor(miles * 1609.34) if miles else 563270
 
     # Create an instance of the Trip Algorithm
     # and set the origin and destination
+    origin = data['startLocation']
+    destination = data['endLocation']
+    
     trip_algo = TripClass()
     directions_json = trip_algo.createNewTrip(
-        start=data['startLocation'],
-        end=data['endLocation'],
-        metersToRefuel=data['milesToRefuel'],
+        start=origin,
+        end=destination,
+        metersToRefuel=fuel_distance,
         timeBetweenStops=data['timeBetweenStops'],
         endTimeForDay=data['endTimeForDay'],
         startISO=data['startISO'],
@@ -70,7 +76,7 @@ def post_trip(user_id):
         user_id=data['userId'],
         name=f'{origin} -> {destination}',
         start_time=data["startISO"],
-        car_id=data['']
+        car_id=data['carId'],
         directions=directions_json
     )
 
@@ -80,8 +86,12 @@ def post_trip(user_id):
 
         # Create a json object structured for Redux slices of state
         trip_json = jsonify({
-            'payload': {'trips': normalize(trip.to_dict()), 'currentId': trip.id},
-            'timeline': trip.get_timeline()
+            'payload': {
+                'trips': normalize(trip.to_dict()),
+                'currentTripId': trip.id
+            },
+            'suggestions': trip_algo.getNextStopDetails,
+            'directions': trip.directions
         })
         return trip_json
 
@@ -97,7 +107,7 @@ def post_trip(user_id):
 @login_required
 def modify_trip(trip_id):
     data = request.json
-    
+
     # Amend the Trip Model with attributes sent from Frontend for the DB
     trip = Trip.query.get(trip_id)
     for key, value in data['db'].items():
@@ -118,9 +128,7 @@ def modify_trip(trip_id):
 
     # Recreate the directions of the Algorithm
     trip_algo.constructFromDirections(trip.directions)
-    
-    
-    print('********\n\n', data, '\n')
+
     # Get preferences and search next stop for places that match preferences
     # food_query, hotel, gas = get_preferences(data['preferences'])
     suggestions = trip_algo.getNextStopDetails(foodQuery=data['preferences']['foodQuery'][0],

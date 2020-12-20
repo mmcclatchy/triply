@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setStartTimeAction } from '../store/actions/directions';
 
 const useStyles = makeStyles(theme => ({
@@ -29,13 +29,17 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function DateAndTimePickers() {
+  const startTime = useSelector(state => state.directionsRedux.startTime)
   const dispatch = useDispatch();
   const classes = useStyles();
-  const [startTime, setStartTime] = useState('');
   const [startTimeContent, setStartTimeContent] = useState('');
+  
+  useEffect(() => {
+    dispatch(setStartTimeAction(startTimeContent));
+  }, [startTimeContent])
+  
   const updateStartTime = e => {
     setStartTimeContent(e.target.value);
-    dispatch(setStartTimeAction(startTimeContent));
   };
 
   return (
@@ -45,7 +49,7 @@ export default function DateAndTimePickers() {
           id='datetime'
           label='Start Time'
           type='datetime-local'
-          value={startTimeContent}
+          value={startTime}
           onChange={updateStartTime}
           className={classes.textField}
           InputLabelProps={{
