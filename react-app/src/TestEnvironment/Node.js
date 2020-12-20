@@ -1,15 +1,20 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { setNode } from '../store/TestEnvironment/ReduxTest';
+import { setNode, unsetNode } from '../store/TestEnvironment/ReduxTest';
 
 const Node = ({ data }) => {
   const step = useSelector(state => state.testenv.step);
-  const [disable, setDisable] = useState(false);
+  const [booked, setBooked] = useState(false);
   const dispatch = useDispatch();
 
   const registerNode = async () => {
-    console.log(data);
-    dispatch(setNode(data));
+    await dispatch(setNode(data));
+    setBooked(true);
+  };
+
+  const unregisterNode = async () => {
+    await dispatch(unsetNode(data.place_id));
+    setBooked(false);
   };
 
   return (
@@ -19,9 +24,13 @@ const Node = ({ data }) => {
         {data.city},{data.state}
       </div>
       <img src={data.img_url} style={{ width: '70px', height: '70px' }} />
-      <button disabled={disable} onClick={registerNode}>
-        Select
-      </button>
+      {booked ? (
+        <button onClick={unregisterNode} style={{ backgroundColor: 'green' }}>
+          Booked
+        </button>
+      ) : (
+        <button onClick={registerNode}>Select</button>
+      )}
     </div>
   );
 };

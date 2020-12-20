@@ -19,7 +19,7 @@ export const editNode = (payload, nodeIndex) => ({
   payload,
   nodeIndex
 });
-export const deleteNode = nodeIndex => ({ type: DELETE_NODE, nodeIndex });
+export const deleteNode = placeId => ({ type: DELETE_NODE, placeId });
 export const getStep = () => ({ type: GET_STEP });
 export const updateStep = step => ({ type: UPDATE_STEP, step });
 
@@ -32,6 +32,10 @@ export const setSuggestion = payload => async dispatch => {
 export const setNode = payload => async dispatch => {
   // fetch to algorithm will go here;
   dispatch(addNode(payload));
+};
+
+export const unsetNode = id => async dispatch => {
+  dispatch(deleteNode(id));
 };
 
 // REDUCERS
@@ -63,14 +67,19 @@ export default function testenv(
       return { ...state, nodes: newNodes };
     }
     case EDIT_NODE: {
-      const newState = state.nodes;
-      newState[action.nodeIndex] = action.payload;
-      return newState;
+      //
     }
     case DELETE_NODE: {
-      const newState = state.nodes;
-      newState[action.nodeIndex] = null;
-      return newState;
+      const array = state.nodes[state.step].filter(
+        e => e.place_id !== action.placeId
+      );
+
+      const newNodes = {
+        ...state.nodes,
+        [state.step]: array
+      };
+
+      return { ...state, nodes: newNodes };
     }
     case GET_STEP: {
       return state.step;
