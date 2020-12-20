@@ -34,7 +34,7 @@ class TripClass:
         endCor = r["candidates"][0]["geometry"]["location"]
 
         # gets or estimates miles till refuel
-        #  a safe bet for distance between refules by default
+        #  a safe bet for distance between refuels by default
         self.cache = {}
         if metersToRefuel:
             self.cache["metersToRefuel"] = metersToRefuel

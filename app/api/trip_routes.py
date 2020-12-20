@@ -51,27 +51,27 @@ def get_trip(trip_id):
 @login_required
 def post_trip(user_id):
     data = request.json
-    origin = data['startLocation']
-    destination = data['endLocation']
 
     # Create an instance of the Trip Algorithm
     # and set the origin and destination
-    trip_algo = TripClass(departureTime=data['startTime'])
-    trip_algo.setStartLocationFromString(origin)
-    trip_algo.setEndLocationFromString(destination)
+    trip_algo = TripClass()
+    directions_json = trip_algo.createNewTrip(
+        start=data['startLocation'],
+        end=data['endLocation'],
+        metersToRefuel=data['milesToRefuel'],
+        timeBetweenStops=data['timeBetweenStops'],
+        endTimeForDay=data['endTimeForDay'],
+        startISO=data['startISO'],
+        avoidTolls=data['avoidTolls']
+    )
 
-    # Set the directions from Google API
-    # and create a dictionary of the information the Frontend needs
-    trip_algo.createDirection()
-    trip_dict = trip_algo.toDictForDatabase()
     # Create a model of the Trip for the DB
     trip = Trip(
         user_id=data['userId'],
         name=f'{origin} -> {destination}',
-        start_time=data["startTime"],
-        start_location=json.dumps(trip_dict['start_location']),
-        end_location=json.dumps(trip_dict['end_location']),
-        directions=trip_dict['directions']
+        start_time=data["startISO"],
+        car_id=data['']
+        directions=directions_json
     )
 
     try:
