@@ -5,6 +5,7 @@ export const HIDE_FORM = 'triply/utilities/HIDE_FORM';
 export const API = 'triply/middleware/API';
 export const SET_TRIP = 'triply/middleware/SET_TRIP';
 export const DELETE_TRIP = 'triply/middleware/DELETE_TRIP';
+export const CLEAR_TRIPS = 'triply/middleware/CLEAR_TRIPS';
 export const SET_CAR = 'triply/middleware/SET_CAR';
 export const DELETE_CAR = 'triply/middleware/DELETE_CAR';
 export const SET_DIRECTIONS = 'triply/directions/SET_DIRECTIONS';

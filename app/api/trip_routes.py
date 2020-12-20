@@ -67,7 +67,7 @@ def post_trip(user_id):
         metersToRefuel=fuel_distance,
         timeBetweenStops=data['timeBetweenStops'],
         endTimeForDay=data['endTimeForDay'],
-        startISO=data['startISO'],
+        startISO=data['startISO'] + '00:000Z',  # ! This is a placeholding work around
         avoidTolls=data['avoidTolls']
     )
 

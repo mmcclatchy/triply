@@ -88,14 +88,14 @@ const RouteForm = ({}) => {
     setDestination(destinationFormContent);
     dispatch(setOriginAction(originFormContent));
     dispatch(setDestinationAction(destinationFormContent));
-    const new_trip = {
-      userId: userId,
-      startTime: startTime,
-      startLocation: or,
-      endLocation: de
-    };
-    console.log('ABOUT TO DISPATCH', new_trip);
-    dispatch(postTrip(new_trip, userId));
+    // const new_trip = {
+    //   userId: userId,
+    //   startTime: startTime,
+    //   startLocation: or,
+    //   endLocation: de
+    // };
+    
+    // dispatch(postTrip(new_trip, userId));
     return history.push(`/create-trip`);
   };
   const updateOriginFormContent = e => {
