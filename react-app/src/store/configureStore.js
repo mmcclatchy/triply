@@ -49,7 +49,8 @@ store.subscribe(() => {
     trips: store.getState().trips,
     stops: store.getState().stops,
     cars: store.getState().cars,
-    setDuration: store.getState().setDuration
+    setDuration: store.getState().setDuration,
+    // stepper: store.getState().stepper,
   });
 });
 

@@ -41,7 +41,7 @@ const Node = ({ data, type, index }) => {
   
   // Re-render node after photo is fetched
   useEffect(() => {
-  }, [place])
+  }, [photoUrl])
   
   
   // *** Actions ***
@@ -71,7 +71,7 @@ const Node = ({ data, type, index }) => {
       {/* <img src={typeImg(type)} style={{ width: '70px', height: '70px' }} /> */}
       {
         place 
-          ?  <img src={place.photoUrl || typeImg(type)} style={{ width: '70px', height: '70px' }} />
+          ?  <img src={photoUrl || typeImg(type)} style={{ width: '70px', height: '70px' }} />
           :  null
       }
       {booked ? (
