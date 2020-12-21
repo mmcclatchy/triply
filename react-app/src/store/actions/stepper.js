@@ -18,3 +18,8 @@ export const deleteNode = payload => ({ type: DELETE_NODE, payload });
 // pass the number of the step as the argument
 export const updateStep = payload => ({ type: UPDATE_STEP, payload });
 
+
+//------------------------------------------------------------
+
+
+export const unsetNode = id => async dispatch => dispatch(deleteNode(id));

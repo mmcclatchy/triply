@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { setNode, unsetNode } from '../store/TestEnvironment/ReduxTest';
+import { setNode, unsetNode } from '../store/actions/stepper';
 
 const Node = ({ data }) => {
-  const step = useSelector(state => state.testenv.step);
-  const nodes = useSelector(state => state.testenv.nodes);
+  const step = useSelector(state => state.stepper.step);
+  const nodes = useSelector(state => state.stepper.nodes);
   const [booked, setBooked] = useState(false);
   const dispatch = useDispatch();
 

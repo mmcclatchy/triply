@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { updateStep } from '../store/TestEnvironment/ReduxTest';
+import { updateStep } from '../store/actions/stepper';
 
 import Suggestions from './Suggestions';
 
