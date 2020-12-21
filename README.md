@@ -1,11 +1,11 @@
 # Road Trip App
 
-Check out the app: [Live Demo](https://)
+Check out the app: [Live Demo](https://triplyroadtripapp.herokuapp.com/)
 
 ## Table of Contents
 
 1. [Technologies Used](#technologies-used)
-2. [Feature List](#feature-list)
+2. [Summary](#summary)
 3. [MVP](#mvp)
 4. [Front End Routes](#front-end-routes)
 5. [Back End Routes](#back-end-routes)
@@ -21,10 +21,11 @@ Check out the app: [Live Demo](https://)
   * [Distance Matrix API](https://developers.google.com/maps/documentation/distance-matrix/overview)
   * [Places API](https://developers.google.com/places/web-service/overview)
 * Fuel Effeciency API
+  * [fueleconomy.gov](https://www.fueleconomy.gov/feg/ws/index.shtml)
 
 ---
 
-## **Feature List**
+## **Summary**
 
 ---
 
@@ -56,13 +57,13 @@ Check out the app: [Live Demo](https://)
 
 ---
 
-## **Front End Routes**
+<!-- ## **Front End Routes**
 
 ---
 
 ## **Back End Routes**
 
----
+--- -->
 
 ## **Schema**
 
