@@ -10,11 +10,11 @@ const TripSummary = () => {
   const userName = useSelector(state => state.authentication.userName);
   const dispatch = useDispatch();
 
-  const distance = useSelector(state => state.directionsRedux.distance);
-  const duration = useSelector(state => state.directionsRedux.duration);
-  const origin = useSelector(state => state.directionsRedux.origin);
-  const destination = useSelector(state => state.directionsRedux.destination);
-  const startTime = useSelector(state => state.directionsRedux.startTime);
+  const distance = useSelector(state => state.directions.distance);
+  const duration = useSelector(state => state.directions.duration);
+  const origin = useSelector(state => state.directions.origin);
+  const destination = useSelector(state => state.directions.destination);
+  const startTime = useSelector(state => state.directions.startTime);
 
   const showDetails = open => {
     setDetails(open);

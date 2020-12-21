@@ -17,11 +17,11 @@ import { Route } from './route';
 
 const InitMap = ({}) => {
   const dispatch = useDispatch();
-  const reduxOrigin = useSelector(state => state.directionsRedux.origin);
+  const reduxOrigin = useSelector(state => state.directions.origin);
   const reduxDestination = useSelector(
-    state => state.directionsRedux.destination
+    state => state.directions.destination
   );
-  const reduxStartTime = useSelector(state => state.directionsRedux.startTime);
+  const reduxStartTime = useSelector(state => state.directions.startTime);
   const [origin, setOrigin] = useState('');
   const [destination, setDestination] = useState('');
   const [originFormContent, setOriginFormContent] = useState('');

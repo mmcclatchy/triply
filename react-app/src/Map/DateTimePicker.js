@@ -29,7 +29,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function DateAndTimePickers() {
-  const startTime = useSelector(state => state.directionsRedux.startTime)
+  const startTime = useSelector(state => state.directions.startTime)
   const dispatch = useDispatch();
   const classes = useStyles();
   const [startTimeContent, setStartTimeContent] = useState('');

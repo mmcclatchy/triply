@@ -22,10 +22,10 @@ const RouteForm = ({}) => {
   const destinationField = document.getElementById('destination');
   const dispatch = useDispatch();
   const history = useHistory();
-  const startTime = useSelector(state => state.directionsRedux.startTime);
+  const startTime = useSelector(state => state.directions.startTime);
   const userId = useSelector(state => state.authentication.userId);
-  const or = useSelector(state => state.directionsRedux.origin);
-  const de = useSelector(state => state.directionsRedux.destination);
+  const or = useSelector(state => state.directions.origin);
+  const de = useSelector(state => state.directions.destination);
   // const autoOrigin = new google.maps.places.Autocomplete(originField);
   // const autoOrigin2 = new google.maps.places.Autocomplete(destinationField);
 

@@ -26,9 +26,9 @@ const StartOfTripForm = () => {
   const userName = useSelector(state => state.authentication.userName);
   // const trip = useSelector(state => state.trips);
   const userId = useSelector(state => state.authentication.userId);
-  const startLocation = useSelector(state => state.directionsRedux.origin);
-  const endLocation = useSelector(state => state.directionsRedux.destination);
-  const startTime = useSelector(state => state.directionsRedux.startTime)
+  const startLocation = useSelector(state => state.directions.origin);
+  const endLocation = useSelector(state => state.directions.destination);
+  const startTime = useSelector(state => state.directions.startTime)
   // console.log(trip);
 
   
