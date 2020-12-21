@@ -6,7 +6,7 @@ from app.utils import (
     coords_from_str, get_places
 )
 from sqlalchemy.exc import SQLAlchemyError
-from ..Trip import TripClass
+from ..Trip2 import TripClass
 import json
 
 
@@ -50,22 +50,26 @@ def get_trip(trip_id):
 @trip_routes.route('/users/<int:user_id>/trips', methods=['POST'])
 @login_required
 def post_trip(user_id):
-    data = request.json
-    miles = data['milesToRefuel']
-    # Default distance for a tank is 350 miles or 563270 meters
-    fuel_distance = math.floor(miles * 1609.34) if miles else 563270
+    req = request.json
+    data = req['db']
+    food_query = req['preferences']['foodQuery'][0]
+
+    # print(f'***\n\nData: {data} \n\n***')
+
+    # Convert miles to meters
+    fuel_distance = round(data['milesToRefuel'] * 1609.34)
 
     # Create an instance of the Trip Algorithm
     # and set the origin and destination
     origin = data['startLocation']
     destination = data['endLocation']
-    
+
     trip_algo = TripClass()
     directions_json = trip_algo.createNewTrip(
         start=origin,
         end=destination,
         metersToRefuel=fuel_distance,
-        timeBetweenStops=data['timeBetweenStops'],
+        timeBetweenStops=int(data['timeBetweenStops']),
         endTimeForDay=data['endTimeForDay'],
         startISO=data['startISO'] + '00:000Z',  # ! This is a placeholding work around
         avoidTolls=data['avoidTolls']
@@ -75,10 +79,11 @@ def post_trip(user_id):
     trip = Trip(
         user_id=data['userId'],
         name=f'{origin} -> {destination}',
-        start_time=data["startISO"],
         car_id=data['carId'],
         directions=directions_json
     )
+
+    next_stop_suggestions = trip_algo.getNextStopDetails(foodQuery=food_query)
 
     try:
         db.session.add(trip)
@@ -90,7 +95,7 @@ def post_trip(user_id):
                 'trips': normalize(trip.to_dict()),
                 'currentTripId': trip.id
             },
-            'suggestions': trip_algo.getNextStopDetails,
+            'suggestions': next_stop_suggestions,
             'directions': trip.directions
         })
         return trip_json

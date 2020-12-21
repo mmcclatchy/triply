@@ -22,7 +22,7 @@ export const getTrip = tripId => ({
 });
 
 export const postTrip = (trip, userId) => {
-  console.log('POSTING TRIP!!!!!!!!!!!!!!!!!!!!');
+  console.log('POSTING TRIP!!!!!!!!!!!!!!!!!!!!', trip);
   return {
     type: API,
     payload: {

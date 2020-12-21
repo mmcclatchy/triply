@@ -10,7 +10,8 @@ import stops from './reducers/stops';
 import trips from './reducers/trips';
 import setDuration from './reducers/setDurations';
 import suggestions from './reducers/suggestions';
-import timeline from './reducers/timeline';
+import stepper from './reducers/stepper';
+// import timeline from './reducers/timeline';
 import testenv from './TestEnvironment/ReduxTest';
 
 const composeEnhancers =
@@ -27,6 +28,7 @@ export const reducer = combineReducers({
   cars,
   setDuration,
   suggestions,
+  stepper,
   // timeline,
   testenv
 });

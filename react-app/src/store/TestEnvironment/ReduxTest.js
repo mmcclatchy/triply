@@ -1,21 +1,19 @@
 // ACTIONS
-const ADD_SUG = 'Triply/Trip/ADD_SUG';
-
-const ADD_NODE = 'Triply/Trip/ADD_NODE';
-const DELETE_NODE = 'Triply/Trip/DELETE_NODE';
-
-const UPDATE_STEP = 'Triply/Trip/UPDATE_STEP';
+const ADD_TEST_SUG = 'Triply/TestEnvironment/ADD_TEST_SUG';
+const ADD_TEST_NODE = 'Triply/TestEnvironment/ADD_TEST_NODE';
+const DELETE_TEST_NODE = 'Triply/TestEnvironment/DELETE_TEST_NODE';
+const UPDATE_TEST_STEP = 'Triply/TestEnvironment/UPDATE_TEST_STEP';
 
 export const addSuggestion = payload => ({
-  type: ADD_SUG,
+  type: ADD_TEST_SUG,
   payload
 });
 export const addNode = payload => ({
-  type: ADD_NODE,
+  type: ADD_TEST_NODE,
   payload
 });
-export const deleteNode = placeId => ({ type: DELETE_NODE, placeId });
-export const updateStep = step => ({ type: UPDATE_STEP, step });
+export const deleteNode = placeId => ({ type: DELETE_TEST_NODE, placeId });
+export const updateStep = step => ({ type: UPDATE_TEST_STEP, step });
 
 // "Fetches";
 export const setSuggestion = payload => async dispatch => {
@@ -38,14 +36,14 @@ export default function testenv(
   action
 ) {
   switch (action.type) {
-    case ADD_SUG: {
+    case ADD_TEST_SUG: {
       const newSuggestions = {
         ...state.suggestions,
         [state.step]: action.payload
       };
       return { ...state, suggestions: newSuggestions };
     }
-    case ADD_NODE: {
+    case ADD_TEST_NODE: {
       const array = state.nodes[state.step];
       let data = action.payload;
 
@@ -60,7 +58,7 @@ export default function testenv(
       };
       return { ...state, nodes: newNodes };
     }
-    case DELETE_NODE: {
+    case DELETE_TEST_NODE: {
       const array = state.nodes[state.step].filter(
         e => e.place_id !== action.placeId
       );
@@ -72,7 +70,7 @@ export default function testenv(
 
       return { ...state, nodes: newNodes };
     }
-    case UPDATE_STEP: {
+    case UPDATE_TEST_STEP: {
       state.step = action.step;
       return state;
     }

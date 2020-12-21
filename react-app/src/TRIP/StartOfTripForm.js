@@ -13,7 +13,8 @@ import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 
 import './TripPage.css';
 import { postTrip } from '../store/actions/trips';
-import SuggestionStepper from '../Suggestions/SuggestionStepper';
+// import SuggestionStepper from '../Suggestions/SuggestionStepper';
+import SuggestionStepper from '../Stepper/Stepper';
 // import { setDuration } from '../store/actions/setDuration';
 
 //************************************************************
@@ -23,12 +24,12 @@ const StartOfTripForm = () => {
   // *** Redux ***
   const dispatch = useDispatch();
   const userName = useSelector(state => state.authentication.userName);
-  const trip = useSelector(state => state.trips.payload);
+  // const trip = useSelector(state => state.trips);
   const userId = useSelector(state => state.authentication.userId);
   const startLocation = useSelector(state => state.directionsRedux.origin);
   const endLocation = useSelector(state => state.directionsRedux.destination);
   const startTime = useSelector(state => state.directionsRedux.startTime)
-  console.log(trip);
+  // console.log(trip);
 
   
   // *** Local State ***
@@ -127,19 +128,21 @@ const StartOfTripForm = () => {
       postTrip(
         {
           db: {
-            // startLocation,
-            // endLocation,
-            // startISO,
+            userId,
+            startLocation,
+            endLocation,
+            startISO: startTime,
             carId: selectedCar,
             endTimeForDay,
             timeBetweenStops,
             avoidTolls,
+            milesToRefuel: 350,  //! Placeholder until new API works
           },
           preferences: {
             foodQuery: selectedFood
           }
         },
-        trip.currentId
+        userId
       )
     );
     setToggle(false);

@@ -164,10 +164,16 @@ class TripClass:
         foodResults = r.json()
 
         return {
-            "ceterOfSearch": queries["location"],
-            'foodResults': foodResults,
-            'gasResults': gasResults,
-            'hotelResults': hotelResults
+            "centerOfSearch": queries["location"],
+            'foodResults': self.filterResults(foodResults),
+            'gasResults': self.filterResults(gasResults),
+            'hotelResults': self.filterResults(hotelResults)
+        }
+
+    def filterResults(self, result):
+        return {
+            'htmlAttributions': result['html_attributions'],
+            'results': result['results']
         }
 
     def addGasStation(self, placeId):

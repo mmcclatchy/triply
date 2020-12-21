@@ -5,9 +5,9 @@ const initialState = {tripId: 0, payload: {},trips: {}};
 // payloads have been normalized in the back end
 export default function reducer(state = initialState, { type, payload }) {
   Object.freeze(state);
-  console.log('TRIP REDUCER: ', type, payload)
   switch (type) {
     case SET_TRIP:
+      console.log('TRIP REDUCER: ', type, payload)
       return { ...state, ...payload };
 
     case DELETE_TRIP:

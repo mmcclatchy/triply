@@ -16,3 +16,7 @@ export const SET_DURATIONS = 'triply/StartOfTripForm/SET_DURATIONS';
 export const SET_SUGGESTIONS = 'triply/tripForm/SET_SUGGESTIONS';
 export const SET_TIMELINE = 'triply/timeline/SET_TIMELINE';
 export const SET_ROUTE = 'triply/route/SET_ROUTE';
+export const ADD_SUG = 'Triply/Trip/ADD_SUG';
+export const ADD_NODE = 'Triply/Trip/ADD_NODE';
+export const DELETE_NODE = 'Triply/Trip/DELETE_NODE';
+export const UPDATE_STEP = 'Triply/Trip/UPDATE_STEP';
