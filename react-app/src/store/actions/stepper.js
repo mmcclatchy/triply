@@ -22,4 +22,8 @@ export const updateStep = payload => ({ type: UPDATE_STEP, payload });
 //------------------------------------------------------------
 
 
+// Set a selection from suggestions into Redux
+export const setNode = payload => async dispatch => dispatch(addNode(payload));
+
+// Remove a selection from suggestions from Redux
 export const unsetNode = id => async dispatch => dispatch(deleteNode(id));
