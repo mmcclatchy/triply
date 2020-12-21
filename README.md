@@ -95,14 +95,14 @@ Triply allows users to:
 * **Technologies**
 
   * [React.js](https://reactjs.org/)
-  * [Redux](#https://redux.js.org/)
-  * [Python](#https://www.python.org/)
-  * [Flask](#https://flask.palletsprojects.com/en/1.1.x/)
-  * [Flask-SQLAlchemy ORM](#https://flask-sqlalchemy.palletsprojects.com/en/2.x/)
-  * [PostgreSQL](#https://www.postgresql.org/)
-  * [Google Maps Directions API](#https://developers.google.com/maps/documentation/directions/overview)
-  * [Google Maps Places API](#https://developers.google.com/places/web-service/overview)
-  * [Material-UI](#https://material-ui.com/)
+  * [Redux](https://redux.js.org/)
+  * [Python](https://www.python.org/)
+  * [Flask](https://flask.palletsprojects.com/en/1.1.x/)
+  * [Flask-SQLAlchemy ORM](https://flask-sqlalchemy.palletsprojects.com/en/2.x/)
+  * [PostgreSQL](https://www.postgresql.org/)
+  * [Google Maps Directions API](https://developers.google.com/maps/documentation/directions/overview)
+  * [Google Maps Places API](https://developers.google.com/places/web-service/overview)
+  * [Material-UI](https://material-ui.com/)
 
 ---
 
