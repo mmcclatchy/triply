@@ -13,27 +13,48 @@ const Suggestions = ({ data }) => {
   const gasStations = useSelector(state => state.stepper.suggestions[step].gasStations);
 
   
+  // *** Shorten Suggestions ***
+  const threeHotels = hotels.slice(0, 1)
+  const threeRestaurants = restaurants.slice(0, 1)
+  const threeGasStations = gasStations.slice(0, 1)
+  
+  
   // *** JSX ***
   return (
     <div>
       <h2>Suggestions For {data.time}</h2>
 
       <h3>Hotels</h3>
-      {hotels &&
-        hotels.map(hotel => {
-          return <Node data={hotel} id='hotel_id' />;
+      {threeHotels &&
+        threeHotels.map((hotel, index) => {
+          return <Node 
+            data={hotel} 
+            type='hotels' 
+            key={index}
+            index={index} 
+            className='node_hotels' />;
         })}
 
       <h3>Food</h3>
-      {restaurants &&
-        restaurants.map(food => {
-          return <Node data={food} id='restaurant_id' />;
+      {threeRestaurants &&
+        threeRestaurants.map((food, index) => {
+          return <Node 
+            data={food} 
+            type='restaurants' 
+            key={index}
+            index={index} 
+            className='node_restaurants' />;
         })}
 
       <h3>Refill</h3>
-      {gasStations &&
-        gasStations.map(gas => {
-          return <Node data={gas} id='gas_station_id' />;
+      {threeGasStations &&
+        threeGasStations.map((gas, index) => {
+          return <Node 
+            data={gas} 
+            type='gasStations' 
+            key={index}
+            index={index} 
+            className='gas_station_id' />;
         })}
     </div>
   );

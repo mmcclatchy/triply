@@ -2,7 +2,8 @@ import {
   ADD_SUG,
   ADD_NODE,
   DELETE_NODE,
-  UPDATE_STEP
+  UPDATE_STEP,
+  SET_PLACE_IMG,
 } from '../constants/constants';
 
 const initState = {
@@ -33,6 +34,16 @@ export default function stepperReducer(state = initState, { type, payload }) {
 
     case UPDATE_STEP:
       return  { ...state, step: payload };
+      
+    case SET_PLACE_IMG:
+      const { photoUrl, step, type, index } = payload;
+      const newState = { ...state };
+      console.log('SET_PLACE_IMG STEP: ', newState.suggestions[step])
+      console.log('SET_PLACE_IMG TYPE: ', newState.suggestions[step][type])
+      console.log('SET_PLACE_IMG INDEX: ', newState.suggestions[step][type][index])
+      newState.suggestions[step][type][index].photoUrl = photoUrl
+      console.log('PHOTO URL: ', newState.suggestions[step][type][index].photoUrl)
+      return newState
 
     default:
       return state;

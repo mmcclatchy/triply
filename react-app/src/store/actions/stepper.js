@@ -2,7 +2,8 @@ import {
   ADD_SUG,
   ADD_NODE,
   DELETE_NODE,
-  UPDATE_STEP
+  UPDATE_STEP,
+  SET_PLACE_IMG,
 } from '../constants/constants';
 
 
@@ -27,3 +28,22 @@ export const setNode = payload => async dispatch => dispatch(addNode(payload));
 
 // Remove a selection from suggestions from Redux
 export const unsetNode = id => async dispatch => dispatch(deleteNode(id));
+
+// Fetch a Google Places Photo using the photo_reference
+// Place in Redux within the places data
+export const fetchImg = (place, step, type, index) => async dispatch => {
+  if (!place || !type) return
+  // console.log('Just Entered fetchImg Action')
+  const key = process.env.REACT_APP_GOOGLE_KEY;
+  // console.log('FETCH IMG PLACE: ', place)
+  // console.log('FETCH IMG PHOTOS: ', place.photos)
+  // console.log('FETCH IMG PHOTO: ', place.photos[0])
+  // let reference;
+  let photoUrl;
+  if (place.photos) {
+    const reference = place.photos[0].photo_reference;
+    photoUrl = `https://maps.googleapis.com/maps/api/place/photo?maxwidth=80&photoreference=${reference}&key=${key}`
+    dispatch({ type: SET_PLACE_IMG, payload: { photoUrl, step, type, index }})
+  }
+  
+}
