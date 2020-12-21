@@ -2,14 +2,30 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { updateStep } from '../store/actions/stepper';
-
 import Suggestions from './Suggestions';
 
-const Stepper = ({ suggestions, step }) => {
-  const dispatch = useDispatch();
-  const data = useSelector(state => state.stepper.nodes);
-  const [back, disableBack] = useState(false);
+//*************************************************************
 
+const Stepper = () => {
+  // *** Redux ***
+  const step = useSelector(state => state.stepper.step);
+  const suggestions = useSelector(state => state.stepper.suggestions);
+  const data = useSelector(state => state.stepper.nodes);
+  const dispatch = useDispatch();
+  
+  // *** Local State ***
+  const [back, disableBack] = useState(false);
+  
+
+  // *** Use Effect Hooks ***
+  useEffect(() => {
+    if (step === 1) disableBack(true);
+    if (step > 1) disableBack(false);
+    
+  }, [step]);
+  
+  
+  // *** Actions ***
   const nextHandler = () => {
     dispatch(updateStep(step + 1));
   };
@@ -21,13 +37,9 @@ const Stepper = ({ suggestions, step }) => {
   const submitTrip = () => {
     console.log(data);
   };
+  
 
-  useEffect(() => {
-    if (step === 1) disableBack(true);
-    if (step > 1) disableBack(false);
-    
-  }, [step]);
-
+  // *** JSX ***
   return (
     <div style={{ border: '1px solid black', width: '75%' }}>
       <h1>Stepper</h1>

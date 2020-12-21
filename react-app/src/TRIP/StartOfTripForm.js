@@ -9,7 +9,7 @@ import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
 import HotelIcon from '@material-ui/icons/Hotel';
 import FastfoodIcon from '@material-ui/icons/Fastfood';
 import DirectionsCarIcon from '@material-ui/icons/DirectionsCar';
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+// import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 
 import './TripPage.css';
 import { postTrip } from '../store/actions/trips';
@@ -58,7 +58,7 @@ const StartOfTripForm = () => {
   const handleAdditionalOptionChange = e => 
     setAdditionalOption(e.target.value);
   
-    const handleAdditionalOptionAddition = e => {
+  const handleAdditionalOptionAddition = e => {
     if (!additionalOption) {
       return;
     }
@@ -197,7 +197,7 @@ const StartOfTripForm = () => {
                 <option value={5400}>Every Hour or Two</option>
                 <option value={9000}>Every Two or Three Hours</option>
                 <option value={10800}>Every Three or Four Hours</option>
-                <option value={'Never'}>
+                <option value={20000}>
                   Only When I Will Run Out of Gas
                 </option>
               </select>
@@ -211,7 +211,7 @@ const StartOfTripForm = () => {
                 <option value={28800}>Every Seven to Nine Hours</option>
                 <option value={39600}>Every Ten to Twelve Hours</option>
                 <option value={14400}>Every Thirteen to Fifteen Hours</option>
-                <option value={'Never'}>What's a sleep?</option>
+                <option value={1000000}>What's a sleep?</option>
               </select>
             </div>
             <br />

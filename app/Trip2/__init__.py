@@ -165,16 +165,15 @@ class TripClass:
 
         return {
             "centerOfSearch": queries["location"],
-            'foodResults': self.filterResults(foodResults),
-            'gasResults': self.filterResults(gasResults),
-            'hotelResults': self.filterResults(hotelResults)
+            'restaurants': self.filterResults(foodResults),
+            'gasStations': self.filterResults(gasResults),
+            'hotels': self.filterResults(hotelResults)
         }
 
     def filterResults(self, result):
-        return {
-            'htmlAttributions': result['html_attributions'],
-            'results': result['results']
-        }
+        if result is False:
+            return []
+        return [*result['results']]
 
     def addGasStation(self, placeId):
         self.buffer.append((placeId, "gas"))

@@ -1,11 +1,19 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
+
 import Node from './Node';
 
-const Suggestions = ({ data }) => {
-  const hotels = data.suggestions.Hotel;
-  const restaurants = data.suggestions.Restaurant;
-  const gasStations = data.suggestions.Gas;
+//**************************************************************
 
+const Suggestions = ({ data }) => {
+  // *** Redux ***
+  const step = useSelector(state => state.stepper.step);
+  const hotels = useSelector(state => state.stepper.suggestions[step].hotels);
+  const restaurants = useSelector(state => state.stepper.suggestions[step].restaurants);
+  const gasStations = useSelector(state => state.stepper.suggestions[step].gasStations);
+
+  
+  // *** JSX ***
   return (
     <div>
       <h2>Suggestions For {data.time}</h2>
