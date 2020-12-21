@@ -30,7 +30,7 @@ const api = ({ dispatch, getState }) => next => async action => {
     console.log("SUGGESTIONS FROM API: ", suggestions);
     
     
-    if (directions) dispatch({ type: SET_DIRECTIONS, payload: directions });
+    if (directions) dispatch({ type: SET_DIRECTIONS, payload: JSON.parse(directions) });
     if (suggestions) dispatch({ type: ADD_SUG, payload: suggestions });
 
     dispatch({ type: actionConst, payload });
