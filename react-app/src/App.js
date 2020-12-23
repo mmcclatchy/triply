@@ -11,6 +11,7 @@ import TripPage from './TRIP/TripPage';
 import { setAuth } from './store/actions/authentication';
 import SuggestionStepper from './Suggestions/SuggestionStepper';
 import TestEnvironment from './TestEnvironment/TestEnvironment';
+import StyleEnv from './StyledTE/StyleEnv';
 
 function App() {
   const [authenticated, setAuthenticated] = useState(false);
@@ -53,6 +54,10 @@ function App() {
 
       <Route path='/test-environment' exact={true}>
         <TestEnvironment />
+      </Route>
+
+      <Route path='/style-environment' exact={true}>
+        <StyleEnv />
       </Route>
 
       <Route path='/profile/:userId' authenticated={authenticated}>

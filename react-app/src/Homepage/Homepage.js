@@ -23,6 +23,10 @@ const Homepage = ({ authenticated, setAuthenticated }) => {
     return history.push('/test-environment');
   };
 
+  const accessTest2 = () => {
+    return history.push('/style-environment');
+  };
+
   return (
     <div className='homepage_body'>
       <div className='header__content'>
@@ -38,6 +42,7 @@ const Homepage = ({ authenticated, setAuthenticated }) => {
             userId={userId}
           />
           <button onClick={accessTest}>Test Environment</button>
+          <button onClick={accessTest2}>Style Environment</button>
         </div>
       </div>
       <div className='form_header'>Plan your next Road trip</div>

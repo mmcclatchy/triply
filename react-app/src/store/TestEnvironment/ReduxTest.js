@@ -6,6 +6,9 @@ const DELETE_NODE = 'Triply/Trip/DELETE_NODE';
 
 const UPDATE_STEP = 'Triply/Trip/UPDATE_STEP';
 
+const UPDATE_ORIGIN_NODE = 'Triply/Trip/UPDATE_ORIGIN_NODE';
+const UPDATE_DEST_NODE = 'Triply/Trip/UPDATE_DEST_NODE';
+
 export const addSuggestion = payload => ({
   type: ADD_SUG,
   payload
@@ -16,6 +19,8 @@ export const addNode = payload => ({
 });
 export const deleteNode = placeId => ({ type: DELETE_NODE, placeId });
 export const updateStep = step => ({ type: UPDATE_STEP, step });
+export const updateOrigin = payload => ({ type: UPDATE_ORIGIN_NODE, payload });
+export const updateDest = payload => ({ type: UPDATE_DEST_NODE, payload });
 
 // "Fetches";
 export const setSuggestion = payload => async dispatch => {
@@ -30,6 +35,11 @@ export const setNode = payload => async dispatch => {
 
 export const unsetNode = id => async dispatch => {
   dispatch(deleteNode(id));
+};
+
+export const OriginDestination = (origin, dest) => async dispatch => {
+  dispatch(updateOrigin(origin));
+  dispatch(updateDest(dest));
 };
 
 // REDUCERS
