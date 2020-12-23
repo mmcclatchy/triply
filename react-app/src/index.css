@@ -1,3 +1,13 @@
 body {
   margin: 0;
 }
+
+body,
+html {
+  height: 100%;
+}
+
+.responsive {
+  width: 100%;
+  height: auto;
+}

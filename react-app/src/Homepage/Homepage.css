@@ -2,7 +2,7 @@
 
 .homepage_body {
   background-image: url('../assets/triply_cover.jpeg');
-  background-size: 100% auto;
+  background-size: cover;
   background-repeat: no-repeat;
   background-position: center 62%;
   height: 100vh;
@@ -11,17 +11,16 @@
 }
 
 .logo {
-  background-image: url('../assets/triply_logo_black.png');
-  background-size: 65%;
-  background-repeat: no-repeat;
-  margin-top: 10vh;
-  margin-left: 30px;
-  width: 35vw;
-  height: 35vh;
-  display: flex
+  margin: 3%;
+  min-width: 180px;
+  width: 30vw;
+  max-width: 380px;
+  height: 30vh;
+
+  max-height: 400px;
 }
 
-.MuiButton-root{
+.MuiButton-root {
   background-color: yellow;
 }
 
@@ -56,8 +55,7 @@
   text-transform: uppercase;
   margin-right: 3em;
   margin-bottom: 0;
-  margin-top: -.1em;
-
+  margin-top: -0.1em;
 }
 .homepage__tagline2 {
   display: flex;
@@ -73,7 +71,7 @@
   font-variant: normal;
   text-transform: uppercase;
   margin-right: 3em;
-  margin-top: -.1em;
+  margin-top: -0.1em;
 }
 
 /* .tag_container {
@@ -92,22 +90,22 @@
 .navbar_container {
   display: flex;
   justify-content: flex-end;
-  width: 70em
+  width: 70em;
 }
 
 .form_header {
-    display: flex;
-    justify-content: flex-end;
-    font-family: 'Anton', sans-serif;
-    font-size: 40px;
-    color: rgb(253, 210, 0);
-    letter-spacing: 0.2px;
-    -webkit-text-stroke: 3px rgb(34, 34, 30);
-    font-weight: 400;
-    text-decoration: none;
-    font-style: normal;
-    font-variant: normal;
-    text-transform: uppercase;
-    margin-right: 6.5em;
-    margin-bottom: 1em;
+  display: flex;
+  justify-content: flex-end;
+  font-family: 'Anton', sans-serif;
+  font-size: 40px;
+  color: rgb(253, 210, 0);
+  letter-spacing: 0.2px;
+  -webkit-text-stroke: 3px rgb(34, 34, 30);
+  font-weight: 400;
+  text-decoration: none;
+  font-style: normal;
+  font-variant: normal;
+  text-transform: uppercase;
+  margin-right: 6.5em;
+  margin-bottom: 1em;
 }

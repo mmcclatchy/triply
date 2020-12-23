@@ -26,7 +26,11 @@ const Homepage = ({ authenticated, setAuthenticated }) => {
   return (
     <div className='homepage_body'>
       <div className='header__content'>
-        <div className='logo'></div>
+        <img
+          src={require(`../assets/triply_logo_black.png`)}
+          className='logo responsive'
+        />
+        {/* <div className='logo'></div> */}
         <div className='navbar_container'>
           <NavBar
             authenticated={authenticated}
