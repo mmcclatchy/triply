@@ -1,14 +1,8 @@
 export const greeting = () => {
-  const time = new Date().toLocaleTimeString().toLowerCase();
-  const idx = time.indexOf(':');
-  const hour = time.slice(0, idx);
-  if (time.includes('am') && parseInt(hour) >= 5) {
-    return 'Good Morning';
-  } else if (time.includes('pm') && parseInt(hour) < 6) {
-    return 'Good Afternoon';
-  } else {
-    return 'Good Evening';
-  }
+  const time = new Date().getHours();
+  if (time < 12) return 'Good Morning';
+  else if (time >= 12 && time <= 17) return 'Good Afternoon';
+  else if (time >= 17 && time <= 24) return 'Good Evening';
 };
 
 // used to persist state by loading/storing store into local storage
@@ -25,7 +19,7 @@ export const loadState = () => {
 };
 
 //samesies
-export const saveState = (state) => {
+export const saveState = state => {
   try {
     const serializedState = JSON.stringify(state);
     localStorage.setItem('state', serializedState);
