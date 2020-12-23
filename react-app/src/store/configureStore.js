@@ -3,14 +3,15 @@ import { loadState, saveState } from '../services/utilities';
 import thunk from 'redux-thunk';
 import utilities from './reducers/utilities';
 import authentication from './reducers/authentication';
-import directionsRedux from './reducers/directions';
+import directions from './reducers/directions';
 import api from './middleware/api';
 import cars from './reducers/cars';
 import stops from './reducers/stops';
 import trips from './reducers/trips';
 import setDuration from './reducers/setDurations';
 import suggestions from './reducers/suggestions';
-import timeline from './reducers/timeline';
+import stepper from './reducers/stepper';
+// import timeline from './reducers/timeline';
 import testenv from './TestEnvironment/ReduxTest';
 
 const composeEnhancers =
@@ -21,13 +22,14 @@ const initialState = {};
 export const reducer = combineReducers({
   authentication,
   utilities,
-  directionsRedux,
+  directions,
   trips,
   stops,
   cars,
   setDuration,
   suggestions,
-  timeline,
+  stepper,
+  // timeline,
   testenv
 });
 
@@ -43,11 +45,12 @@ store.subscribe(() => {
   saveState({
     authentication: store.getState().authentication,
     utilities: store.getState().utilities,
-    directionsRedux: store.getState().directionsRedux,
+    directions: store.getState().directions,
     trips: store.getState().trips,
     stops: store.getState().stops,
     cars: store.getState().cars,
-    setDuration: store.getState().setDuration
+    setDuration: store.getState().setDuration,
+    // stepper: store.getState().stepper,
   });
 });
 

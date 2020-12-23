@@ -1,4 +1,4 @@
-import { API, SET_TRIP, DELETE_TRIP } from '../constants/constants';
+import { API, SET_TRIP, DELETE_TRIP, CLEAR_TRIPS } from '../constants/constants';
 
 export const getTrips = userId => {
   console.log('made it in');
@@ -22,7 +22,7 @@ export const getTrip = tripId => ({
 });
 
 export const postTrip = (trip, userId) => {
-  console.log('POSTING TRIP!!!!!!!!!!!!!!!!!!!!');
+  console.log('POSTING TRIP!!!!!!!!!!!!!!!!!!!!', trip);
   return {
     type: API,
     payload: {
@@ -52,3 +52,5 @@ export const deleteTrip = tripId => ({
     actionConst: DELETE_TRIP
   }
 });
+
+export const clearTrips = () => ({ type: CLEAR_TRIPS })

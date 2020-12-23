@@ -34,7 +34,7 @@ class TripClass:
         endCor = r["candidates"][0]["geometry"]["location"]
 
         # gets or estimates miles till refuel
-        #  a safe bet for distance between refules by default
+        #  a safe bet for distance between refuels by default
         self.cache = {}
         if metersToRefuel:
             self.cache["metersToRefuel"] = metersToRefuel
@@ -164,11 +164,16 @@ class TripClass:
         foodResults = r.json()
 
         return {
-            "ceterOfSearch": queries["location"],
-            'foodResults': foodResults,
-            'gasResults': gasResults,
-            'hotelResults': hotelResults
+            "centerOfSearch": queries["location"],
+            'restaurants': self.filterResults(foodResults),
+            'gasStations': self.filterResults(gasResults),
+            'hotels': self.filterResults(hotelResults)
         }
+
+    def filterResults(self, result):
+        if result is False:
+            return []
+        return [*result['results']]
 
     def addGasStation(self, placeId):
         self.buffer.append((placeId, "gas"))

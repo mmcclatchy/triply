@@ -1,30 +1,43 @@
-import { Typography, Paper, Button } from '@material-ui/core';
 import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
+
+import { Typography, Paper, Button } from '@material-ui/core';
 import CardTravelIcon from '@material-ui/icons/CardTravel';
 import LocalGasStationIcon from '@material-ui/icons/LocalGasStation';
 import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
 import HotelIcon from '@material-ui/icons/Hotel';
 import FastfoodIcon from '@material-ui/icons/Fastfood';
 import DirectionsCarIcon from '@material-ui/icons/DirectionsCar';
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+// import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+
 import './TripPage.css';
-import { useDispatch, useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
-import { putTrip } from '../store/actions/trips';
-import { setDuration } from '../store/actions/setDuration';
-import SuggestionStepper from '../Suggestions/SuggestionStepper';
+import { postTrip } from '../store/actions/trips';
+// import SuggestionStepper from '../Suggestions/SuggestionStepper';
+import SuggestionStepper from '../Stepper/Stepper';
+// import { setDuration } from '../store/actions/setDuration';
+
+//************************************************************
 
 const StartOfTripForm = () => {
+  
+  // *** Redux ***
   const dispatch = useDispatch();
   const userName = useSelector(state => state.authentication.userName);
-  const trip = useSelector(state => state.trips.payload);
-  console.log(trip);
+  // const trip = useSelector(state => state.trips);
+  const userId = useSelector(state => state.authentication.userId);
+  const startLocation = useSelector(state => state.directions.origin);
+  const endLocation = useSelector(state => state.directions.destination);
+  const startTime = useSelector(state => state.directions.startTime)
+  // console.log(trip);
 
+  
+  // *** Local State ***
   const [car, setCar] = useState([]);
   const [selectedCar, setSelectedCar] = useState([]);
-  const [stopTime, setStopTime] = useState(5400);
-  const [sleepTime, setSleepTime] = useState(18000);
-  const [tolls, setTolls] = useState(false);
+  const [timeBetweenStops, setTimeBetweenStops] = useState(5400);
+  const [endTimeForDay, setEndTimeForDay] = useState(18000);
+  const [avoidTolls, setAvoidTolls] = useState(false);
   const [options, setOptions] = useState([
     'Mexican',
     'Fast Food',
@@ -36,45 +49,15 @@ const StartOfTripForm = () => {
   const [selectedFoods, setSelectedFoods] = useState([]);
   const [toggle, setToggle] = useState(true);
 
-  const userId = useSelector(state => state.authentication.userId);
-  const handleCarChange = e => {
-    setSelectedCar(e.target.value);
-  };
-  const handleStopChange = e => setStopTime(e.target.value);
-  const handleSleepChange = e => setSleepTime(e.target.value);
-  const handleCheck = e => {
-    setTolls(e.target.checked);
-  };
-  const saveInfo = e => {
-    const op = document.getElementById('options').childNodes;
-    const selectedFood = [];
-    op.forEach(el => {
-      if (el.lastChild.checked) {
-        selectedFood.push(el.lastChild.id);
-      }
-    });
-    dispatch(
-      putTrip(
-        {
-          db: {
-            carId: selectedCar,
-            dailyTimeLimit: sleepTime,
-            stopTimeLimit: stopTime,
-            avoidTolls: tolls
-          },
-          preferences: {
-            foodQuery: selectedFood
-          }
-        },
-        trip.currentId
-      )
-    );
-    setToggle(false);
-  };
-
-  const handleAdditionalOptionChange = e =>
+  
+  // *** Helper Functions ***
+  const handleCarChange = e => setSelectedCar(e.target.value);
+  const handleStopChange = e => setTimeBetweenStops(e.target.value);
+  const handleSleepChange = e => setEndTimeForDay(e.target.value);
+  const handleCheck = e => setAvoidTolls(e.target.checked);
+  const handleAdditionalOptionChange = e => 
     setAdditionalOption(e.target.value);
-
+  
   const handleAdditionalOptionAddition = e => {
     if (!additionalOption) {
       return;
@@ -86,16 +69,7 @@ const StartOfTripForm = () => {
     setOptions(o);
     setAdditionalOption('');
   };
-
-  useEffect(() => {
-    if (options.length === 5) {
-      return;
-    }
-    const newBox = document.getElementById('options').lastChild.lastChild;
-    // console.log(newBox);
-    newBox.checked = true;
-  }, [options.length]);
-
+  
   const handleCheckOfFood = e => {
     if (e.target.value) {
       let s = selectedFoods;
@@ -112,7 +86,11 @@ const StartOfTripForm = () => {
       // console.log(s);
     }
   };
+  
+  
+  // *** Use Effect Hooks ***  
 
+  // On Mount: Get User's Car Data
   useEffect(() => {
     if (!userId) {
       return null;
@@ -125,7 +103,54 @@ const StartOfTripForm = () => {
     };
     getCars();
   }, []);
+  
+  // Re-render when options change
+  useEffect(() => {
+    if (options.length === 5) {
+      return;
+    }
+    const newBox = document.getElementById('options').lastChild.lastChild;
+    // console.log(newBox);
+    newBox.checked = true;
+  }, [options.length]);
+  
+  
+  // *** Post Trip Info to the Backend ***
+  const saveInfo = e => {
+    const op = document.getElementById('options').childNodes;
+    const selectedFood = [];
+    op.forEach(el => {
+      if (el.lastChild.checked) {
+        selectedFood.push(el.lastChild.id);
+      }
+    });
+    dispatch(
+      postTrip(
+        {
+          db: {
+            userId,
+            startLocation,
+            endLocation,
+            startISO: startTime,
+            carId: selectedCar,
+            endTimeForDay,
+            timeBetweenStops,
+            avoidTolls,
+            milesToRefuel: 350,  //! Placeholder until new API works
+          },
+          preferences: {
+            foodQuery: selectedFood
+          }
+        },
+        userId
+      )
+    );
+    setToggle(false);
+  };
 
+
+  // *** JSX ***
+  
   return (
     <Paper variant='outlined' elevation={8}>
       <div className='StartOfTripForm'>
@@ -168,11 +193,11 @@ const StartOfTripForm = () => {
             <LocalGasStationIcon />
             <div>
               <label>How often are we stopping?</label>
-              <select value={stopTime} onChange={handleStopChange}>
+              <select value={timeBetweenStops} onChange={handleStopChange}>
                 <option value={5400}>Every Hour or Two</option>
                 <option value={9000}>Every Two or Three Hours</option>
                 <option value={10800}>Every Three or Four Hours</option>
-                <option value={'Never'}>
+                <option value={20000}>
                   Only When I Will Run Out of Gas
                 </option>
               </select>
@@ -181,19 +206,19 @@ const StartOfTripForm = () => {
             <HotelIcon />
             <div>
               <label>How often do you want to sleep?</label>
-              <select value={sleepTime} onChange={handleSleepChange}>
+              <select value={endTimeForDay} onChange={handleSleepChange}>
                 <option value={18000}>Every Four to Six Hours</option>
                 <option value={28800}>Every Seven to Nine Hours</option>
                 <option value={39600}>Every Ten to Twelve Hours</option>
                 <option value={14400}>Every Thirteen to Fifteen Hours</option>
-                <option value={'Never'}>What's a sleep?</option>
+                <option value={1000000}>What's a sleep?</option>
               </select>
             </div>
             <br />
             <MonetizationOnIcon />
             <div>
               <label>Avoid Tolls?</label>
-              <input type={'checkbox'} checked={tolls} onClick={handleCheck} />
+              <input type={'checkbox'} checked={avoidTolls} onClick={handleCheck} />
             </div>
             <br />
             <FastfoodIcon />
@@ -219,7 +244,7 @@ const StartOfTripForm = () => {
                 <label>Avoid Tolls?</label>
                 <input
                   type={'checkbox'}
-                  checked={tolls}
+                  checked={avoidTolls}
                   onClick={handleCheck}
                 />
               </div>

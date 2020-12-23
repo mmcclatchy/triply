@@ -8,6 +8,7 @@ import View from '../shared_components/Drawer';
 import { setAuth, setName, setId } from '../store/actions/authentication';
 import {setOriginAction, setDestinationAction, setStartTimeAction, setDistanceAction, setDurationAction} from '../store/actions/directions'
 import { greeting } from '../services/utilities';
+import { clearTrips } from '../store/actions/trips';
 
  const NavBar = () => {
   const history = useHistory();
@@ -26,6 +27,7 @@ import { greeting } from '../services/utilities';
     dispatch(setDurationAction(""));
     dispatch(setName(""));
     dispatch(setId(""));
+    dispatch(clearTrips())
   };
 
   return (

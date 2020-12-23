@@ -6,7 +6,7 @@ from app.utils import (
     coords_from_str, get_places
 )
 from sqlalchemy.exc import SQLAlchemyError
-from ..Trip import TripClass
+from ..Trip2 import TripClass
 import json
 
 
@@ -50,32 +50,40 @@ def get_trip(trip_id):
 @trip_routes.route('/users/<int:user_id>/trips', methods=['POST'])
 @login_required
 def post_trip(user_id):
-    data = request.json
-    print(data, '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
-    origin = data['startLocation']
-    destination = data['endLocation']
-    print('********\n\nORIGIN', origin, destination, '\n\n\n')
+    req = request.json
+    data = req['db']
+    food_query = req['preferences']['foodQuery'][0]
+
+    # print(f'***\n\nData: {data} \n\n***')
+
+    # Convert miles to meters
+    fuel_distance = round(data['milesToRefuel'] * 1609.34)
 
     # Create an instance of the Trip Algorithm
     # and set the origin and destination
-    trip_algo = TripClass(departureTime=data['startTime'])
-    trip_algo.setStartLocationFromString(origin)
-    trip_algo.setEndLocationFromString(destination)
+    origin = data['startLocation']
+    destination = data['endLocation']
 
-    # Set the directions from Google API
-    # and create a dictionary of the information the Frontend needs
-    trip_algo.createDirection()
-    trip_dict = trip_algo.toDictForDatabase()
-    print(data, "\n\n\n\n\n\n\n")
+    trip_algo = TripClass()
+    directions_json = trip_algo.createNewTrip(
+        start=origin,
+        end=destination,
+        metersToRefuel=fuel_distance,
+        timeBetweenStops=int(data['timeBetweenStops']),
+        endTimeForDay=data['endTimeForDay'],
+        startISO=data['startISO'] + '00:000Z',  # ! This is a placeholding work around
+        avoidTolls=data['avoidTolls']
+    )
+
     # Create a model of the Trip for the DB
     trip = Trip(
         user_id=data['userId'],
         name=f'{origin} -> {destination}',
-        start_time=data["startTime"],
-        start_location=json.dumps(trip_dict['start_location']),
-        end_location=json.dumps(trip_dict['end_location']),
-        directions=trip_dict['directions']
+        car_id=data['carId'],
+        directions=directions_json
     )
+
+    next_stop_suggestions = trip_algo.getNextStopDetails(foodQuery=food_query)
 
     try:
         db.session.add(trip)
@@ -83,8 +91,12 @@ def post_trip(user_id):
 
         # Create a json object structured for Redux slices of state
         trip_json = jsonify({
-            'payload': {'trips': normalize(trip.to_dict()), 'currentId': trip.id},
-            'timeline': trip.get_timeline()
+            'payload': {
+                'trips': normalize(trip.to_dict()),
+                'currentTripId': trip.id
+            },
+            'suggestions': next_stop_suggestions,
+            'directions': trip.directions
         })
         return trip_json
 
@@ -100,7 +112,7 @@ def post_trip(user_id):
 @login_required
 def modify_trip(trip_id):
     data = request.json
-    
+
     # Amend the Trip Model with attributes sent from Frontend for the DB
     trip = Trip.query.get(trip_id)
     for key, value in data['db'].items():
@@ -121,9 +133,7 @@ def modify_trip(trip_id):
 
     # Recreate the directions of the Algorithm
     trip_algo.constructFromDirections(trip.directions)
-    
-    
-    print('********\n\n', data, '\n')
+
     # Get preferences and search next stop for places that match preferences
     # food_query, hotel, gas = get_preferences(data['preferences'])
     suggestions = trip_algo.getNextStopDetails(foodQuery=data['preferences']['foodQuery'][0],
