@@ -19,14 +19,14 @@ class TripClass:
         self.basicLocalSearch = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?key=" + os.environ.get("BACKEND_API_KEY")
         self.buffer = []
         return None
-    
+
     def createNewTrip(self, start, end, metersToRefuel, timeBetweenStops, endTimeForDay, startISO, avoidTolls):
         # get the start coordinates for the trip from a string
         url = self.useThisUrlToGetCordsForAPoint + parse.quote(start)
         r = requests.get(url)
         r = r.json()
         startCor = r["candidates"][0]["geometry"]["location"]
-        
+
         # get the end coordinates for the trip from a string
         url = self.useThisUrlToGetCordsForAPoint + parse.quote(end)
         r = requests.get(url)
@@ -46,7 +46,7 @@ class TripClass:
         url += "&destination=" + str(endCor["lat"]) + "," + str(endCor["lng"])
         if avoidTolls:
             url += "&avoid=tolls"
-        
+
         r = requests.get(url)
         r = r.json()
 
@@ -68,8 +68,9 @@ class TripClass:
         self.directions = r
         return json.dumps(r)
 
-    def createFromJson(self, Json):
-        info = json.loads(Json)
+    def createFromJson(self, directions_json):
+        info = json.loads(directions_json)
+        # print(f'***\n\n{info}\n\n***')
         self.directions = info
         self.cache = info["cache"]
 
@@ -246,8 +247,8 @@ class TripClass:
 
 
 t = TripClass()
-t.createNewTrip("Santa Rosa, California", "Petaluma, California", 100, 2, 2, 2, False) 
-# t.createFromJson(t.createNewTrip("4625 Parktrail ct, santa rosa, ca", "San Diego, California", 100, 5555, 2, 2, False))
+# t.createNewTrip("Santa Rosa, California", "Petaluma, California", 100, 2, 2, 2, False) 
+t.createFromJson(t.createNewTrip("4625 Parktrail ct, santa rosa, ca", "San Diego, California", 100, 5555, 2, 2, False))
 # results = t.getNextStopDetails("mexican")
 # print(json.dumps(results))
 # t.addFood(results["foodResults"]["results"][0]["place_id"])

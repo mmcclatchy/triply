@@ -13,6 +13,7 @@ const Stepper = () => {
   const suggestions = useSelector(state => state.stepper.suggestions);
   const data = useSelector(state => state.stepper.nodes);
   const tripId = useSelector(state => state.trips.currentTripId);
+  const foodQuery = useSelector(state => state.directions.foodQuery);
   const dispatch = useDispatch();
   
   
@@ -41,6 +42,22 @@ const Stepper = () => {
   
   // *** Actions ***
   const nextHandler = () => {
+    const stop = {
+      tripId,
+      step,
+      foodQuery,
+      tripStopNum: step,
+      restaurant: data[step].restaurants,
+      gasStation: data[step].gasStations,
+      hotel: data[step].hotels || null,
+      coordinates: suggestions[step].centerOfSearch,
+      starMin: null,              // TODO: Fix this when Hotels are added
+      starMax: null,
+      time: null,
+      
+    }
+    console.log('submitTrip: ', stop)
+    dispatch(postStop(stop, tripId))
     dispatch(updateStep(step + 1));
   };
 
@@ -49,17 +66,7 @@ const Stepper = () => {
   };
 
   const submitTrip = () => {
-    const stop = {
-      tripId,
-      tripStopNum: step,
-      restaurant: data.restaurants,
-      gasStation: data.gasStations,
-      hotel: data.hotels,
-      coordinates: suggestions[step].centerOfSearch,
-      starMin: null,              // TODO: Fix this when Hotels are added
-      starMax: null,
-    }
-    dispatch(postStop(stop, tripId))
+    // TODO: Submit completed trip
   };
   
 

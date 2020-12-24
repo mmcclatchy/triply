@@ -52,9 +52,9 @@ def get_trip(trip_id):
 def post_trip(user_id):
     req = request.json
     data = req['db']
-
+    
     # User's food preferences
-    food_query = req['preferences']['foodQuery'][0]
+    food_query = req['preferences']['foodQuery']
 
     # Convert miles to meters for distance per tank of selected car
     fuel_distance = round(data['milesToRefuel'] * 1609.34)
@@ -82,7 +82,7 @@ def post_trip(user_id):
         directions=directions_json
     )
 
-    next_stop_suggestions = trip_algo.getNextStopDetails(foodQuery=food_query)
+    next_stop_suggestions = trip_algo.getNextStopDetails(foodQuery=food_query[0])
 
     try:
         db.session.add(trip)
@@ -95,7 +95,10 @@ def post_trip(user_id):
                 'currentTripId': trip.id
             },
             'suggestions': next_stop_suggestions,
-            'directions': trip.directions
+            'directions': {
+                'itinerary': trip.directions,
+                'foodQuery': food_query
+            }
         })
         return trip_json
 

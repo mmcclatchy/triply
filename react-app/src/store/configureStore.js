@@ -6,10 +6,10 @@ import authentication from './reducers/authentication';
 import directions from './reducers/directions';
 import api from './middleware/api';
 import cars from './reducers/cars';
-import stops from './reducers/stops';
+// import stops from './reducers/stops';
 import trips from './reducers/trips';
 import setDuration from './reducers/setDurations';
-import suggestions from './reducers/suggestions';
+// import suggestions from './reducers/suggestions';
 import stepper from './reducers/stepper';
 // import timeline from './reducers/timeline';
 import testenv from './TestEnvironment/ReduxTest';
@@ -24,10 +24,10 @@ export const reducer = combineReducers({
   utilities,
   directions,
   trips,
-  stops,
+  // stops,
   cars,
   setDuration,
-  suggestions,
+  // suggestions,
   stepper,
   // timeline,
   testenv

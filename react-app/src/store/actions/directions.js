@@ -5,8 +5,8 @@ export const SET_TRIP_DURATION = 'triply/directions/SET_TRIP_DURATION';
 export const SET_TRIP_DISTANCE = 'triply/directions/SET_TRIP_DISTANCE';
 
 
-export const setOriginAction = origin => ({ type: SET_ORIGIN, origin });
-export const setDestinationAction = destination => ({ type: SET_DESTINATION, destination });
-export const setStartTimeAction = startTime => ({ type: SET_START_TIME, startTime });
-export const setDistanceAction = distance => ({ type: SET_TRIP_DISTANCE, distance });
-export const setDurationAction = duration => ({ type: SET_TRIP_DURATION, duration})
+export const setOriginAction = payload => ({ type: SET_ORIGIN, payload });
+export const setDestinationAction = payload => ({ type: SET_DESTINATION, payload });
+export const setStartTimeAction = payload => ({ type: SET_START_TIME, payload });
+export const setDistanceAction = payload => ({ type: SET_TRIP_DISTANCE, payload });
+export const setDurationAction = payload => ({ type: SET_TRIP_DURATION, payload})
