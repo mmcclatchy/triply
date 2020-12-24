@@ -26,7 +26,7 @@ class TripClass:
         r = requests.get(url)
         r = r.json()
         startCor = r["candidates"][0]["geometry"]["location"]
-
+        
         # get the end coordinates for the trip from a string
         url = self.useThisUrlToGetCordsForAPoint + parse.quote(end)
         r = requests.get(url)
@@ -46,6 +46,7 @@ class TripClass:
         url += "&destination=" + str(endCor["lat"]) + "," + str(endCor["lng"])
         if avoidTolls:
             url += "&avoid=tolls"
+        
         r = requests.get(url)
         r = r.json()
 
@@ -244,8 +245,8 @@ class TripClass:
 
 
 
-# t = TripClass()
-# t.createNewTrip("Santa Rosa, California", "Petaluma, California", 100, 2, 2, 2, False) 
+t = TripClass()
+t.createNewTrip("Santa Rosa, California", "Petaluma, California", 100, 2, 2, 2, False) 
 # t.createFromJson(t.createNewTrip("4625 Parktrail ct, santa rosa, ca", "San Diego, California", 100, 5555, 2, 2, False))
 # results = t.getNextStopDetails("mexican")
 # print(json.dumps(results))

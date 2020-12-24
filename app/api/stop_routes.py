@@ -60,23 +60,13 @@ def post_stop(trip_id):
             'suggestions': {'suggestions': food_and_gas, 'hotel': hotel}
         })
 
-    # Construct a instance of the Trip Algorithm
-    trip_algo = TripClass(
-        startCor=coords_from_str(trip.start_location),
-        endCor=coords_from_str(trip.end_location),
-        travelPerDay=trip.daily_time_limit,
-        travelPerIncrement=trip.stop_time_limit,
-        milesTillFuelNeeded=trip.car.miles_to_refuel,
-        avoidTolls=trip.tolls
-    )
+    trip_algo = TripClass()
 
-    # Reconstruct the directions of the Trip
-    trip_algo.constructFromDirections(trip.directions)
+    # Reconstruct algorithm from the directions of the Trip
+    trip_algo.createFromJson(trip.directions)
 
-    # Get the Google Maps Place Ids and create a list that keeps track
-    # of each waypoint type (gas, restaurant, and/or hotel)
-    places = create_place_id_list(data)
-    stop_keys = create_stop_keys(data)
+    if restaurant:
+        trip_algo.addFood()
 
     # If a hotel was chosen prior to the food and/or gas,
     # add the hotel to place_ids and stop_keys

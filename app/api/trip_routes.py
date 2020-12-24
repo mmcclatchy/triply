@@ -52,18 +52,17 @@ def get_trip(trip_id):
 def post_trip(user_id):
     req = request.json
     data = req['db']
+
+    # User's food preferences
     food_query = req['preferences']['foodQuery'][0]
 
-    # print(f'***\n\nData: {data} \n\n***')
-
-    # Convert miles to meters
+    # Convert miles to meters for distance per tank of selected car
     fuel_distance = round(data['milesToRefuel'] * 1609.34)
 
-    # Create an instance of the Trip Algorithm
-    # and set the origin and destination
     origin = data['startLocation']
     destination = data['endLocation']
 
+    # Create an instance of the trip algorithm and generate a new trip
     trip_algo = TripClass()
     directions_json = trip_algo.createNewTrip(
         start=origin,
