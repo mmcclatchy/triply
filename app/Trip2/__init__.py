@@ -146,6 +146,8 @@ class TripClass:
     def getNextStopDetails(self, foodQuery, **kwargs):
         self.updateDirections()
         queries = self.getNextStopLocation()
+        if not queries:
+            return None
         print('***\n\nQueries: ', queries, '\n\n***')
         if kwargs.get("hotel"):
             queries["hotelStop"] = kwargs.get("hotel")
