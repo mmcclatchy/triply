@@ -86,6 +86,7 @@ def post_stop(trip_id):
             
             if 'photoUrl' in req_rest.keys():
                 rest_photo_url = req_rest['photoUrl']
+                print('***\n\nRest Photo: ', len(rest_photo_url), '\n\n***')
             else:
                 rest_photo_url = None
                 
@@ -104,6 +105,7 @@ def post_stop(trip_id):
             
             if 'photoUrl' in req_gas.keys():
                 gas_photo_url = req_gas['photoUrl']
+                print('***\n\nGas Photo: ', len(gas_photo_url), '\n\n***')
             else:
                 gas_photo_url = None
                 
