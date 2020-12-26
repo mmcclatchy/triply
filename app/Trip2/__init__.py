@@ -189,6 +189,9 @@ class TripClass:
     def addHotel(self, placeId):
         self.buffer.insert(0, (placeId, "hotel"))
 
+    def skipStop(self, placeId):
+        self.buffer.append((placeId, "skip"))
+
     def updateDirections(self):
         if len(self.buffer) == 0:
             return
@@ -200,19 +203,20 @@ class TripClass:
             stop = self.cache["stopArray"][i]
             print(stop)
             for id in stop:
-                if id == "stopDateTime":
+                if id == "time":
                     continue
                 placeIds.append(stop[id])
         
         newStop = {}
         for stop in self.buffer:
             placeIds.append(stop[0])
-            if stop[1] == "food":
-                newStop["food"] = stop[0]
-            if stop[1] == "gas":
-                newStop["gas"] = stop[0]
-            if stop[1] == "hotel":
-                newStop["hotel"] = stop[0]
+            newStop[stop[1]] = stop[0] 
+            # if stop[1] == "food":
+            #     newStop["food"] = stop[0]
+            # if stop[1] == "gas":
+            #     newStop["gas"] = stop[0]
+            # if stop[1] == "hotel":
+            #     newStop["hotel"] = stop[0]
 
         print("YOU NEED TO ADD IN THE TIME FOR THE NEXT STOP")
         # print(self.buffer, placeIds)
@@ -239,9 +243,22 @@ class TripClass:
         return json.dumps(self.directions)
 
     
-        
+    def editStop(self, oldPlaceId, newPlaceId):
+        for stop in self.cache["stopArray"]:
+            for key in stop:
+                if stop[key] == oldPlaceId:
+                    stop[key] = newPlaceId
 
-
+    def removeStop(self, oldPlaceId):
+        scopedVar = None
+        for stop in self.cache["stopArray"]:
+            for key in stop:
+                print(stop[key], oldPlaceId)
+                if stop[key] == oldPlaceId:
+                    print(key)
+                    scopedVar = key
+                    break
+        del stop[scopedVar]
 
         
 
@@ -250,9 +267,17 @@ class TripClass:
 
 
 t = TripClass()
-# t.createNewTrip("Santa Rosa, California", "Petaluma, California", 100, 2, 2, 2, False) 
-t.createFromJson(t.createNewTrip("4625 Parktrail ct, santa rosa, ca", "San Diego, California", 100, 5555, 2, 2, False))
-# results = t.getNextStopDetails("mexican")
+t.createNewTrip("Santa Rosa, California", "Petaluma, California", 100, 2, 2, 2, False) 
+
+# t.createFromJson(t.createNewTrip("4625 Parktrail ct, santa rosa, ca", "San Diego, California", 100, 5555, 2, 2, False))
+results = t.getNextStopDetails("mexican")
 # print(json.dumps(results))
-# t.addFood(results["foodResults"]["results"][0]["place_id"])
-# print(t.getDirections())
+placeId = results["restaurants"][0]["place_id"]
+t.addFood(placeId)
+t.getDirections()
+print(t.cache)
+t.editStop(placeId, "asdf")
+print(t.cache)
+t.removeStop("asdf")
+print(t.cache)
+t.updateDirections()
