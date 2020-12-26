@@ -10,6 +10,10 @@ class Trip(db.Model):
     name = db.Column(db.String(100), nullable=False)
     car_id = db.Column(db.Integer, db.ForeignKey('cars.id'))
     directions = db.Column(db.Text)
+    start_location = db.Column(db.String(255))
+    end_location = db.Column(db.String(255))
+    start_iso = db.Column(db.String(35))
+    end_iso = db.Column(db.String(35))
 
     stops = db.relationship('Stop', back_populates='trip', lazy='joined')
     car = db.relationship('Car', back_populates='trips', lazy='joined')
@@ -20,6 +24,9 @@ class Trip(db.Model):
             'user_id': self.user_id,
             'name': self.name,
             'car_id': self.car_id,
+            'start_location': self.start_location,
+            'end_location': self.end_location,
+            'start_iso': self.start_iso,
             'stops': [stop.id for stop in self.stops]
         }
 
