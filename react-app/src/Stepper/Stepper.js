@@ -46,6 +46,7 @@ const Stepper = () => {
       tripId,
       step,
       foodQuery,
+      skipId: data[step]?.restaurants[0]?.place_id,
       tripStopNum: step,
       restaurant: data[step]?.restaurants || null,
       gasStation: data[step]?.gasStations || null,
@@ -56,7 +57,7 @@ const Stepper = () => {
       time: null,
       
     }
-    console.log('submitTrip: ', stop)
+    
     dispatch(postStop(stop, tripId))
     dispatch(updateStep(step + 1));
   };
