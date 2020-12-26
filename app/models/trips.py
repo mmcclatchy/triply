@@ -13,6 +13,7 @@ class Trip(db.Model):
     start_location = db.Column(db.String(255))
     end_location = db.Column(db.String(255))
     start_iso = db.Column(db.String(35))
+    end_iso = db.Column(db.String(35))
 
     stops = db.relationship('Stop', back_populates='trip', lazy='joined')
     car = db.relationship('Car', back_populates='trips', lazy='joined')
