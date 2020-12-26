@@ -9,7 +9,7 @@ import { useHistory } from 'react-router-dom';
 
 const Homepage = ({ authenticated, setAuthenticated }) => {
   const userId = useSelector(state => state.authentication.userId);
-  const trips = useSelector(state => state.trips.payload.trips);
+  const trips = useSelector(state => state.trips.trips);
   const dispatch = useDispatch();
   const history = useHistory();
   useEffect(() => {}, []);

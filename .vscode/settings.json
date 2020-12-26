@@ -1,5 +1,4 @@
 {
-    "python.pythonPath": "/home/bbartlett/AppAcademy/pythonGroupProject/triply/.venv/bin/python3.8",
     "python.linting.pylintEnabled": false,
     "python.linting.enabled": true,
     "python.linting.pycodestyleEnabled": true,
