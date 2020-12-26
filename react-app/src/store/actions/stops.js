@@ -21,15 +21,18 @@ export const getStop = stopId => ({
 })
 
 
-export const postStop = (stop, tripId) => ({
-  type: API,
-  payload: {
-    method: 'POST',
-    endpoint: `/trips/${tripId}/stops`,
-    body: JSON.stringify(stop),
-    actionConst: SET_STOP
-  },
-});
+export const postStop = (stop, tripId) => {
+  console.log('Post Stop', stop)
+  return {
+    type: API,
+    payload: {
+      method: 'POST',
+      endpoint: `/trips/${tripId}/stops`,
+      body: JSON.stringify(stop),
+      actionConst: SET_STOP
+    },
+  }
+};
 
 
 export const putStop = (stop, stopId) => ({

@@ -169,8 +169,8 @@ const StartOfTripForm = () => {
                 <>
                   <label>Which car will you be driving?</label>
                   <select value={selectedCar} onChange={handleCarChange}>
-                    {/* {car && */}
-                    {Object.keys(car).map(key => {
+                    {car &&
+                    Object.keys(car).map(key => {
                       const current = car[`${key}`];
                       return (
                         <option key={current.id} value={current.id}>

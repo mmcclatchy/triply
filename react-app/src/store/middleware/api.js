@@ -27,10 +27,16 @@ const api = ({ dispatch, getState }) => next => async action => {
     const { payload, suggestions, directions } = await response.json();
   
     
-    console.log("SUGGESTIONS FROM API: ", suggestions);
+    console.log("payload FROM API: ", payload);
     
     
-    if (directions) dispatch({ type: SET_DIRECTIONS, payload: JSON.parse(directions) });
+    if (directions) dispatch({ 
+      type: SET_DIRECTIONS, 
+      payload: {
+        itinerary: await JSON.parse(directions.itinerary),
+        foodQuery: directions.foodQuery,
+      }
+    });
     if (suggestions) dispatch({ type: ADD_SUG, payload: suggestions });
 
     dispatch({ type: actionConst, payload });

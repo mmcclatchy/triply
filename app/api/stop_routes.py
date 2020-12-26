@@ -1,12 +1,12 @@
 from flask import Blueprint, jsonify, request
 from flask_login import login_required
-from app.models import Trip, Stop, Cuisine, db
+from app.models import Trip, Stop, Cuisine, Restaurant, GasStation, Hotel, db
 from app.utils import (
     normalize, snake_case, coords_from_str, create_place_id_list,
-    create_stop_keys, get_places
+    create_stop_keys, coords_to_str,
 )
 from sqlalchemy.exc import SQLAlchemyError
-from ..Trip import TripClass
+from ..Trip2 import TripClass
 
 
 stop_routes = Blueprint('stops', __name__)
@@ -35,7 +35,7 @@ def get_stop(stop_id):
 
 
 # POST a new stop for a specific trip
-@stop_routes.route('/trips/<int:trip_id>/stops/', methods=['POST'])
+@stop_routes.route('/trips/<int:trip_id>/stops', methods=['POST'])
 @login_required
 def post_stop(trip_id):
     data = request.json
@@ -43,59 +43,109 @@ def post_stop(trip_id):
     # Find the trip in which this stop is associated
     trip = Trip.query.filter(Trip.id == trip_id).first()
 
-    # Extract the places from data and assign them the correct variables
-    restaurant, gas, hotel = get_places(data)
-
-    # Determine cuisine based on preferences and what has already been eaten
-    food_preference = trip.next_cuisine_option(data['cuisines'])
-
     # If the place ids include a hotel, send suggestions
     # for food and gas based on the location of the hotel
-    if any([place for place in data['places'] if place['type'] == 'hotel']):
-        trip_algo = TripClass()
-        food_and_gas = trip_algo.getFoodAndGasNearLocation(
-            food_preference, hotel['placeId']
-        )
-        return jsonify({
-            'suggestions': {'suggestions': food_and_gas, 'hotel': hotel}
-        })
+    # if any([place for place in data['places'] if place['type'] == 'hotel']):
+    #     trip_algo = TripClass()
+    #     food_and_gas = trip_algo.getFoodAndGasNearLocation(
+    #         food_pref, hotel['placeId']
+    #     )
+    #     return jsonify({
+    #         'suggestions': {'suggestions': food_and_gas, 'hotel': hotel}
+    #     })
 
-    # Construct a instance of the Trip Algorithm
-    trip_algo = TripClass(
-        startCor=coords_from_str(trip.start_location),
-        endCor=coords_from_str(trip.end_location),
-        travelPerDay=trip.daily_time_limit,
-        travelPerIncrement=trip.stop_time_limit,
-        milesTillFuelNeeded=trip.car.miles_to_refuel,
-        avoidTolls=trip.tolls
-    )
+    trip_algo = TripClass()
 
-    # Reconstruct the directions of the Trip
-    trip_algo.constructFromDirections(trip.directions)
+    # Reconstruct algorithm from the directions of the Trip
+    trip_algo.createFromJson(trip.directions)
 
-    # Get the Google Maps Place Ids and create a list that keeps track
-    # of each waypoint type (gas, restaurant, and/or hotel)
-    places = create_place_id_list(data)
-    stop_keys = create_stop_keys(data)
+    if data['restaurant']:
+        trip_algo.addFood(data['restaurant']['place_id'])
+
+    if data['gasStation']:
+        trip_algo.addGasStation(data['gasStation']['place_id'])
+
+    # ! Hotels are being skipped over for now
+    if data['hotel']:
+        trip_algo.addHotel(data['hotel']['place_id'])
 
     # If a hotel was chosen prior to the food and/or gas,
     # add the hotel to place_ids and stop_keys
-    if data['hotel']:
-        place_ids = [data['hotel']] + place_ids
-        stop_keys = ['h'] + stop_keys
+    # if data['hotel']:
+    #     place_ids = [data['hotel']] + place_ids
+    #     stop_keys = ['h'] + stop_keys
+    # ! ------------------------------------
 
-    # Create a new stop along the route based off the selections
-    trip_algo.addStop(place_ids, stop_keys)
+    food_query = data['foodQuery']
+    food_pref = food_query[len(food_query) % data['tripStopNum']]
 
     try:
+
+        if data['restaurant']:
+            req_rest = data['restaurant']
+            
+            if 'photoUrl' in req_rest.keys():
+                rest_photo_url = req_rest['photoUrl']
+                print('***\n\nRest Photo: ', len(rest_photo_url), '\n\n***')
+            else:
+                rest_photo_url = None
+                
+            print('***\n\Restaurant: ', type(req_rest['place_id']), req_rest['place_id'], '\n\n***')
+            cuisine = Cuisine(name=food_pref)
+            restaurant = Restaurant(
+                name=req_rest['name'],
+                coordinates=coords_to_str(req_rest['geometry']['location']),
+                img_url=rest_photo_url,
+                place_id=req_rest['place_id'],
+            )
+            restaurant.cuisines.append(cuisine)
+            db.session.add(restaurant)
+
+        if data['gasStation']:
+            req_gas = data['gasStation']
+            
+            if 'photoUrl' in req_gas.keys():
+                gas_photo_url = req_gas['photoUrl']
+            else:
+                gas_photo_url = None
+                
+            print('***\n\nGas: ', type(req_gas['place_id']), req_gas['place_id'], '\n\n***')
+            gas_station = GasStation(
+                name=req_gas['name'],
+                coordinates=coords_to_str(req_gas['geometry']['location']),
+                img_url=gas_photo_url,
+                place_id=req_gas['place_id'],
+            )
+            db.session.add(gas_station)
+
+        if data['hotel']:
+            req_hotel = data['hotel']
+            
+            if 'photoUrl' in req_hotel.keys():
+                hotel_photo_url = req_hotel['photoUrl']
+            else:
+                hotel_photo_url = None
+                
+            hotel = Hotel(
+                name=req_hotel['name'],
+                coordinates=coords_to_str(req_hotel['geometry']['location']),
+                img_url=hotel_photo_url,
+                place_id=req_hotel['place_id'],
+            )
+            db.session.add(hotel)
+
+        restaurant_id = restaurant.id if 'restaurant' in locals() else None
+        gas_station_id = gas_station.id if 'gas_station' in locals() else None
+        hotel_id = hotel.id if 'hotel' in locals() else None
+
         stop = Stop(
             trip_id=data['tripId'],
             trip_stop_num=data['tripStopNum'],
-            restaurant=restaurant,
-            hotel=hotel,
-            gas_station=gas,
-            coordinates=data['coordinates'],
+            coordinates=coords_to_str(data['coordinates']),
             time=data['time'],
+            restaurant_id=restaurant_id,
+            gas_station_id=gas_station_id,
+            hotel_id=hotel_id,
             star_min=data['starMin'],
             star_max=data['starMax'])
 
@@ -107,10 +157,22 @@ def post_stop(trip_id):
         #         cuisine_type = Cuisine(name=cuisine)
         #         stop.cuisines.append(cuisine_type)
 
+        # Determine cuisine based on preferences and what has already been eaten
+
+        directions = trip_algo.getDirections()
+        print('***\n\nDirections: ', directions, '\n\n***')
+
         db.session.add(stop)
         db.session.commit()
-        stop_json = jsonify({
-            'payload': {'stops': normalize(stop.to_dict())}})
+        stop_info = {
+            # 'payload': {'stops': normalize(stop.to_dict())}
+            'suggestions': trip_algo.getNextStopDetails(foodQuery=food_pref),
+            'directions': {
+                'itinerary': directions,
+                'foodQuery': food_query
+            }
+        }
+        stop_json = jsonify(stop_info)
         return stop_json
 
     except SQLAlchemyError as e:
@@ -127,9 +189,9 @@ def put_stop(stop_id):
     data = request.json
     try:
         stop = Stop.query.get(stop_id)
-        
+
         for key in data:
-            
+
             if key == 'cuisines':
                 for cuisine in data['cuisines']:
                     c = Cuisine.query.filter(Cuisine.name == cuisine).first()
@@ -167,4 +229,3 @@ def delete_stop(stop_id):
 ################################################################
 #                       Helper Functions
 ################################################################
-

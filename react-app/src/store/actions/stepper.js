@@ -24,7 +24,7 @@ export const updateStep = payload => ({ type: UPDATE_STEP, payload });
 
 
 // Set a selection from suggestions into Redux
-export const setNode = payload => async dispatch => dispatch(addNode(payload));
+export const setNode = (data, nodeType) => async dispatch => dispatch(addNode({ data, nodeType }));
 
 // Remove a selection from suggestions from Redux
 export const unsetNode = id => async dispatch => dispatch(deleteNode(id));
@@ -33,12 +33,7 @@ export const unsetNode = id => async dispatch => dispatch(deleteNode(id));
 // Place in Redux within the places data
 export const fetchImg = (place, step, type, index) => async dispatch => {
   if (!place || !type) return
-  // console.log('Just Entered fetchImg Action')
   const key = process.env.REACT_APP_GOOGLE_KEY;
-  // console.log('FETCH IMG PLACE: ', place)
-  // console.log('FETCH IMG PHOTOS: ', place.photos)
-  // console.log('FETCH IMG PHOTO: ', place.photos[0])
-  // let reference;
   let photoUrl;
   if (place.photos) {
     const reference = place.photos[0].photo_reference;

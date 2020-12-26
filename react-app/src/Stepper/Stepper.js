@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { updateStep } from '../store/actions/stepper';
 import Suggestions from './Suggestions';
+import { postStop } from '../store/actions/stops';
 
 //*************************************************************
 
@@ -11,10 +12,16 @@ const Stepper = () => {
   const step = useSelector(state => state.stepper.step);
   const suggestions = useSelector(state => state.stepper.suggestions);
   const data = useSelector(state => state.stepper.nodes);
+  const tripId = useSelector(state => state.trips.currentTripId);
+  const foodQuery = useSelector(state => state.directions.foodQuery);
   const dispatch = useDispatch();
+  
   
   // *** Local State ***
   const [back, disableBack] = useState(false);
+  const [restaurant, setRestaurant] = useState(null);
+  const [gasStation, setGasStation] = useState(null);
+  const [hotel, setHotel] = useState(null);
   
 
   // *** Use Effect Hooks ***
@@ -24,9 +31,33 @@ const Stepper = () => {
     
   }, [step]);
   
+  useEffect(() => {
+    if (!data[step]) return
+    const { restaurants, gasStations, hotels } = data[step];
+    if (restaurants) setRestaurant(restaurants);
+    if (gasStations) setGasStation(gasStations);
+    if (hotels) setHotel(hotels);
+  }, [data])
+  
   
   // *** Actions ***
   const nextHandler = () => {
+    const stop = {
+      tripId,
+      step,
+      foodQuery,
+      tripStopNum: step,
+      restaurant: data[step].restaurants,
+      gasStation: data[step].gasStations,
+      hotel: data[step].hotels || null,
+      coordinates: suggestions[step].centerOfSearch,
+      starMin: null,              // TODO: Fix this when Hotels are added
+      starMax: null,
+      time: null,
+      
+    }
+    console.log('submitTrip: ', stop)
+    dispatch(postStop(stop, tripId))
     dispatch(updateStep(step + 1));
   };
 
@@ -35,7 +66,7 @@ const Stepper = () => {
   };
 
   const submitTrip = () => {
-    console.log(data);
+    // TODO: Submit completed trip
   };
   
 
@@ -48,14 +79,14 @@ const Stepper = () => {
         <>
           <h2>Stop {step}</h2>
           <h3>Selected</h3>
-          {data[step] &&
-            data[step].map(e => {
+          {/* {[data[step]] &&
+            Object.values(data[stepZ]).map(stopType => {
               return (
                 <div>
-                  {e.type}: {e.name}
+                  {stopType.type}: {stopType.name}
                 </div>
               );
-            })}
+            })} */}
 
           <Suggestions data={suggestions[step]} />
 
