@@ -146,6 +146,7 @@ class TripClass:
     def getNextStopDetails(self, foodQuery, **kwargs):
         self.updateDirections()
         queries = self.getNextStopLocation()
+        print('***\n\nQueries: ', queries, '\n\n***')
         if kwargs.get("hotel"):
             queries["hotelStop"] = kwargs.get("hotel")
         if kwargs.get("gas"):
@@ -212,7 +213,7 @@ class TripClass:
                 newStop["hotel"] = stop[0]
 
         print("YOU NEED TO ADD IN THE TIME FOR THE NEXT STOP")
-        print(self.buffer, placeIds)
+        # print(self.buffer, placeIds)
         url = self.basicDirectionUrl + "&origin=" + str(self.cache['startLocation']["lat"]) + "," + str(self.cache['startLocation']["lng"])
         url += "&destination=" + str(self.cache['endLocation']["lat"]) + "," + str(self.cache['endLocation']["lng"])
         if self.cache["avoidTolls"]:

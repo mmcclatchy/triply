@@ -60,14 +60,14 @@ def post_stop(trip_id):
     trip_algo.createFromJson(trip.directions)
 
     if data['restaurant']:
-        trip_algo.addFood(data['restaurant'])
+        trip_algo.addFood(data['restaurant']['place_id'])
 
     if data['gasStation']:
-        trip_algo.addGasStation(data['gasStation'])
+        trip_algo.addGasStation(data['gasStation']['place_id'])
 
     # ! Hotels are being skipped over for now
     if data['hotel']:
-        trip_algo.addHotel(data['hotel'])
+        trip_algo.addHotel(data['hotel']['place_id'])
 
     # If a hotel was chosen prior to the food and/or gas,
     # add the hotel to place_ids and stop_keys
@@ -90,6 +90,7 @@ def post_stop(trip_id):
             else:
                 rest_photo_url = None
                 
+            print('***\n\Restaurant: ', type(req_rest['place_id']), req_rest['place_id'], '\n\n***')
             cuisine = Cuisine(name=food_pref)
             restaurant = Restaurant(
                 name=req_rest['name'],
@@ -105,10 +106,10 @@ def post_stop(trip_id):
             
             if 'photoUrl' in req_gas.keys():
                 gas_photo_url = req_gas['photoUrl']
-                print('***\n\nGas Photo: ', len(gas_photo_url), '\n\n***')
             else:
                 gas_photo_url = None
                 
+            print('***\n\nGas: ', type(req_gas['place_id']), req_gas['place_id'], '\n\n***')
             gas_station = GasStation(
                 name=req_gas['name'],
                 coordinates=coords_to_str(req_gas['geometry']['location']),
@@ -133,14 +134,14 @@ def post_stop(trip_id):
             )
             db.session.add(hotel)
 
-        restaurant_id = restaurant.id if data['restaurant'] else None
-        gas_station_id = gas_station.id if data['gasStation'] else None
-        hotel_id = hotel.id if data['hotel'] else None
+        restaurant_id = restaurant.id if 'restaurant' in locals() else None
+        gas_station_id = gas_station.id if 'gas_station' in locals() else None
+        hotel_id = hotel.id if 'hotel' in locals() else None
 
         stop = Stop(
             trip_id=data['tripId'],
             trip_stop_num=data['tripStopNum'],
-            coordinates=data['coordinates'],
+            coordinates=coords_to_str(data['coordinates']),
             time=data['time'],
             restaurant_id=restaurant_id,
             gas_station_id=gas_station_id,
@@ -158,12 +159,18 @@ def post_stop(trip_id):
 
         # Determine cuisine based on preferences and what has already been eaten
 
+        directions = trip_algo.getDirections()
+        print('***\n\nDirections: ', directions, '\n\n***')
+
         db.session.add(stop)
         db.session.commit()
         stop_info = {
             # 'payload': {'stops': normalize(stop.to_dict())}
             'suggestions': trip_algo.getNextStopDetails(foodQuery=food_pref),
-            'directions': trip_algo.getDirections(),
+            'directions': {
+                'itinerary': directions,
+                'foodQuery': food_query
+            }
         }
         stop_json = jsonify(stop_info)
         return stop_json

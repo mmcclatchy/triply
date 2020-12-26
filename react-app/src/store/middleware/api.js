@@ -33,7 +33,7 @@ const api = ({ dispatch, getState }) => next => async action => {
     if (directions) dispatch({ 
       type: SET_DIRECTIONS, 
       payload: {
-        itinerary: JSON.parse(directions.itinerary),
+        itinerary: await JSON.parse(directions.itinerary),
         foodQuery: directions.foodQuery,
       }
     });
