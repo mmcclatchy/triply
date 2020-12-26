@@ -3,7 +3,7 @@ from flask_login import login_required
 from app.models import Trip, Stop, Cuisine, Restaurant, GasStation, Hotel, db
 from app.utils import (
     normalize, snake_case, coords_from_str, create_place_id_list,
-    create_stop_keys
+    create_stop_keys, coords_to_str,
 )
 from sqlalchemy.exc import SQLAlchemyError
 from ..Trip2 import TripClass
@@ -39,7 +39,7 @@ def get_stop(stop_id):
 @login_required
 def post_stop(trip_id):
     data = request.json
-    
+
     # Find the trip in which this stop is associated
     trip = Trip.query.filter(Trip.id == trip_id).first()
 
@@ -80,42 +80,71 @@ def post_stop(trip_id):
     food_pref = food_query[len(food_query) % data['tripStopNum']]
 
     try:
+
+        if data['restaurant']:
+            req_rest = data['restaurant']
+            
+            if 'photoUrl' in req_rest.keys():
+                rest_photo_url = req_rest['photoUrl']
+            else:
+                rest_photo_url = None
+                
+            cuisine = Cuisine(name=food_pref)
+            restaurant = Restaurant(
+                name=req_rest['name'],
+                coordinates=coords_to_str(req_rest['geometry']['location']),
+                img_url=rest_photo_url,
+                place_id=req_rest['place_id'],
+            )
+            restaurant.cuisines.append(cuisine)
+            db.session.add(restaurant)
+
+        if data['gasStation']:
+            req_gas = data['gasStation']
+            
+            if 'photoUrl' in req_gas.keys():
+                gas_photo_url = req_gas['photoUrl']
+            else:
+                gas_photo_url = None
+                
+            gas_station = GasStation(
+                name=req_gas['name'],
+                coordinates=coords_to_str(req_gas['geometry']['location']),
+                img_url=gas_photo_url,
+                place_id=req_gas['place_id'],
+            )
+            db.session.add(gas_station)
+
+        if data['hotel']:
+            req_hotel = data['hotel']
+            
+            if 'photoUrl' in req_hotel.keys():
+                hotel_photo_url = req_hotel['photoUrl']
+            else:
+                hotel_photo_url = None
+                
+            hotel = Hotel(
+                name=req_hotel['name'],
+                coordinates=coords_to_str(req_hotel['geometry']['location']),
+                img_url=hotel_photo_url,
+                place_id=req_hotel['place_id'],
+            )
+            db.session.add(hotel)
+
+        restaurant_id = restaurant.id if data['restaurant'] else None
+        gas_station_id = gas_station.id if data['gasStation'] else None
+        hotel_id = hotel.id if data['hotel'] else None
+
         stop = Stop(
             trip_id=data['tripId'],
             trip_stop_num=data['tripStopNum'],
             coordinates=data['coordinates'],
             time=data['time'],
+            restaurant_id=restaurant_id,
+            gas_station_id=gas_station_id,
+            hotel_id=hotel_id,
             star_min=data['starMin'],
             star_max=data['starMax'])
-        
-        if data['restaurant']:
-            cuisine = Cuisine(name=food_pref)
-            restaurant = Restaurant(
-                name=data['restaurant']['name'],
-                coordinates=data['restaurant']['geometry']['location'],
-                img_url=data['restaurant']['photoUrl'],
-                place_id=data['restaurant']['place_id'],
-            )
-            restaurant.cuisines.append(cuisine)
-            stop.restaurant.append(restaurant)
-
-        if data['gasStation']:
-            gas_station = GasStation(
-                name=data['gasStation']['name'],
-                coordinates=data['gasStation']['geometry']['location'],
-                img_url=data['gasStation']['photoUrl'],
-                place_id=data['gasStation']['place_id'],
-            )
-            stop.gas_station.append(gas_station)
-
-        if data['hotel']:
-            hotel = Hotel(
-                name=data['hotel']['name'],
-                coordinates=data['hotel']['geometry']['location'],
-                img_url=data['hotel']['photoUrl'],
-                place_id=data['hotel']['place_id'],
-            )
-            stop.hotel.append(hotel)
 
         # for cuisine in data['cuisines']:
         #     c = Cuisine.query.filter(Cuisine.name == cuisine).first()
@@ -151,9 +180,9 @@ def put_stop(stop_id):
     data = request.json
     try:
         stop = Stop.query.get(stop_id)
-        
+
         for key in data:
-            
+
             if key == 'cuisines':
                 for cuisine in data['cuisines']:
                     c = Cuisine.query.filter(Cuisine.name == cuisine).first()
@@ -191,4 +220,3 @@ def delete_stop(stop_id):
 ################################################################
 #                       Helper Functions
 ################################################################
-
