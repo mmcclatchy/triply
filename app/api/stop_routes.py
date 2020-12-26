@@ -77,7 +77,7 @@ def post_stop(trip_id):
     # ! ------------------------------------
 
     food_query = data['foodQuery']
-    food_pref = food_query[len(food_query) % data['tripStopNum']]
+    food_pref = food_query[data['tripStopNum'] % len(food_query)]
 
     try:
 

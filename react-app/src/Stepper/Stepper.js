@@ -47,9 +47,9 @@ const Stepper = () => {
       step,
       foodQuery,
       tripStopNum: step,
-      restaurant: data[step].restaurants,
-      gasStation: data[step].gasStations,
-      hotel: data[step].hotels || null,
+      restaurant: data[step]?.restaurants || null,
+      gasStation: data[step]?.gasStations || null,
+      hotel: data[step]?.hotels || null,
       coordinates: suggestions[step].centerOfSearch,
       starMin: null,              // TODO: Fix this when Hotels are added
       starMax: null,
