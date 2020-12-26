@@ -6,10 +6,10 @@ from app.models import db, Trip
 
 def seed_trips():
 
-    fishing = Trip(user_id=1, name='Fishing Trip', car_id=1, daily_time_limit=3, stop_time_limit=3, toll=False, start_iso="2020-12-17T10:54:00-06:00", start_location="Nashville, TN", end_iso="2020-12-18T10:54:00-06:00", end_location="Austin, TX", directions="null")
-    family = Trip(user_id=1, name='Family Trip', car_id=1, daily_time_limit=3, stop_time_limit=3, toll=False, start_iso="2020-11-23T10:54:00-05:00", start_location="New York, NY", end_iso="2020-11-24T10:54:00-05:00", end_location="Chelsea, MI", directions="null")
-    girls = Trip(user_id=1, name='Girls Trip', car_id=1, daily_time_limit=3, stop_time_limit=3, toll=False, start_iso="2020-12-01T10:54:00-05:00", start_location="322 W 101st St, NY, NY", end_iso="2020-12-18T10:54:00-05:00", end_location="Charleston, SC", directions="null")
-    camping = Trip(user_id=1, name='Camping Trip', car_id=1, daily_time_limit=3, stop_time_limit=3, toll=False, start_iso="2020-09-17T10:54:00-05:00", start_location="New York, NY", end_iso="2020-09-17T15:54:00-08:00", end_location="Ontario, CA", directions="null")
+    fishing = Trip(user_id=1, name='Fishing Trip', car_id=1, start_iso="2020-12-17T10:54:00-06:00", start_location="Nashville, TN", end_iso="2020-12-18T10:54:00-06:00", end_location="Austin, TX", directions="null")
+    family = Trip(user_id=1, name='Family Trip', car_id=1, start_iso="2020-11-23T10:54:00-05:00", start_location="New York, NY", end_iso="2020-11-24T10:54:00-05:00", end_location="Chelsea, MI", directions="null")
+    girls = Trip(user_id=1, name='Girls Trip', car_id=1, start_iso="2020-12-01T10:54:00-05:00", start_location="322 W 101st St, NY, NY", end_iso="2020-12-18T10:54:00-05:00", end_location="Charleston, SC", directions="null")
+    camping = Trip(user_id=1, name='Camping Trip', car_id=1, start_iso="2020-09-17T10:54:00-05:00", start_location="New York, NY", end_iso="2020-09-17T15:54:00-08:00", end_location="Ontario, CA", directions="null")
 
 
     db.session.add(fishing)
