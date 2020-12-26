@@ -13,8 +13,8 @@ class Restaurant(db.Model):
     street_address = db.Column(db.String(100))
     city = db.Column(db.String(50))
     state = db.Column(db.String(2))
+    img_url = db.Column(db.Text)
     zip_code = db.Column(db.String(10))
-    img_url = db.Column(db.String(511))
     place_id = db.Column(db.String(255), nullable=False)
 
     cuisines = db.relationship("Cuisine", secondary=restaurant_cuisines,
