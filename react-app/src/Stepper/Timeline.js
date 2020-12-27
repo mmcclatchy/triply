@@ -1,9 +1,15 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 
-const FakeTimeline = ({ nodes }) => {
+const Timeline = () => {
+  const nodes = useSelector(state => state.stepper.nodes);
+
   return (
-    <div style={{ border: '1px solid black', width: '25%' }}>
+    <div style={{ border: '1px solid red', width: '25%' }}>
       <h1>Timeline</h1>
+      {/* <div style={{ width: '500px', overflow: 'hidden' }}>
+        {JSON.stringify(nodes)};
+      </div> */}
       {nodes &&
         Object.keys(nodes).map(node => {
           return (
@@ -19,4 +25,4 @@ const FakeTimeline = ({ nodes }) => {
   );
 };
 
-export default FakeTimeline;
+export default Timeline;

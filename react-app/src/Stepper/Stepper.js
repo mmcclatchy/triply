@@ -15,54 +15,40 @@ const Stepper = () => {
   const tripId = useSelector(state => state.trips.currentTripId);
   const foodQuery = useSelector(state => state.directions.foodQuery);
   const dispatch = useDispatch();
-  
-  
+
   // *** Local State ***
   const [back, disableBack] = useState(false);
   const [restaurant, setRestaurant] = useState(null);
   const [gasStation, setGasStation] = useState(null);
   const [hotel, setHotel] = useState(null);
   const [skipId, setSkipId] = useState(null);
-  
 
   // *** Use Effect Hooks ***
   useEffect(() => {
     if (step === 1) disableBack(true);
     if (step > 1) disableBack(false);
-    
   }, [step]);
-  
-  useEffect(async () => {
-    if (!data[step]) return
-    const { restaurants, gasStations, hotels } = data[step];
-    if (restaurants) setRestaurant(restaurants);
-    if (gasStations) setGasStation(gasStations);
-    if (hotels) setHotel(hotels);
-    await setSkipId(data[step]?.restaurants[0]?.place_id)
-    console.log('skipId: ', skipId)
-  }, [data])
-  
-  
+
   // *** Actions ***
   const nextHandler = () => {
     const stop = {
       tripId,
       step,
       foodQuery,
-      skipId: suggestions[step]?.restaurants[0]?.place_id || 
-              suggestions[step]?.gasStations[0]?.place_id,
+      skipId:
+        suggestions[step]?.restaurants[0]?.place_id ||
+        suggestions[step]?.gasStations[0]?.place_id,
       tripStopNum: step,
       restaurant: data[step]?.restaurants || null,
       gasStation: data[step]?.gasStations || null,
       hotel: data[step]?.hotels || null,
       coordinates: suggestions[step].centerOfSearch,
-      starMin: null,              // TODO: Fix this when Hotels are added
+      starMin: null, // TODO: Fix this when Hotels are added
       starMax: null,
-      time: null,
-      
-    }
-    console.log('STOP: ', stop)
-    dispatch(postStop(stop, tripId))
+      time: null
+    };
+    console.log('STOP: ', stop);
+    dispatch(postStop(stop, tripId));
     dispatch(updateStep(step + 1));
   };
 
@@ -73,7 +59,12 @@ const Stepper = () => {
   const submitTrip = () => {
     // TODO: Submit completed trip
   };
-  
+
+  const refreshSuggestions = () => {
+    // TODO: Refresh Suggestions from Slice
+    // Caveat: Need to always include any business already booked so user can unselect;
+    // Work-Around: Render out "Selected" Again
+  };
 
   // *** JSX ***
   return (
@@ -83,7 +74,7 @@ const Stepper = () => {
       {suggestions[step] ? (
         <>
           <h2>Stop {step}</h2>
-          <h3>Selected</h3>
+          {/* <h3>Selected</h3> */}
           {/* {[data[step]] &&
             Object.values(data[stepZ]).map(stopType => {
               return (
@@ -98,6 +89,7 @@ const Stepper = () => {
           <button disabled={back} onClick={prevHandler}>
             Back
           </button>
+          <button onClick={refreshSuggestions}>Refresh</button>
           <button onClick={nextHandler}>Next</button>
         </>
       ) : (
