@@ -49,7 +49,8 @@ const Stepper = () => {
       tripId,
       step,
       foodQuery,
-      skipId: suggestions[step]?.restaurants[0]?.place_id,
+      skipId: suggestions[step]?.restaurants[0]?.place_id || 
+              suggestions[step]?.gasStations[0]?.place_id,
       tripStopNum: step,
       restaurant: data[step]?.restaurants || null,
       gasStation: data[step]?.gasStations || null,

@@ -39,7 +39,7 @@ def get_stop(stop_id):
 @login_required
 def post_stop(trip_id):
     data = request.json
-    print('***\n\n', data, '\n\n***')
+
     # Find the trip in which this stop is associated
     trip = Trip.query.filter(Trip.id == trip_id).first()
 
@@ -69,8 +69,10 @@ def post_stop(trip_id):
     if data['hotel']:
         trip_algo.addHotel(data['hotel']['place_id'])
 
-    if data['restaurant'] is None and data['gasStation'] is None and data['hotel'] is None:
-        print('***\n\nSKIP STOP', data['skipId'], '\n\n***')
+    if (data['restaurant'] is None and
+        data['gasStation'] is None and
+        data['hotel'] is None):
+
         trip_algo.skipStop(data['skipId'])
 
     # If a hotel was chosen prior to the food and/or gas,
