@@ -1,13 +1,15 @@
-import React, { useEffect } from 'react';
+import React, { useState } from 'react';
 import Map from '../Map/Map';
 import TripSummary from './TripSummary';
 // import TripTimeline from '../Timeline/TripTimeline';
-import TripTimeline from '../TestEnvironment/Timeline'
+import TripTimeline from '../TestEnvironment/Timeline';
 import StartOfTripForm from './StartOfTripForm';
 import { Link } from 'react-router-dom';
 import './TripPage.css';
+import SuggestionStepper from '../Stepper/Stepper';
 
 const TripPage = () => {
+  const [toggle, setToggle] = useState(true);
   return (
     <>
       <div className='trip__container'>
@@ -24,7 +26,11 @@ const TripPage = () => {
 
         <div className='trip__container--inner'>
           <TripSummary />
-          <StartOfTripForm />
+          {toggle ? (
+            <StartOfTripForm setToggle={setToggle} />
+          ) : (
+            <SuggestionStepper />
+          )}
         </div>
       </div>
     </>

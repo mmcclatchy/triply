@@ -19,8 +19,7 @@ import SuggestionStepper from '../Stepper/Stepper';
 
 //************************************************************
 
-const StartOfTripForm = () => {
-  
+const StartOfTripForm = ({ setToggle }) => {
   // *** Redux ***
   const dispatch = useDispatch();
   const userName = useSelector(state => state.authentication.userName);
@@ -28,10 +27,9 @@ const StartOfTripForm = () => {
   const userId = useSelector(state => state.authentication.userId);
   const startLocation = useSelector(state => state.directions.origin);
   const endLocation = useSelector(state => state.directions.destination);
-  const startTime = useSelector(state => state.directions.startTime)
+  const startTime = useSelector(state => state.directions.startTime);
   // console.log(trip);
 
-  
   // *** Local State ***
   const [car, setCar] = useState([]);
   const [selectedCar, setSelectedCar] = useState([]);
@@ -47,17 +45,15 @@ const StartOfTripForm = () => {
   ]);
   const [additionalOption, setAdditionalOption] = useState('');
   const [selectedFoods, setSelectedFoods] = useState([]);
-  const [toggle, setToggle] = useState(true);
 
-  
   // *** Helper Functions ***
   const handleCarChange = e => setSelectedCar(e.target.value);
   const handleStopChange = e => setTimeBetweenStops(e.target.value);
   const handleSleepChange = e => setEndTimeForDay(e.target.value);
   const handleCheck = e => setAvoidTolls(e.target.checked);
-  const handleAdditionalOptionChange = e => 
+  const handleAdditionalOptionChange = e =>
     setAdditionalOption(e.target.value);
-  
+
   const handleAdditionalOptionAddition = e => {
     if (!additionalOption) {
       return;
@@ -69,7 +65,7 @@ const StartOfTripForm = () => {
     setOptions(o);
     setAdditionalOption('');
   };
-  
+
   const handleCheckOfFood = e => {
     if (e.target.value) {
       let s = selectedFoods;
@@ -86,9 +82,8 @@ const StartOfTripForm = () => {
       // console.log(s);
     }
   };
-  
-  
-  // *** Use Effect Hooks ***  
+
+  // *** Use Effect Hooks ***
 
   // On Mount: Get User's Car Data
   useEffect(() => {
@@ -103,7 +98,7 @@ const StartOfTripForm = () => {
     };
     getCars();
   }, []);
-  
+
   // Re-render when options change
   useEffect(() => {
     if (options.length === 5) {
@@ -113,8 +108,7 @@ const StartOfTripForm = () => {
     // console.log(newBox);
     newBox.checked = true;
   }, [options.length]);
-  
-  
+
   // *** Post Trip Info to the Backend ***
   const saveInfo = e => {
     const op = document.getElementById('options').childNodes;
@@ -136,7 +130,7 @@ const StartOfTripForm = () => {
             endTimeForDay,
             timeBetweenStops,
             avoidTolls,
-            milesToRefuel: 350,  //! Placeholder until new API works
+            milesToRefuel: 350 //! Placeholder until new API works
           },
           preferences: {
             foodQuery: selectedFood
@@ -148,28 +142,26 @@ const StartOfTripForm = () => {
     setToggle(false);
   };
 
-
   // *** JSX ***
-  
+
   return (
     <Paper variant='outlined' elevation={8}>
       <div className='StartOfTripForm'>
-        {toggle ? (
-          <div className='trip_customize_container'>
-            <CardTravelIcon />
-            <Typography variant='h5' component='h1'>
-              Customize Your Trip
-            </Typography>
+        <div className='trip_customize_container'>
+          <CardTravelIcon />
+          <Typography variant='h5' component='h1'>
+            Customize Your Trip
+          </Typography>
 
-            <br />
+          <br />
 
-            <DirectionsCarIcon />
-            <div>
-              {userName ? (
-                <>
-                  <label>Which car will you be driving?</label>
-                  <select value={selectedCar} onChange={handleCarChange}>
-                    {car &&
+          <DirectionsCarIcon />
+          <div>
+            {userName ? (
+              <>
+                <label>Which car will you be driving?</label>
+                <select value={selectedCar} onChange={handleCarChange}>
+                  {car &&
                     Object.keys(car).map(key => {
                       const current = car[`${key}`];
                       return (
@@ -180,45 +172,75 @@ const StartOfTripForm = () => {
                         </option>
                       );
                     })}
-                    ,
-                  </select>
-                </>
-              ) : (
-                <Link to='/'>
-                  <label>Sign In To Choose a Vehicle</label>
-                </Link>
-              )}
-            </div>
-            <br />
-            <LocalGasStationIcon />
-            <div>
-              <label>How often are we stopping?</label>
-              <select value={timeBetweenStops} onChange={handleStopChange}>
-                <option value={5400}>Every Hour or Two</option>
-                <option value={9000}>Every Two or Three Hours</option>
-                <option value={10800}>Every Three or Four Hours</option>
-                <option value={20000}>
-                  Only When I Will Run Out of Gas
-                </option>
-              </select>
-            </div>
-            <br />
-            <HotelIcon />
-            <div>
-              <label>How often do you want to sleep?</label>
-              <select value={endTimeForDay} onChange={handleSleepChange}>
-                <option value={18000}>Every Four to Six Hours</option>
-                <option value={28800}>Every Seven to Nine Hours</option>
-                <option value={39600}>Every Ten to Twelve Hours</option>
-                <option value={14400}>Every Thirteen to Fifteen Hours</option>
-                <option value={1000000}>What's a sleep?</option>
-              </select>
+                  ,
+                </select>
+              </>
+            ) : (
+              <Link to='/'>
+                <label>Sign In To Choose a Vehicle</label>
+              </Link>
+            )}
+          </div>
+          <br />
+          <LocalGasStationIcon />
+          <div>
+            <label>How often are we stopping?</label>
+            <select value={timeBetweenStops} onChange={handleStopChange}>
+              <option value={5400}>Every Hour or Two</option>
+              <option value={9000}>Every Two or Three Hours</option>
+              <option value={10800}>Every Three or Four Hours</option>
+              <option value={20000}>Only When I Will Run Out of Gas</option>
+            </select>
+          </div>
+          <br />
+          <HotelIcon />
+          <div>
+            <label>How often do you want to sleep?</label>
+            <select value={endTimeForDay} onChange={handleSleepChange}>
+              <option value={18000}>Every Four to Six Hours</option>
+              <option value={28800}>Every Seven to Nine Hours</option>
+              <option value={39600}>Every Ten to Twelve Hours</option>
+              <option value={14400}>Every Thirteen to Fifteen Hours</option>
+              <option value={1000000}>What's a sleep?</option>
+            </select>
+          </div>
+          <br />
+          <MonetizationOnIcon />
+          <div>
+            <label>Avoid Tolls?</label>
+            <input
+              type={'checkbox'}
+              checked={avoidTolls}
+              onClick={handleCheck}
+            />
+          </div>
+          <br />
+          <FastfoodIcon />
+          <div>
+            <label>Select Food Preferences</label>
+            <div id='options'>
+              {options.map((el, i) => (
+                <div>
+                  <label key={i * 2}>{el}</label>{' '}
+                  <input
+                    key={i * 2 + 1}
+                    type='checkbox'
+                    onChange={handleCheckOfFood}
+                    className={el}
+                    id={el}
+                  />
+                </div>
+              ))}
             </div>
             <br />
             <MonetizationOnIcon />
             <div>
               <label>Avoid Tolls?</label>
-              <input type={'checkbox'} checked={avoidTolls} onClick={handleCheck} />
+              <input
+                type={'checkbox'}
+                checked={avoidTolls}
+                onClick={handleCheck}
+              />
             </div>
             <br />
             <FastfoodIcon />
@@ -238,54 +260,23 @@ const StartOfTripForm = () => {
                   </div>
                 ))}
               </div>
-              <br />
-              <MonetizationOnIcon />
-              <div>
-                <label>Avoid Tolls?</label>
-                <input
-                  type={'checkbox'}
-                  checked={avoidTolls}
-                  onClick={handleCheck}
-                />
-              </div>
-              <br />
-              <FastfoodIcon />
-              <div>
-                <label>Select Food Preferences</label>
-                <div id='options'>
-                  {options.map((el, i) => (
-                    <div>
-                      <label key={i * 2}>{el}</label>{' '}
-                      <input
-                        key={i * 2 + 1}
-                        type='checkbox'
-                        onChange={handleCheckOfFood}
-                        className={el}
-                        id={el}
-                      />
-                    </div>
-                  ))}
-                </div>
-                <input
-                  onChange={handleAdditionalOptionChange}
-                  value={additionalOption}
-                />
-                <Button
-                  variant='outlined'
-                  onClick={handleAdditionalOptionAddition}>
-                  Add Option
-                </Button>
-              </div>
-              <br />
-
-              <Button color='primary' variant='outlined' onClick={saveInfo}>
-                Generate Trip
+              <input
+                onChange={handleAdditionalOptionChange}
+                value={additionalOption}
+              />
+              <Button
+                variant='outlined'
+                onClick={handleAdditionalOptionAddition}>
+                Add Option
               </Button>
             </div>
+            <br />
+
+            <Button color='primary' variant='outlined' onClick={saveInfo}>
+              Generate Trip
+            </Button>
           </div>
-        ) : (
-          <SuggestionStepper />
-        )}
+        </div>
       </div>
     </Paper>
   );

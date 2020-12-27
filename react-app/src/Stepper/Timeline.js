@@ -1,6 +1,11 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 
-const FakeTimeline = ({ nodes }) => {
+const Timeline = () => {
+  // *** Redux ***
+  const nodes = useSelector(state => state.stepper.nodes);
+  console.log(nodes);
+
   return (
     <div style={{ border: '1px solid black', width: '25%' }}>
       <h1>Timeline</h1>
@@ -19,4 +24,4 @@ const FakeTimeline = ({ nodes }) => {
   );
 };
 
-export default FakeTimeline;
+export default Timeline;
