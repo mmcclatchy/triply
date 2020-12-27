@@ -37,6 +37,18 @@ export default function stepperReducer(state = initState, { type, payload }) {
     case UPDATE_STEP:
       return { ...state, step: payload };
 
+    case DELETE_NODE:
+      const deleteArray = state.nodes[state.step].filter(
+        e => e.place_id !== payload
+      );
+
+      const newNodes = {
+        ...state.nodes,
+        [state.step]: deleteArray
+      };
+
+      return { ...state, nodes: newNodes };
+
     // case SET_PLACE_IMG:
     //   const { photoUrl, step, type, index } = payload;
 

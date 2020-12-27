@@ -3,12 +3,14 @@ import { useSelector } from 'react-redux';
 
 const Timeline = () => {
   const nodes = useSelector(state => state.stepper.nodes);
-  console.log(nodes);
 
   return (
     <div style={{ border: '1px solid red', width: '25%' }}>
       <h1>Timeline</h1>
-      {/* {nodes &&
+      {/* <div style={{ width: '500px', overflow: 'hidden' }}>
+        {JSON.stringify(nodes)};
+      </div> */}
+      {nodes &&
         Object.keys(nodes).map(node => {
           return (
             <div>
@@ -18,7 +20,7 @@ const Timeline = () => {
               })}
             </div>
           );
-        })} */}
+        })}
     </div>
   );
 };

@@ -55,7 +55,7 @@ const Node = ({ data, type, index }) => {
   };
 
   const unregisterNode = async () => {
-    await dispatch(unsetNode(type));
+    await dispatch(unsetNode(data.place_id));
     setBooked(false);
   };
 
