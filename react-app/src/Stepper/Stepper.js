@@ -60,6 +60,12 @@ const Stepper = () => {
     // TODO: Submit completed trip
   };
 
+  const refreshSuggestions = () => {
+    // TODO: Refresh Suggestions from Slice
+    // Caveat: Need to always include any business already booked so user can unselect;
+    // Work-Around: Render out "Selected" Again
+  };
+
   // *** JSX ***
   return (
     <div style={{ border: '1px solid black', width: '75%' }}>
@@ -68,7 +74,7 @@ const Stepper = () => {
       {suggestions[step] ? (
         <>
           <h2>Stop {step}</h2>
-          <h3>Selected</h3>
+          {/* <h3>Selected</h3> */}
           {/* {[data[step]] &&
             Object.values(data[stepZ]).map(stopType => {
               return (
@@ -83,6 +89,7 @@ const Stepper = () => {
           <button disabled={back} onClick={prevHandler}>
             Back
           </button>
+          <button onClick={refreshSuggestions}>Refresh</button>
           <button onClick={nextHandler}>Next</button>
         </>
       ) : (

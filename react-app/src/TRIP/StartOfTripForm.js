@@ -205,34 +205,8 @@ const StartOfTripForm = ({ setToggle }) => {
             </select>
           </div>
           <br />
-          <MonetizationOnIcon />
+
           <div>
-            <label>Avoid Tolls?</label>
-            <input
-              type={'checkbox'}
-              checked={avoidTolls}
-              onClick={handleCheck}
-            />
-          </div>
-          <br />
-          <FastfoodIcon />
-          <div>
-            <label>Select Food Preferences</label>
-            <div id='options'>
-              {options.map((el, i) => (
-                <div>
-                  <label key={i * 2}>{el}</label>{' '}
-                  <input
-                    key={i * 2 + 1}
-                    type='checkbox'
-                    onChange={handleCheckOfFood}
-                    className={el}
-                    id={el}
-                  />
-                </div>
-              ))}
-            </div>
-            <br />
             <MonetizationOnIcon />
             <div>
               <label>Avoid Tolls?</label>
