@@ -17,7 +17,7 @@ import { Route } from './route';
 
 const InitMap = ({}) => {
   const [directions, setDirections] = useState(false);
-  const [restaurants, setRestaurants] = useState([])
+  const [restaurants, setRestaurants] = useState("")
   const dispatch = useDispatch();
   const reduxOrigin = useSelector(state => state.directions.origin);
   const reduxDestination = useSelector(
@@ -26,6 +26,7 @@ const InitMap = ({}) => {
   const reduxStartTime = useSelector(state => state.directions.startTime);
   const directionsService = new google.maps.DirectionsService();
   const suggestions = useSelector(state => state.stepper.suggestions);
+  const currentSuggestions = suggestions[Object.keys(suggestions)[Object.keys(suggestions).length - 1]]
 
   useEffect(() => {
     if (!reduxOrigin && !reduxDestination) {
@@ -71,8 +72,19 @@ const InitMap = ({}) => {
       );
     };
     setRoute();
-    console.log(suggestions.1 , suggestions.length, "this")
-  }, [suggestions, dispatch]);
+    console.log(suggestions, "this")
+    if (suggestions[1]) {
+      setRestaurants([
+        currentSuggestions.restaurants[0].geometry.location,
+        currentSuggestions.restaurants[1].geometry.location,
+        currentSuggestions.restaurants[2].geometry.location
+      ])
+    }
+
+  }, [suggestions]);
+  if (restaurants) {
+    console.log(restaurants[0].lat, "restaurants")
+  }
 
   return (
     <>
