@@ -19,10 +19,6 @@ const Stepper = () => {
   
   // *** Local State ***
   const [back, disableBack] = useState(false);
-  const [restaurant, setRestaurant] = useState(null);
-  const [gasStation, setGasStation] = useState(null);
-  const [hotel, setHotel] = useState(null);
-  const [skipId, setSkipId] = useState(null);
   
 
   // *** Use Effect Hooks ***
@@ -31,16 +27,6 @@ const Stepper = () => {
     if (step > 1) disableBack(false);
     
   }, [step]);
-  
-  useEffect(async () => {
-    if (!data[step]) return
-    const { restaurants, gasStations, hotels } = data[step];
-    if (restaurants) setRestaurant(restaurants);
-    if (gasStations) setGasStation(gasStations);
-    if (hotels) setHotel(hotels);
-    await setSkipId(data[step]?.restaurants[0]?.place_id)
-    console.log('skipId: ', skipId)
-  }, [data])
   
   
   // *** Actions ***

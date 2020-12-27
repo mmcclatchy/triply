@@ -1,38 +1,47 @@
 /* global google */
 import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   GoogleMap,
   withScriptjs,
   withGoogleMap,
   DirectionsRenderer
 } from 'react-google-maps';
-import { TextField, Button } from '@material-ui/core';
-import { useDispatch, useSelector } from 'react-redux';
 import {
   setDurationAction,
   setDistanceAction
 } from '../store/actions/directions';
-import { Route } from './route';
 //  use withScriptjs and withGoogleMap to wrap the map in order to get the map to load correctly
 
 const InitMap = ({}) => {
-  const dispatch = useDispatch();
+  // *** Redux ***
+  const reduxStartTime = useSelector(state => state.directions.startTime);
   const reduxOrigin = useSelector(state => state.directions.origin);
   const reduxDestination = useSelector(
     state => state.directions.destination
   );
-  const reduxStartTime = useSelector(state => state.directions.startTime);
-  const [origin, setOrigin] = useState('');
-  const [destination, setDestination] = useState('');
-  const [originFormContent, setOriginFormContent] = useState('');
-  const [destinationFormContent, setDestinationFormContent] = useState('');
-  const [directions, setDirections] = useState(false);
-  const directionsService = new google.maps.DirectionsService();
-  const originField = document.getElementById('origin');
-  const destinationField = document.getElementById('destination');
-  const autoOrigin = new google.maps.places.Autocomplete(originField);
-  const autoOrigin2 = new google.maps.places.Autocomplete(destinationField);
+  const waypoints = useSelector(
+    state => state.directions.itinerary?.geocoded_waypoints
+  );
+  const dispatch = useDispatch();
 
+  
+  // *** Local State ***
+  const [directions, setDirections] = useState(false);
+
+  
+  // *** DOM ***
+  // const originField = document.getElementById('origin');
+  // const destinationField = document.getElementById('destination');
+
+  
+  // *** Google Maps ***
+  const directionsService = new google.maps.DirectionsService();
+  // const autoOrigin = new google.maps.places.Autocomplete(originField);
+  // const autoOrigin2 = new google.maps.places.Autocomplete(destinationField);
+
+  
+  // *** Use Effect Hooks ***
   useEffect(() => {
     if (!reduxOrigin && !reduxDestination) {
       return;
@@ -77,7 +86,7 @@ const InitMap = ({}) => {
       );
     };
     setRoute();
-  }, [origin, destination, dispatch]);
+  }, [reduxOrigin, reduxDestination, dispatch]);
 
   return (
     <>
