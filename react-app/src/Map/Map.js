@@ -16,22 +16,16 @@ import { Route } from './route';
 //  use withScriptjs and withGoogleMap to wrap the map in order to get the map to load correctly
 
 const InitMap = ({}) => {
+  const [directions, setDirections] = useState(false);
+  const [restaurants, setRestaurants] = useState([])
   const dispatch = useDispatch();
   const reduxOrigin = useSelector(state => state.directions.origin);
   const reduxDestination = useSelector(
     state => state.directions.destination
   );
   const reduxStartTime = useSelector(state => state.directions.startTime);
-  const [origin, setOrigin] = useState('');
-  const [destination, setDestination] = useState('');
-  const [originFormContent, setOriginFormContent] = useState('');
-  const [destinationFormContent, setDestinationFormContent] = useState('');
-  const [directions, setDirections] = useState(false);
   const directionsService = new google.maps.DirectionsService();
-  const originField = document.getElementById('origin');
-  const destinationField = document.getElementById('destination');
-  const autoOrigin = new google.maps.places.Autocomplete(originField);
-  const autoOrigin2 = new google.maps.places.Autocomplete(destinationField);
+  const suggestions = useSelector(state => state.stepper.suggestions);
 
   useEffect(() => {
     if (!reduxOrigin && !reduxDestination) {
@@ -77,7 +71,8 @@ const InitMap = ({}) => {
       );
     };
     setRoute();
-  }, [origin, destination, dispatch]);
+    console.log(suggestions.1 , suggestions.length, "this")
+  }, [suggestions, dispatch]);
 
   return (
     <>
