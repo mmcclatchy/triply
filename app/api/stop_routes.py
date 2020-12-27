@@ -69,6 +69,12 @@ def post_stop(trip_id):
     if data['hotel']:
         trip_algo.addHotel(data['hotel']['place_id'])
 
+    if (data['restaurant'] is None and
+        data['gasStation'] is None and
+        data['hotel'] is None):
+
+        trip_algo.skipStop(data['skipId'])
+
     # If a hotel was chosen prior to the food and/or gas,
     # add the hotel to place_ids and stop_keys
     # if data['hotel']:
@@ -83,14 +89,12 @@ def post_stop(trip_id):
 
         if data['restaurant']:
             req_rest = data['restaurant']
-            
+
             if 'photoUrl' in req_rest.keys():
                 rest_photo_url = req_rest['photoUrl']
-                print('***\n\nRest Photo: ', len(rest_photo_url), '\n\n***')
             else:
                 rest_photo_url = None
-                
-            print('***\n\Restaurant: ', type(req_rest['place_id']), req_rest['place_id'], '\n\n***')
+
             cuisine = Cuisine(name=food_pref)
             restaurant = Restaurant(
                 name=req_rest['name'],
@@ -103,13 +107,12 @@ def post_stop(trip_id):
 
         if data['gasStation']:
             req_gas = data['gasStation']
-            
+
             if 'photoUrl' in req_gas.keys():
                 gas_photo_url = req_gas['photoUrl']
             else:
                 gas_photo_url = None
-                
-            print('***\n\nGas: ', type(req_gas['place_id']), req_gas['place_id'], '\n\n***')
+
             gas_station = GasStation(
                 name=req_gas['name'],
                 coordinates=coords_to_str(req_gas['geometry']['location']),
@@ -120,12 +123,12 @@ def post_stop(trip_id):
 
         if data['hotel']:
             req_hotel = data['hotel']
-            
+
             if 'photoUrl' in req_hotel.keys():
                 hotel_photo_url = req_hotel['photoUrl']
             else:
                 hotel_photo_url = None
-                
+
             hotel = Hotel(
                 name=req_hotel['name'],
                 coordinates=coords_to_str(req_hotel['geometry']['location']),
@@ -160,7 +163,6 @@ def post_stop(trip_id):
         # Determine cuisine based on preferences and what has already been eaten
 
         directions = trip_algo.getDirections()
-        print('***\n\nDirections: ', directions, '\n\n***')
 
         db.session.add(stop)
         db.session.commit()

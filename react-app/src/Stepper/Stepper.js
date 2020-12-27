@@ -22,6 +22,7 @@ const Stepper = () => {
   const [restaurant, setRestaurant] = useState(null);
   const [gasStation, setGasStation] = useState(null);
   const [hotel, setHotel] = useState(null);
+  const [skipId, setSkipId] = useState(null);
   
 
   // *** Use Effect Hooks ***
@@ -31,12 +32,14 @@ const Stepper = () => {
     
   }, [step]);
   
-  useEffect(() => {
+  useEffect(async () => {
     if (!data[step]) return
     const { restaurants, gasStations, hotels } = data[step];
     if (restaurants) setRestaurant(restaurants);
     if (gasStations) setGasStation(gasStations);
     if (hotels) setHotel(hotels);
+    await setSkipId(data[step]?.restaurants[0]?.place_id)
+    console.log('skipId: ', skipId)
   }, [data])
   
   
@@ -46,6 +49,8 @@ const Stepper = () => {
       tripId,
       step,
       foodQuery,
+      skipId: suggestions[step]?.restaurants[0]?.place_id || 
+              suggestions[step]?.gasStations[0]?.place_id,
       tripStopNum: step,
       restaurant: data[step]?.restaurants || null,
       gasStation: data[step]?.gasStations || null,
@@ -56,7 +61,7 @@ const Stepper = () => {
       time: null,
       
     }
-    console.log('submitTrip: ', stop)
+    console.log('STOP: ', stop)
     dispatch(postStop(stop, tripId))
     dispatch(updateStep(step + 1));
   };
