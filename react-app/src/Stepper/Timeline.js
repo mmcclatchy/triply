@@ -8,7 +8,6 @@ const Timeline = () => {
   return (
     <div style={{ border: '1px solid red', width: '25%' }}>
       <h1>Timeline</h1>
-      {JSON.stringify(nodes)}
       {/* {nodes &&
         Object.keys(nodes).map(node => {
           return (

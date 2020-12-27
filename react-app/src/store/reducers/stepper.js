@@ -22,25 +22,17 @@ export default function stepperReducer(state = initState, { type, payload }) {
       return { ...state, suggestions: newSuggestions };
 
     case ADD_NODE:
-      console.log('REDUCER', payload);
+      const array = state.nodes[state.step];
+      let data = payload;
 
-      const newNode = { ...state.nodes, [state.step]: payload };
+      if (!array) {
+        data = [payload];
+      } else {
+        data = [...array, payload];
+      }
+
+      const newNode = { ...state.nodes, [state.step]: data };
       return { ...state, nodes: newNode };
-
-    // if (newState.nodes[state.step]) {
-    //   newState.nodes[state.step] = {
-    //     ...newState.nodes[state.step],
-    //     [nodeType]: data
-    //   };
-    // } else {
-    //   newState.nodes[state.step] = { [nodeType]: data };
-    // // }
-    // const newNode = { ...state.nodes, [state.step]: payload };
-    // return { ...state, nodes: newNode };
-
-    // case DELETE_NODE:
-    //   delete newState.nodes[state.step][payload];
-    //   return newState;
 
     case UPDATE_STEP:
       return { ...state, step: payload };

@@ -26,16 +26,15 @@ const Node = ({ data, type, index }) => {
   // *** Use Effect Hooks ***
   useEffect(() => {
     setBooked(false);
+    console.log(nodes[step]);
 
-    if (nodes[step]?.[type]?.place_id === data.place_id) setBooked(true);
-
-    // const nodeType = nodes[step]?.[type];
-    // if (nodeType)
-    //   nodeType.map(e => {
-    //     if (e.place_id === data.place_id) {
-    //       return setBooked(true);
-    //     }
-    //   });
+    if (nodes[step]) {
+      nodes[step].forEach(e => {
+        if (e.place_id === data.place_id) {
+          setBooked(true);
+        }
+      });
+    }
   }, [step, nodes]);
 
   // On Mount: Retrieve place image from Google and store in Redux
