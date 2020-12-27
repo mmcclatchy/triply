@@ -42,7 +42,7 @@ const Node = ({ data, origin, destination, head, tail }) => {
   };
 
   const clickHandler = e => {
-    console.log(e.target.parentElement.getAttribute('value'));
+    // console.log(e.target.parentElement.getAttribute('value'));
   };
 
   return (

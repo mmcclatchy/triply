@@ -27,7 +27,7 @@ const api = ({ dispatch, getState }) => next => async action => {
     const { payload, suggestions, directions } = await response.json();
   
     
-    console.log("payload FROM API: ", payload);
+    console.log("API => DIRECTIONS: ", directions);
     
     
     if (directions) dispatch({ 
