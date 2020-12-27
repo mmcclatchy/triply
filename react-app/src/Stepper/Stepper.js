@@ -29,18 +29,6 @@ const Stepper = () => {
     if (step > 1) disableBack(false);
   }, [step]);
 
-  useEffect(() => {
-    (async () => {
-      if (!data[step]) return;
-      const { restaurants, gasStations, hotels } = data[step];
-      if (restaurants) setRestaurant(restaurants);
-      if (gasStations) setGasStation(gasStations);
-      if (hotels) setHotel(hotels);
-      await setSkipId(data[step]?.restaurants[0]?.place_id);
-      console.log('skipId: ', skipId);
-    })();
-  }, [data]);
-
   // *** Actions ***
   const nextHandler = () => {
     const stop = {
