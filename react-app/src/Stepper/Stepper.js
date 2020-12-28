@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-
+import './Stepper.css';
 import { updateStep } from '../store/actions/stepper';
 import Suggestions from './Suggestions';
 import { postStop } from '../store/actions/stops';
@@ -94,11 +94,18 @@ const Stepper = () => {
         </>
       ) : (
         <>
-          <h2>Trip Planned!</h2>
+          {/* <h2>Trip Planned!</h2>
           <button disabled={back} onClick={prevHandler}>
             Back
           </button>
-          <button onClick={submitTrip}>Complete</button>
+          <button onClick={submitTrip}>Complete</button> */}
+          <h1>Calculating Your Next Stop...</h1>
+          <div className='sk-folding-cube'>
+            <div className='sk-cube1 sk-cube'></div>
+            <div className='sk-cube2 sk-cube'></div>
+            <div className='sk-cube4 sk-cube'></div>
+            <div className='sk-cube3 sk-cube'></div>
+          </div>
         </>
       )}
     </div>
