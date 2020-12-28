@@ -112,7 +112,7 @@ function User({ userId }) {
   const classes= useStyles()
   const dispatch = useDispatch();
   const visible = useSelector(state => state.utilities.formVisible);
-  const trips = useSelector(state => state.trips.payload.trips)
+  const trips = useSelector(state => state.trips.trips)
   // const trips = ""
 
   useEffect(() => {
