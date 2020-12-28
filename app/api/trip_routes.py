@@ -59,6 +59,8 @@ def post_trip(user_id):
     # Convert miles to meters for distance per tank of selected car
     fuel_distance = round(data['milesToRefuel'] * 1609.34)
 
+    # origin = 'New York City, NY'
+    # destination = 'Miami, FL'
     origin = data['startLocation']
     destination = data['endLocation']
 
