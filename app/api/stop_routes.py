@@ -7,6 +7,7 @@ from app.utils import (
 )
 from sqlalchemy.exc import SQLAlchemyError
 from ..Trip2 import TripClass
+import json
 
 
 stop_routes = Blueprint('stops', __name__)
@@ -163,7 +164,9 @@ def post_stop(trip_id):
         # Determine cuisine based on preferences and what has already been eaten
 
         directions = trip_algo.getDirections()
+        trip.directions = directions
 
+        db.session.add(trip)
         db.session.add(stop)
         db.session.commit()
         stop_info = {

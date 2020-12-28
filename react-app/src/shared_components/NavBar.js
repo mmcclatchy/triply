@@ -6,7 +6,7 @@ import { useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import View from '../shared_components/Drawer';
 import { setAuth, setName, setId } from '../store/actions/authentication';
-import {setOriginAction, setDestinationAction, setStartTimeAction, setDistanceAction, setDurationAction} from '../store/actions/directions'
+import {setOriginAction, setDestinationAction, setStartTimeAction, setDistanceAction, setDurationAction, clearDirections} from '../store/actions/directions'
 import { greeting } from '../services/utilities';
 import { clearTrips } from '../store/actions/trips';
 
@@ -28,6 +28,7 @@ import { clearTrips } from '../store/actions/trips';
     dispatch(setName(""));
     dispatch(setId(""));
     dispatch(clearTrips())
+    dispatch(clearDirections())
   };
 
   return (

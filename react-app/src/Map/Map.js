@@ -1,43 +1,72 @@
 /* global google */
 import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   GoogleMap,
   withScriptjs,
   withGoogleMap,
   DirectionsRenderer
 } from 'react-google-maps';
-import { TextField, Button } from '@material-ui/core';
-import { useDispatch, useSelector } from 'react-redux';
 import {
   setDurationAction,
   setDistanceAction
 } from '../store/actions/directions';
-import { Route } from './route';
-//  use withScriptjs and withGoogleMap to wrap the map in order to get the map to load correctly
+
 
 const InitMap = ({}) => {
-  const dispatch = useDispatch();
+  // *** Redux ***
+  const reduxStartTime = useSelector(state => state.directions.startTime);
+  const nodes = useSelector(state => state.stepper.nodes);
+  const avoidTolls = useSelector(state => state.directions.avoidTolls);
   const reduxOrigin = useSelector(state => state.directions.origin);
   const reduxDestination = useSelector(
     state => state.directions.destination
   );
-  const reduxStartTime = useSelector(state => state.directions.startTime);
-  const [origin, setOrigin] = useState('');
-  const [destination, setDestination] = useState('');
-  const [originFormContent, setOriginFormContent] = useState('');
-  const [destinationFormContent, setDestinationFormContent] = useState('');
-  const [directions, setDirections] = useState(false);
-  const directionsService = new google.maps.DirectionsService();
-  const originField = document.getElementById('origin');
-  const destinationField = document.getElementById('destination');
-  const autoOrigin = new google.maps.places.Autocomplete(originField);
-  const autoOrigin2 = new google.maps.places.Autocomplete(destinationField);
+  const geocoded = useSelector(
+    state => state.directions.itinerary?.geocoded_waypoints
+  );
+  const dispatch = useDispatch();
 
+  
+  // *** Local State ***
+  const [directions, setDirections] = useState(false);
+  const [waypoints, setWaypoints] = useState([]);
+
+  
+  // *** Google Maps ***
+  const directionsService = new google.maps.DirectionsService();
+
+  
+  // *** Helper Functions ***
+  // Return an array of each waypoint from the stepper.nodes slice of state
+  const getWaypointsFrom = nodes => {
+    const waypoints = []
+    
+    for (const stop of Object.values(nodes)) {
+      for (const waypoint of Object.values(stop)) {
+        const { location } = waypoint.geometry;
+        waypoints.push({ location, stopover: true });
+      }
+    }
+    setWaypoints(waypoints);
+  }
+  
+  
+  // *** Use Effect Hooks ***
+
+  useEffect(() => {
+    setWaypoints(getWaypointsFrom(nodes))
+    console.log('getWaypointsFrom: ', getWaypointsFrom(nodes))
+  }, [geocoded])
+  
+  // Create a Google Maps request to render the route
   useEffect(() => {
     if (!reduxOrigin && !reduxDestination) {
       return;
     }
+    
     const setRoute = () => {
+      console.log('WAYPOINTS: ', waypoints)
       directionsService.route(
         {
           origin: {
@@ -46,23 +75,17 @@ const InitMap = ({}) => {
           destination: {
             query: reduxDestination
           },
-          waypoints: [
-            {
-              location: 'Baltimore, MD',
-              stopover: true
-            },
-            {
-              location: 'Washington D.C.',
-              stopover: true
-            }
-          ],
+          optimizeWaypoints: true,
           drivingOptions: {
             departureTime: new Date(reduxStartTime)
           },
-          travelMode: google.maps.TravelMode.DRIVING
+          travelMode: google.maps.TravelMode.DRIVING,
+          waypoints,  
+          avoidTolls,
         },
         (response, status) => {
           if (status === 'OK') {
+            console.log('GOOGLE RESPONSE: ', response)
             setDirections(response);
             dispatch(
               setDurationAction(response.routes[0].legs[0].duration.text)
@@ -77,19 +100,26 @@ const InitMap = ({}) => {
       );
     };
     setRoute();
-  }, [origin, destination, dispatch]);
+     
+  }, [reduxOrigin, reduxDestination, waypoints]);
 
+  
+  // *** JSX ***
   return (
     <>
       <GoogleMap
         defaultZoom={10}
         defaultCenter={{ lat: 40.99136, lng: -72.534203 }}>
-        {directions ? <DirectionsRenderer directions={directions} /> : null}
+        {directions ? <DirectionsRenderer directions={directions} /> : console.log('DIRECTIONS ARE NOT RENDERING')}
       </GoogleMap>
     </>
   );
 };
 
+// ------------------------------------------------------------------------
+
+// *** React-Google-Map Components ***
+//  use withScriptjs and withGoogleMap to wrap the map in order to get the map to load correctly
 const WrappedMap = withScriptjs(withGoogleMap(InitMap));
 
 //make sure to create .env.local file with REACT_APP_GOOGLE_KEY ="apikey"

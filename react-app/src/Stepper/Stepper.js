@@ -18,17 +18,15 @@ const Stepper = () => {
 
   // *** Local State ***
   const [back, disableBack] = useState(false);
-  const [restaurant, setRestaurant] = useState(null);
-  const [gasStation, setGasStation] = useState(null);
-  const [hotel, setHotel] = useState(null);
-  const [skipId, setSkipId] = useState(null);
+  
 
   // *** Use Effect Hooks ***
   useEffect(() => {
     if (step === 1) disableBack(true);
     if (step > 1) disableBack(false);
   }, [step]);
-
+  
+  
   // *** Actions ***
   const nextHandler = () => {
     const stop = {
