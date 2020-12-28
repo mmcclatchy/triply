@@ -39,8 +39,8 @@ const Timeline = () => {
         Object.keys(nodes).map(node => {
           return (
             <div>
-              <Paper elevation={3} className='Timeline__Card'>
-                {converter.toWordsOrdinal(node)} stop
+              <Paper elevation={3} className='Timeline__Divider'>
+                {converter.toWordsOrdinal(node).toUpperCase()} STOP
               </Paper>
               {nodes[node].map(e => {
                 return (
