@@ -16,6 +16,8 @@ import {
 const InitMap = ({}) => {
   // *** Redux ***
   const reduxStartTime = useSelector(state => state.directions.startTime);
+  const nodes = useSelector(state => state.stepper.nodes);
+  const avoidTolls = useSelector(state => state.directions.avoidTolls);
   const reduxOrigin = useSelector(state => state.directions.origin);
   const reduxDestination = useSelector(
     state => state.directions.destination
@@ -23,7 +25,6 @@ const InitMap = ({}) => {
   const geocoded = useSelector(
     state => state.directions.itinerary?.geocoded_waypoints
   );
-  const nodes = useSelector(state => state.stepper.nodes);
   const dispatch = useDispatch();
 
   
@@ -74,12 +75,13 @@ const InitMap = ({}) => {
           destination: {
             query: reduxDestination
           },
-          waypoints: waypoints,  
           optimizeWaypoints: true,
           drivingOptions: {
             departureTime: new Date(reduxStartTime)
           },
-          travelMode: google.maps.TravelMode.DRIVING
+          travelMode: google.maps.TravelMode.DRIVING,
+          waypoints,  
+          avoidTolls,
         },
         (response, status) => {
           if (status === 'OK') {

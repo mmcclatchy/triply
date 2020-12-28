@@ -1,4 +1,4 @@
-import { SET_DESTINATION, SET_ORIGIN, SET_START_TIME,  SET_TRIP_DISTANCE, SET_TRIP_DURATION, SET_DIRECTIONS, CLEAR_DIRECTIONS } from '../constants/constants';
+import { SET_DESTINATION, SET_ORIGIN, SET_START_TIME,  SET_TRIP_DISTANCE, SET_TRIP_DURATION, SET_DIRECTIONS, CLEAR_DIRECTIONS, SET_AVOID_TOLLS } from '../constants/constants';
 
 
 const initialState = {
@@ -9,6 +9,7 @@ const initialState = {
   distance: '',
   itinerary: {},
   foodQuery: [],
+  avoidTolls: false,
 }
 
 export default function reducer(state = initialState, { type, payload }) {
@@ -29,11 +30,14 @@ export default function reducer(state = initialState, { type, payload }) {
       return {...state, duration: payload }
     
     case SET_DIRECTIONS:
-      const { itinerary, foodQuery } = payload;
-      return { ...state, itinerary, foodQuery }
+      const { itinerary, foodQuery, avoidTolls } = payload;
+      return { ...state, itinerary, foodQuery, avoidTolls }
       
     case CLEAR_DIRECTIONS:
       return initialState;
+    
+    case SET_AVOID_TOLLS:
+      return { ...state, avoidTolls: payload };
       
     default:
       return state;

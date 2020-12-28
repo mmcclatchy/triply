@@ -56,4 +56,5 @@ export const SET_DESTINATION = 'triply/directions/SET_DESTINATION';
 export const SET_START_TIME = 'triply/directions/SET_START_TIME';
 export const SET_TRIP_DURATION = 'triply/directions/SET_TRIP_DURATION';
 export const SET_TRIP_DISTANCE = 'triply/directions/SET_TRIP_DISTANCE';
-export const CLEAR_DIRECTIONS = 'triply/directions/CLEAR_DIRECTIONS'
+export const CLEAR_DIRECTIONS = 'triply/directions/CLEAR_DIRECTIONS';
+export const SET_AVOID_TOLLS = 'triply/directions/SET_AVOID_TOLLS';

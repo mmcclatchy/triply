@@ -35,6 +35,7 @@ const api = ({ dispatch, getState }) => next => async action => {
       payload: {
         itinerary: await JSON.parse(directions.itinerary),
         foodQuery: directions.foodQuery,
+        avoidTolls: directions.avoidTolls,
       }
     });
     if (suggestions) dispatch({ type: ADD_SUG, payload: suggestions });

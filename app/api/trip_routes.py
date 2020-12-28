@@ -99,7 +99,8 @@ def post_trip(user_id):
             'suggestions': next_stop_suggestions,
             'directions': {
                 'itinerary': trip.directions,
-                'foodQuery': food_query
+                'foodQuery': food_query,
+                'avoidTolls': data['avoidTolls']
             }
         })
         return trip_json
