@@ -39,12 +39,10 @@ export const getIcon = type => {
   }
 };
 
-export const getTagline = (key, name) => {
-  if (key === 'Restaurant') return `Meal at ${name}`;
-  if (key === 'Hotel') return `Stay at ${name}`;
-  if (key === 'GasStation') return `Refill at ${name}`;
-  if (key === 'Origin') return `Departing from ${name}`;
-  if (key === 'Destination') return `Arriving at ${name}`;
+export const getTagline = key => {
+  if (key === 'restaurants') return `Meal`;
+  if (key === 'hotels') return `Sleep`;
+  if (key === 'gasStations') return `Refill`;
 };
 
 export const meal = time => {

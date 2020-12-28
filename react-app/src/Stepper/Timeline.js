@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { getIcon } from './timelineUtility';
+import { getIcon, getTagline } from './timelineUtility';
 import { DateTime } from 'luxon';
 import { Paper } from '@material-ui/core';
 import './Stepper.css';
@@ -47,6 +47,7 @@ const Timeline = () => {
                   <Paper elevation={3} className='Timeline__Card'>
                     {getIcon(e.type)}
                     <div>
+                      <h3>{getTagline(e.type)}</h3>
                       <h3>{e.name}</h3>
                       <div>{e.vicinity}</div>
                     </div>
