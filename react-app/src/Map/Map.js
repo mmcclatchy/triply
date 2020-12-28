@@ -113,8 +113,26 @@ const InitMap = ({}) => {
     if (geocoded && routes) {
       // const directionsResult = google.maps.DirectionsResult(geocoded, routes)
       // directionsService.setDirections(itinerary);
-      console.log('GEOCODED AND ROUTES')
-      setDirections(directionsService);
+      console.log('GEOCODED AND ROUTES', geocoded, routes)
+      setDirections({ 
+        geocoded_waypoints: geocoded,
+        routes,
+        request: {
+          origin: {
+            query: reduxOrigin
+          },
+          destination: {
+            query: reduxDestination
+          },
+          // waypoints: waypoints,  
+          // optimizeWaypoints: true,
+          drivingOptions: {
+            departureTime: new Date(reduxStartTime)
+          },
+          travelMode: google.maps.TravelMode.DRIVING,
+        },
+        status: 'OK',
+      });
       
     }
     else {
@@ -136,6 +154,7 @@ const InitMap = ({}) => {
           },
           (response, status) => {
             if (status === 'OK') {
+              console.log('GOOGLE RESPONSE: ', response)
               setDirections(response);
               dispatch(
                 setDurationAction(response.routes[0].legs[0].duration.text)
@@ -160,7 +179,7 @@ const InitMap = ({}) => {
       <GoogleMap
         defaultZoom={10}
         defaultCenter={{ lat: 40.99136, lng: -72.534203 }}>
-        {directions ? <DirectionsRenderer directions={directions} /> : null}
+        {directions ? <DirectionsRenderer directions={directions} /> : console.log('DIRECTIONS ARE NOT RENDERING')}
       </GoogleMap>
     </>
   );
