@@ -32,7 +32,7 @@ const StartOfTripForm = ({ setToggle }) => {
 
   // *** Local State ***
   const [car, setCar] = useState([]);
-  const [selectedCar, setSelectedCar] = useState([]);
+  const [selectedCar, setSelectedCar] = useState('1');
   const [timeBetweenStops, setTimeBetweenStops] = useState(5400);
   const [endTimeForDay, setEndTimeForDay] = useState(18000);
   const [avoidTolls, setAvoidTolls] = useState(false);
@@ -66,21 +66,13 @@ const StartOfTripForm = ({ setToggle }) => {
     setAdditionalOption('');
   };
 
+  // *** Add and Removes Foods from Selected Array ***
   const handleCheckOfFood = e => {
-    if (e.target.value) {
-      let s = selectedFoods;
-      s.push(e.target.id);
-      setSelectedFoods(s);
-    } else {
-      let s = selectedFoods;
-      let i = s.findIndex(e.target.id);
-      if (i === -1) {
-        return;
-      }
-      s.slice(i, 1);
-      setSelectedFoods(s);
-      // console.log(s);
+    if (selectedFoods.includes(e.target.value)) {
+      setSelectedFoods(selectedFoods.filter(food => food !== e.target.value));
+      return;
     }
+    if (e.target.value) setSelectedFoods([...selectedFoods, e.target.value]);
   };
 
   // *** Use Effect Hooks ***
@@ -227,6 +219,7 @@ const StartOfTripForm = ({ setToggle }) => {
                     <input
                       key={i * 2 + 1}
                       type='checkbox'
+                      value={el}
                       onChange={handleCheckOfFood}
                       className={el}
                       id={el}
