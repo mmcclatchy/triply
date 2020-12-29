@@ -316,51 +316,51 @@ class TripClass:
 
 
 
-t = TripClass()
-t.createNewTrip("Santa Rosa, California", "Holland, Mi", 100, 3 * 60 * 60, datetime.time(hour=18).isoformat(), datetime.datetime(year=2020, month=12, day=29, hour=10, minute=13).isoformat(), False, datetime.time(hour=8).isoformat()) 
-results = t.getNextStopDetails("mexican")
-placeId = results["restaurants"][0]["place_id"]
-t.addFood(placeId)
-l = TripClass()
-l.createFromJson(t.getDirections())
-t = l
+# t = TripClass()
+# t.createNewTrip("Santa Rosa, California", "Holland, Mi", 100, 3 * 60 * 60, datetime.time(hour=18).isoformat(), datetime.datetime(year=2020, month=12, day=29, hour=10, minute=13).isoformat(), False, datetime.time(hour=8).isoformat()) 
+# results = t.getNextStopDetails("mexican")
+# placeId = results["restaurants"][0]["place_id"]
+# t.addFood(placeId)
+# l = TripClass()
+# l.createFromJson(t.getDirections())
+# t = l
 
-results = t.getNextStopDetails("mexican")
-placeId = results["restaurants"][0]["place_id"]
-t.addFood(placeId)
-l = TripClass()
-l.createFromJson(t.getDirections())
-t = l
+# results = t.getNextStopDetails("mexican")
+# placeId = results["restaurants"][0]["place_id"]
+# t.addFood(placeId)
+# l = TripClass()
+# l.createFromJson(t.getDirections())
+# t = l
 
-results = t.getNextStopDetails("mexican")
-placeId = results["restaurants"][0]["place_id"]
-t.addFood(placeId)
-l = TripClass()
-l.createFromJson(t.getDirections())
-t = l
+# results = t.getNextStopDetails("mexican")
+# placeId = results["restaurants"][0]["place_id"]
+# t.addFood(placeId)
+# l = TripClass()
+# l.createFromJson(t.getDirections())
+# t = l
 
-results = t.getNextStopDetails("mexican")
-placeId = results["restaurants"][0]["place_id"]
-t.addFood(placeId)
-l = TripClass()
-l.createFromJson(t.getDirections())
-t = l
+# results = t.getNextStopDetails("mexican")
+# placeId = results["restaurants"][0]["place_id"]
+# t.addFood(placeId)
+# l = TripClass()
+# l.createFromJson(t.getDirections())
+# t = l
 
-results = t.getNextStopDetails("mexican")
-placeId = results["restaurants"][0]["place_id"]
-t.addFood(placeId)
-t.addHotel(results["hotels"][0]['place_id'])
-l = TripClass()
-l.createFromJson(t.getDirections())
-t = l
+# results = t.getNextStopDetails("mexican")
+# placeId = results["restaurants"][0]["place_id"]
+# t.addFood(placeId)
+# t.addHotel(results["hotels"][0]['place_id'])
+# l = TripClass()
+# l.createFromJson(t.getDirections())
+# t = l
 
-results = t.getNextStopDetails("mexican")
-placeId = results["restaurants"][0]["place_id"]
-t.addFood(placeId)
-l = TripClass()
-l.createFromJson(t.getDirections())
-t = l
-print(t.cache)
+# results = t.getNextStopDetails("mexican")
+# placeId = results["restaurants"][0]["place_id"]
+# t.addFood(placeId)
+# l = TripClass()
+# l.createFromJson(t.getDirections())
+# t = l
+# print(t.cache)
 
 
 
