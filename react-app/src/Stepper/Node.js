@@ -6,7 +6,7 @@ import gasStationsImg from '../images/gas.jpg';
 import restaurantsImg from '../images/restaurant.jpg';
 import hotelsImg from '../images/hotel.jpg';
 import { Card, CardMedia, Button } from '@material-ui/core';
-import { getIcon } from './timelineUtility';
+import { getIcon, getStarIcon, getPriceDisplay } from './timelineUtility';
 
 //*************************************************************
 
@@ -52,7 +52,6 @@ const Node = ({ data, type, index }) => {
   // *** Actions ***
   const registerNode = () => {
     const payload = { ...data, type: type };
-    console.log(payload);
     dispatch(setNode(payload));
     setBooked(true);
   };
@@ -71,13 +70,22 @@ const Node = ({ data, type, index }) => {
 
   return (
     <Card elevation={3} className='node'>
+      <div>
+        {getStarIcon(data.rating)}
+        {data.user_ratings_total} Reviews
+      </div>
       <CardMedia>
         {place ? (
           <img src={photoUrl || typeImg(type)} className='node__image' />
         ) : null}
       </CardMedia>
+
       <div className='node__title'>
-        <h2>{data.name}</h2>
+        <h2>
+          {data.name}
+          <br />
+          {getPriceDisplay(data.price_level || 2)}
+        </h2>
       </div>
 
       {booked ? (

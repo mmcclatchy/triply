@@ -20,9 +20,9 @@ const Suggestions = ({ data }) => {
   );
 
   // *** Shorten Suggestions ***
-  const threeHotels = hotels.slice(0, 1);
+  const threeHotels = hotels.slice(0, 3);
   const threeRestaurants = restaurants.slice(0, 3);
-  const threeGasStations = gasStations.slice(0, 1);
+  const threeGasStations = gasStations.slice(0, 3);
 
   // *** JSX ***
   return (
@@ -50,36 +50,38 @@ const Suggestions = ({ data }) => {
         <img src={gasIcon} style={{ width: '50px' }} />
         <h1>Refill</h1>
       </div>
-      {threeGasStations &&
-        threeGasStations.map((gas, index) => {
-          return (
-            <Node
-              data={gas}
-              type='gasStations'
-              key={index}
-              index={index}
-              className='gas_station_id'
-            />
-          );
-        })}
-
+      <div className='node__container'>
+        {threeGasStations &&
+          threeGasStations.map((gas, index) => {
+            return (
+              <Node
+                data={gas}
+                type='gasStations'
+                key={index}
+                index={index}
+                className='gas_station_id'
+              />
+            );
+          })}
+      </div>
       <div className='Type__Container'>
         <img src={hotelIcon} style={{ width: '50px' }} />
         <h1>Hotels</h1>
       </div>
-
-      {threeHotels &&
-        threeHotels.map((hotel, index) => {
-          return (
-            <Node
-              data={hotel}
-              type='hotels'
-              key={index}
-              index={index}
-              className='node_hotels'
-            />
-          );
-        })}
+      <div className='node__container'>
+        {threeHotels &&
+          threeHotels.map((hotel, index) => {
+            return (
+              <Node
+                data={hotel}
+                type='hotels'
+                key={index}
+                index={index}
+                className='node_hotels'
+              />
+            );
+          })}
+      </div>
     </div>
   );
 };

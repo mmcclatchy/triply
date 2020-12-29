@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans+Condensed:wght@700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+
 .Stepper__Container {
   font-family: 'Open Sans Condensed', sans-serif;
   padding: 10px;
@@ -13,13 +14,14 @@
 
 .node {
   display: flex;
-  width: 25%;
+  width: 100%;
   padding: 10px;
   margin: 5px;
   padding-top: 15px;
   align-items: center;
   flex-direction: column;
   place-content: center;
+  border: 1px solid rgb(215, 211, 211);
 }
 
 .node__title {
@@ -28,9 +30,9 @@
 }
 
 .node__image {
-  height: 170px;
+  height: 180px;
   max-height: 200px;
-  min-width: 230px;
+  min-width: 250px;
 }
 
 .Timeline__Card {
