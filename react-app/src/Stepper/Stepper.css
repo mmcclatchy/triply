@@ -15,11 +15,11 @@
   display: flex;
   width: 30%;
   margin: 3px;
-  padding: 15px;
+  padding: 10px;
+  padding-top: 15px;
   align-items: center;
   flex-direction: column;
   place-content: center;
-  border: 1px solid black;
 }
 
 .node__title {
@@ -28,14 +28,14 @@
 }
 
 .node__image {
-  width: 160px;
-  height: 120px;
-  border-radius: 5px;
+  height: 170px;
+  max-height: 200px;
+  min-width: 230px;
 }
+
 .Timeline__Card {
   padding: 10px;
   margin: 3px;
-
   border: 1px solid rgb(103, 98, 98);
 }
 

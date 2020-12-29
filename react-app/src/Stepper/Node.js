@@ -5,7 +5,8 @@ import { fetchImg, setNode, unsetNode } from '../store/actions/stepper';
 import gasStationsImg from '../images/gas.jpg';
 import restaurantsImg from '../images/restaurant.jpg';
 import hotelsImg from '../images/hotel.jpg';
-import { Paper, Button } from '@material-ui/core';
+import { Card, CardMedia, Button } from '@material-ui/core';
+import { getIcon } from './timelineUtility';
 
 //*************************************************************
 
@@ -69,19 +70,23 @@ const Node = ({ data, type, index }) => {
   };
 
   return (
-    <Paper elevation={3} className='node'>
-      {place ? (
-        <img src={photoUrl || typeImg(type)} className='node__image' />
-      ) : null}
+    <Card elevation={3} className='node'>
+      <CardMedia>
+        {place ? (
+          <img src={photoUrl || typeImg(type)} className='node__image' />
+        ) : null}
+      </CardMedia>
       <div className='node__title'>
         <h2>{data.name}</h2>
       </div>
 
       {booked ? (
         <Button
+          startIcon={getIcon(type)}
           size='large'
           onClick={unregisterNode}
-          style={{ backgroundColor: 'lightgreen' }}>
+          variant='outlined'
+          style={{ backgroundColor: '#5ecc8a', color: 'white' }}>
           Unbook
         </Button>
       ) : (
@@ -89,7 +94,7 @@ const Node = ({ data, type, index }) => {
           Book
         </Button>
       )}
-    </Paper>
+    </Card>
   );
 };
 
