@@ -1,5 +1,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans+Condensed:wght@700&display=swap');
 
+.Stepper__Container {
+  font-family: 'Open Sans Condensed', sans-serif;
+  padding: 10px;
+  width: 100%;
+}
+
 .Timeline__Card {
   padding: 10px;
   margin: 3px;

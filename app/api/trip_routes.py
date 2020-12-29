@@ -52,9 +52,10 @@ def get_trip(trip_id):
 def post_trip(user_id):
     req = request.json
     data = req['db']
-    
+
     # User's food preferences
     food_query = req['preferences']['foodQuery']
+    print("**********\n\n\n", food_query)
 
     # Convert miles to meters for distance per tank of selected car
     fuel_distance = round(data['milesToRefuel'] * 1609.34)
