@@ -103,7 +103,6 @@ class TripClass:
         for step in leg["steps"]:
             end = False
             if step["duration"]["value"] + buffer > self.cache["timeBetweenStops"]:
-                print(buffer, "!!!!!!!!!!!!!!!!!!")
                 break
             if step["duration"]["value"] + buffer > timeTillNextHotel:
                 break
@@ -133,7 +132,6 @@ class TripClass:
             distance += distanceToNextVertext
             lastVertext = vertext
 
-        print(buffer, self.cache["timeBetweenStops"])
 
         # we now have the vertext. Now we need to look for the places nearby
         needGas = distance * 2 > self.cache["metersToRefuel"]
@@ -184,6 +182,11 @@ class TripClass:
     # kwargs: hotel as bool, gas as bool
 
     def getNextStopDetails(self, foodQuery, **kwargs):
+        self.tempCache = self.cache
+        if kwargs.get("push"):
+            self.tempCache["timeBetweenStops"] += 60 * 60
+            endTimeOfDay = datetime.time.fromisoformat(self.tempCache["endTimeForDay"])
+            self.tempCache["endTimeForDay"] = (datetime.datetime(year=1, month=1, day=1, hour=endTimeOfDay.hour, minute=endTimeOfDay.minute, second=endTimeOfDay.second) + datetime.timedelta(hours=1)).time().isoformat()
         self.updateDirections()
         queries = self.getNextStopLocation()
         if not queries:
@@ -204,12 +207,14 @@ class TripClass:
         if queries["gasStop"] or hotelResults:
             r = requests.get(url + "&rankby=distance&keyword=gasstation")
             gasResults = r.json()
-        
-        r = requests.get(url + "&rankby=distance&keyword=" + parse.quote(foodQuery))
+        if kwargs.get("push"):
+            r = requests.get(url + "&rankby=distance&type=food")
+        else:
+            r = requests.get(url + "&rankby=distance&keyword=" + parse.quote(foodQuery))
         foodResults = r.json()
-        if not len(foodResults):
-            requests.get(url + "&rankby=distance&type=food")
-            foodResults = r.json()
+        if not len(foodResults["results"]):
+            print("got in here")
+            return self.getNextStopDetails(foodQuery, push=True, **kwargs)
 
         return {
             "stopISO": queries["stopISO"],
@@ -311,52 +316,51 @@ class TripClass:
 
 
 
-# t = TripClass()
-# t.createNewTrip("Santa Rosa, California", "Holland, Mi", 100, 3 * 60 * 60, datetime.time(hour=18).isoformat(), datetime.datetime(year=2020, month=12, day=29, hour=10, minute=13).isoformat(), False, datetime.time(hour=8).isoformat()) 
+t = TripClass()
+t.createNewTrip("Santa Rosa, California", "Holland, Mi", 100, 3 * 60 * 60, datetime.time(hour=18).isoformat(), datetime.datetime(year=2020, month=12, day=29, hour=10, minute=13).isoformat(), False, datetime.time(hour=8).isoformat()) 
+results = t.getNextStopDetails("mexican")
+placeId = results["restaurants"][0]["place_id"]
+t.addFood(placeId)
+l = TripClass()
+l.createFromJson(t.getDirections())
+t = l
 
-# results = t.getNextStopDetails("mexican")
-# placeId = results["restaurants"][0]["place_id"]
-# t.addFood(placeId)
-# l = TripClass()
-# l.createFromJson(t.getDirections())
-# t = l
+results = t.getNextStopDetails("mexican")
+placeId = results["restaurants"][0]["place_id"]
+t.addFood(placeId)
+l = TripClass()
+l.createFromJson(t.getDirections())
+t = l
 
-# results = t.getNextStopDetails("mexican")
-# placeId = results["restaurants"][0]["place_id"]
-# t.addFood(placeId)
-# l = TripClass()
-# l.createFromJson(t.getDirections())
-# t = l
+results = t.getNextStopDetails("mexican")
+placeId = results["restaurants"][0]["place_id"]
+t.addFood(placeId)
+l = TripClass()
+l.createFromJson(t.getDirections())
+t = l
 
-# results = t.getNextStopDetails("mexican")
-# print(results)
-# placeId = results["restaurants"][0]["place_id"]
-# t.addFood(placeId)
-# l = TripClass()
-# l.createFromJson(t.getDirections())
-# t = l
+results = t.getNextStopDetails("mexican")
+placeId = results["restaurants"][0]["place_id"]
+t.addFood(placeId)
+l = TripClass()
+l.createFromJson(t.getDirections())
+t = l
 
-# results = t.getNextStopDetails("mexican")
-# placeId = results["restaurants"][0]["place_id"]
-# t.addFood(placeId)
-# l = TripClass()
-# l.createFromJson(t.getDirections())
-# t = l
+results = t.getNextStopDetails("mexican")
+placeId = results["restaurants"][0]["place_id"]
+t.addFood(placeId)
+t.addHotel(results["hotels"][0]['place_id'])
+l = TripClass()
+l.createFromJson(t.getDirections())
+t = l
 
-# results = t.getNextStopDetails("mexican")
-# placeId = results["restaurants"][0]["place_id"]
-# t.addFood(placeId)
-# t.addHotel(results["hotels"][0]['place_id'])
-# l = TripClass()
-# l.createFromJson(t.getDirections())
-# t = l
-
-# results = t.getNextStopDetails("mexican")
-# placeId = results["restaurants"][0]["place_id"]
-# t.addFood(placeId)
-# l = TripClass()
-# l.createFromJson(t.getDirections())
-# t = l
+results = t.getNextStopDetails("mexican")
+placeId = results["restaurants"][0]["place_id"]
+t.addFood(placeId)
+l = TripClass()
+l.createFromJson(t.getDirections())
+t = l
+print(t.cache)
 
 
 
