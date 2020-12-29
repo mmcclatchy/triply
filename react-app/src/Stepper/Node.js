@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-
+import './Stepper.css';
 import { fetchImg, setNode, unsetNode } from '../store/actions/stepper';
 import gasStationsImg from '../images/gas.jpg';
 import restaurantsImg from '../images/restaurant.jpg';
@@ -67,11 +67,9 @@ const Node = ({ data, type, index }) => {
   };
 
   return (
-    <div style={{ display: 'flex' }}>
+    <div className='node'>
       <div>{data.name}</div>
-      <div>
-        {data.city},{data.state}
-      </div>
+
       {/* <img src={typeImg(type)} style={{ width: '70px', height: '70px' }} /> */}
       {place ? (
         <img

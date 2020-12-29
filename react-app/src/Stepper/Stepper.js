@@ -4,6 +4,7 @@ import './Stepper.css';
 import { updateStep } from '../store/actions/stepper';
 import Suggestions from './Suggestions';
 import { postStop } from '../store/actions/stops';
+import { Paper, Button } from '@material-ui/core';
 
 //*************************************************************
 
@@ -56,12 +57,6 @@ const Stepper = () => {
     // TODO: Submit completed trip
   };
 
-  const refreshSuggestions = () => {
-    // TODO: Refresh Suggestions from Slice
-    // Caveat: Need to always include any business already booked so user can unselect;
-    // Work-Around: Render out "Selected" Again
-  };
-
   const converter = require('number-to-words');
 
   // *** JSX ***
@@ -71,15 +66,20 @@ const Stepper = () => {
 
       {suggestions[step] ? (
         <>
-          <h2>{converter.toWordsOrdinal(step)} Stop Options</h2>
+          <Paper elevation={3} className='Timeline__Divider'>
+            <h2>
+              {converter.toWordsOrdinal(step).toUpperCase()} STOP OPTIONS
+            </h2>
+          </Paper>
 
           <Suggestions data={suggestions[step]} />
 
-          <button disabled={back} onClick={prevHandler}>
+          <Button variant='outlined' disabled={back} onClick={prevHandler}>
             Back
-          </button>
-          <button onClick={refreshSuggestions}>Refresh</button>
-          <button onClick={nextHandler}>Next</button>
+          </Button>
+          <Button variant='outlined' onClick={nextHandler}>
+            Next
+          </Button>
         </>
       ) : (
         <>
