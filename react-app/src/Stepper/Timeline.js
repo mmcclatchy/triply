@@ -16,8 +16,8 @@ const Timeline = () => {
   );
   const endTime = DateTime.fromISO(start)
     .plus({
-      hours: parseInt(duration.split(' ')[0]),
-      minutes: parseInt(duration.split(' ')[2])
+      hours: parseInt(duration.split(' ')[0] || 0),
+      minutes: parseInt(duration.split(' ')[2] || 0)
     })
     .toLocaleString(DateTime.DATETIME_SHORT);
 
