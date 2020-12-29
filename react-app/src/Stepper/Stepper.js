@@ -64,10 +64,8 @@ const Stepper = () => {
     <div className='Stepper__Container'>
       {suggestions[step] ? (
         <>
-          <Paper elevation={5} className='Stop__Header'>
-            <h2 className='Stop__Title'>
-              PLAN YOUR {converter.toWordsOrdinal(step).toUpperCase()} STOP
-            </h2>
+          <Paper elevation={3} className='Stop__Header'>
+            <h1>BOOK {converter.toWordsOrdinal(step).toUpperCase()} STOP</h1>
           </Paper>
 
           <Suggestions data={suggestions[step]} />

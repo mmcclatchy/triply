@@ -8,14 +8,14 @@
 }
 .node__container {
   display: flex;
-  justify-content: space-around;
+  justify-content: center;
 }
 
 .node {
   display: flex;
-  width: 30%;
-  margin: 3px;
+  width: 25%;
   padding: 10px;
+  margin: 5px;
   padding-top: 15px;
   align-items: center;
   flex-direction: column;
@@ -51,22 +51,9 @@
   );
 }
 
-.Stop__Title {
-  font-family: 'Roboto', sans-serif;
-  margin-left: 30%;
-  margin-top: 9%;
-}
-
 .Stop__Header {
-  padding: 5px 20px 5px 20px;
-  font-family: 'Open Sans Condensed', sans-serif;
-  border: 1px solid black;
-  height: 20%;
   width: 90%;
-  background-image: url(../assets/roadtrip.jpg);
-  background-size: 32%;
-  background-position: center left;
-  background-repeat: no-repeat;
+  border: 1px solid rgb(141, 137, 137);
 }
 
 .Type__Container {
