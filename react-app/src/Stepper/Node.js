@@ -68,9 +68,7 @@ const Node = ({ data, type, index }) => {
 
   return (
     <div className='node'>
-      <div>{data.name}</div>
-
-      {/* <img src={typeImg(type)} style={{ width: '70px', height: '70px' }} /> */}
+      <h3>{data.name}</h3>
       {place ? (
         <img
           src={photoUrl || typeImg(type)}

@@ -62,13 +62,11 @@ const Stepper = () => {
   // *** JSX ***
   return (
     <div className='Stepper__Container'>
-      <h1>Itinerary Stop Generator</h1>
-
       {suggestions[step] ? (
         <>
-          <Paper elevation={3} className='Timeline__Divider'>
-            <h2>
-              {converter.toWordsOrdinal(step).toUpperCase()} STOP OPTIONS
+          <Paper elevation={5} className='Stop__Header'>
+            <h2 className='Stop__Title'>
+              PLAN YOUR {converter.toWordsOrdinal(step).toUpperCase()} STOP
             </h2>
           </Paper>
 

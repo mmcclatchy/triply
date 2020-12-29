@@ -28,24 +28,6 @@ const Suggestions = ({ data }) => {
   return (
     <div>
       <div className='Type__Container'>
-        <img src={hotelIcon} style={{ width: '50px' }} />
-        <h1>Hotels</h1>
-      </div>
-
-      {threeHotels &&
-        threeHotels.map((hotel, index) => {
-          return (
-            <Node
-              data={hotel}
-              type='hotels'
-              key={index}
-              index={index}
-              className='node_hotels'
-            />
-          );
-        })}
-
-      <div className='Type__Container'>
         <img src={foodIcon} style={{ width: '50px' }} />
         <h1>Food</h1>
       </div>
@@ -77,6 +59,24 @@ const Suggestions = ({ data }) => {
               key={index}
               index={index}
               className='gas_station_id'
+            />
+          );
+        })}
+
+      <div className='Type__Container'>
+        <img src={hotelIcon} style={{ width: '50px' }} />
+        <h1>Hotels</h1>
+      </div>
+
+      {threeHotels &&
+        threeHotels.map((hotel, index) => {
+          return (
+            <Node
+              data={hotel}
+              type='hotels'
+              key={index}
+              index={index}
+              className='node_hotels'
             />
           );
         })}
