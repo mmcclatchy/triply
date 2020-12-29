@@ -91,14 +91,12 @@ const StartOfTripForm = ({ setToggle }) => {
     getCars();
   }, []);
 
-  // Re-render when options change
+  // *** Re-Render Options and Add Option to Selected Foods ***
   useEffect(() => {
-    if (options.length === 5) {
-      return;
-    }
+    if (options.length === 5) return;
     const newBox = document.getElementById('options').lastChild.lastChild;
-    // console.log(newBox);
-    newBox.checked = false; //TODO: back to true, set Option value;
+    newBox.checked = true;
+    setSelectedFoods([...selectedFoods, newBox.value]);
   }, [options.length]);
 
   // *** Post Trip Info to the Backend ***
