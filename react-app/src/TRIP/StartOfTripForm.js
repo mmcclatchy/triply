@@ -44,7 +44,7 @@ const StartOfTripForm = ({ setToggle }) => {
     'American'
   ]);
   const [additionalOption, setAdditionalOption] = useState('');
-  const [selectedFoods, setSelectedFoods] = useState([]);
+  const [selectedFoods, setSelectedFoods] = useState(['Food']);
 
   // *** Helper Functions ***
   const handleCarChange = e => setSelectedCar(e.target.value);
@@ -98,18 +98,11 @@ const StartOfTripForm = ({ setToggle }) => {
     }
     const newBox = document.getElementById('options').lastChild.lastChild;
     // console.log(newBox);
-    newBox.checked = false;
+    newBox.checked = false; //TODO: back to true, set Option value;
   }, [options.length]);
 
   // *** Post Trip Info to the Backend ***
   const saveInfo = e => {
-    const op = document.getElementById('options').childNodes;
-    const selectedFood = [];
-    op.forEach(el => {
-      if (el.lastChild.checked) {
-        selectedFood.push(el.lastChild.id);
-      }
-    });
     dispatch(
       postTrip(
         {
@@ -125,7 +118,7 @@ const StartOfTripForm = ({ setToggle }) => {
             milesToRefuel: 350 //! Placeholder until new API works
           },
           preferences: {
-            foodQuery: selectedFood
+            foodQuery: selectedFoods
           }
         },
         userId
