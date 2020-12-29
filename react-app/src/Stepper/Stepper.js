@@ -5,7 +5,7 @@ import { updateStep } from '../store/actions/stepper';
 import Suggestions from './Suggestions';
 import { postStop } from '../store/actions/stops';
 
-//*************************************************************
+//**********************************************************
 
 const Stepper = () => {
   // *** Redux ***
