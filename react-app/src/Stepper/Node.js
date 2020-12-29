@@ -5,10 +5,12 @@ import { fetchImg, setNode, unsetNode } from '../store/actions/stepper';
 import gasStationsImg from '../images/gas.jpg';
 import restaurantsImg from '../images/restaurant.jpg';
 import hotelsImg from '../images/hotel.jpg';
+import { Paper, Button } from '@material-ui/core';
 
 //*************************************************************
 
 const Node = ({ data, type, index }) => {
+  console.log(data);
   // *** Redux ***
   const step = useSelector(state => state.stepper.step);
   const nodes = useSelector(state => state.stepper.nodes);
@@ -67,22 +69,27 @@ const Node = ({ data, type, index }) => {
   };
 
   return (
-    <div className='node'>
-      <h3>{data.name}</h3>
+    <Paper elevation={3} className='node'>
       {place ? (
-        <img
-          src={photoUrl || typeImg(type)}
-          style={{ width: '70px', height: '70px' }}
-        />
+        <img src={photoUrl || typeImg(type)} className='node__image' />
       ) : null}
+      <div className='node__title'>
+        <h2>{data.name}</h2>
+      </div>
+
       {booked ? (
-        <button onClick={unregisterNode} style={{ backgroundColor: 'green' }}>
-          Booked
-        </button>
+        <Button
+          size='large'
+          onClick={unregisterNode}
+          style={{ backgroundColor: 'lightgreen' }}>
+          Unbook
+        </Button>
       ) : (
-        <button onClick={registerNode}>Select</button>
+        <Button variant='outlined' size='large' onClick={registerNode}>
+          Book
+        </Button>
       )}
-    </div>
+    </Paper>
   );
 };
 
