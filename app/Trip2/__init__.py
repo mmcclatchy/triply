@@ -20,7 +20,7 @@ class TripClass:
         self.buffer = []
         return None
 
-    def createNewTrip(self, start, end, metersToRefuel, timeBetweenStops, endTimeForDay, startISO, avoidTolls):
+    def createNewTrip(self, start, end, metersToRefuel, timeBetweenStops, endTimeForDay, startISO, avoidTolls, dailyStartTime):
         # get the start coordinates for the trip from a string
         url = self.useThisUrlToGetCordsForAPoint + parse.quote(start)
         r = requests.get(url)
@@ -52,6 +52,7 @@ class TripClass:
 
         # set up cache
         cache = {
+            "dailyStartTime": dailyStartTime,
             "startISO": startISO,
             "metersToRefuel": metersToRefuel,
             "timeBetweenStops": timeBetweenStops,
@@ -70,7 +71,6 @@ class TripClass:
 
     def createFromJson(self, directions_json):
         info = json.loads(directions_json)
-        # print(f'***\n\n{info}\n\n***')
         self.directions = info
         self.cache = info["cache"]
 
@@ -103,6 +103,7 @@ class TripClass:
         for step in leg["steps"]:
             end = False
             if step["duration"]["value"] + buffer > self.cache["timeBetweenStops"]:
+                print(buffer, "!!!!!!!!!!!!!!!!!!")
                 break
             if step["duration"]["value"] + buffer > timeTillNextHotel:
                 break
@@ -111,15 +112,18 @@ class TripClass:
             end = True
         if end:
             return None
+
         
-        averageMetersPerMileInStep = step["distance"]["value"] / step["duration"]["value"]
+        averageMetersPerSecondInStep = step["distance"]["value"] / step["duration"]["value"]
         vertextes = decodePolyline(step["polyline"]["points"])
         lastVertext = step["start_location"]
         
         hotelStop = False
         for vertext in vertextes:
             distanceToNextVertext = self.getDistanceBetweenTwoPoints(lastVertext, vertext)
-            timeToNextVertext = 1 / (distanceToNextVertext * averageMetersPerMileInStep)
+            timeToNextVertext = (distanceToNextVertext / averageMetersPerSecondInStep)
+            # print(distanceToNextVertext, timeToNextVertext, averageMetersPerSecondInStep)
+            # print(buffer + timeToNextVertext, timeTillNextHotel, ":comparing these:", self.cache["timeBetweenStops"])
             if buffer + timeToNextVertext > self.cache["timeBetweenStops"]:
                 break
             if buffer + timeToNextVertext > timeTillNextHotel:
@@ -129,17 +133,53 @@ class TripClass:
             distance += distanceToNextVertext
             lastVertext = vertext
 
+        print(buffer, self.cache["timeBetweenStops"])
+
         # we now have the vertext. Now we need to look for the places nearby
         needGas = distance * 2 > self.cache["metersToRefuel"]
+
+        delta = datetime.timedelta(seconds=buffer)
+        lastStopTime = datetime.datetime.fromisoformat(self.cache["stopArray"][-1]["time"])
+        stopISO = (lastStopTime + delta).isoformat()
+        
         return{
+            "stopISO": stopISO,
             "location": vertext,
             'hotelStop': hotelStop,
             'gasStop': needGas
         }
 
+    def calculateTimeAtStopAndLastDrive(self, r):
+        lastStop = self.cache["stopArray"][-1]
+        estimatedTimeThere = 0
+        if lastStop.get("hotel"):
+            # there has got to be an easier way to do this...but I don't know it
+            # python does not support subtraction between time objects and so...
+            # I am converting to a date and then back to time
+            # it is convulted and ugly... but, so it seems, so is python's time handling
+            # so who is really at fault?
+            ref = datetime.time.fromisoformat(self.cache["dailyStartTime"])
+            startTime = datetime.datetime(year=1, month=1, day=2, hour=ref.hour, minute=ref.minute, second=ref.second)
+            ref = datetime.datetime.fromisoformat(self.cache["stopArray"][-1]['time']).time()
+            lastStopTime = datetime.datetime(year=1, month=1, day=1, hour=ref.hour, minute=ref.minute, second=ref.second)
+            delta = startTime - lastStopTime
+            return delta.total_seconds()
+        if lastStop.get("gas"):
+            estimatedTimeThere += 10 * 60
+        if lastStop.get("food"):
+            estimatedTimeThere += 20 * 60
+        return estimatedTimeThere + r["routes"][0]["legs"][-2]["duration"]["value"]
+
     def getTimeTillNextHotel(self):
-        print("YOU NEED TO CALCULATE TIME TILL NEXT STOP")
-        return 100000000
+        #checks if last stop was hotel and then forces next stop not to be
+        if self.cache["stopArray"][-1].get("hotel"):
+            return 10000000
+        ref = datetime.time.fromisoformat(self.cache["endTimeForDay"])
+        endTimeForDay = datetime.datetime(year=1, month=1, day=1, hour=ref.hour, minute=ref.minute, second=ref.second)
+        ref = ref = datetime.datetime.fromisoformat(self.cache["stopArray"][-1]['time']).time()
+        lastStopTime = datetime.datetime(year=1, month=1, day=1, hour=ref.hour, minute=ref.minute, second=ref.second)
+        delta = endTimeForDay - lastStopTime
+        return delta.total_seconds()
 
     # kwargs: hotel as bool, gas as bool
 
@@ -167,8 +207,12 @@ class TripClass:
         
         r = requests.get(url + "&rankby=distance&keyword=" + parse.quote(foodQuery))
         foodResults = r.json()
+        if not len(foodResults):
+            requests.get(url + "&rankby=distance&type=food")
+            foodResults = r.json()
 
         return {
+            "stopISO": queries["stopISO"],
             "centerOfSearch": queries["location"],
             'restaurants': self.filterResults(foodResults),
             'gasStations': self.filterResults(gasResults),
@@ -201,7 +245,6 @@ class TripClass:
             if i == 0:
                 continue
             stop = self.cache["stopArray"][i]
-            print(stop)
             for id in stop:
                 if id == "time":
                     continue
@@ -218,7 +261,6 @@ class TripClass:
             # if stop[1] == "hotel":
             #     newStop["hotel"] = stop[0]
 
-        print("YOU NEED TO ADD IN THE TIME FOR THE NEXT STOP")
         # print(self.buffer, placeIds)
         url = self.basicDirectionUrl + "&origin=" + str(self.cache['startLocation']["lat"]) + "," + str(self.cache['startLocation']["lng"])
         url += "&destination=" + str(self.cache['endLocation']["lat"]) + "," + str(self.cache['endLocation']["lng"])
@@ -230,6 +272,11 @@ class TripClass:
         url = url[:-1]
         r = requests.get(url)
         r = r.json()
+
+        # create a time delta from the most recent added leg
+        delta = datetime.timedelta(seconds=self.calculateTimeAtStopAndLastDrive(r))
+        newTime = datetime.datetime.fromisoformat(self.cache["stopArray"][-1]["time"]) + delta
+        newStop["time"] = newTime.isoformat()
 
         self.cache["stopArray"].append(newStop)
 
@@ -253,9 +300,7 @@ class TripClass:
         scopedVar = None
         for stop in self.cache["stopArray"]:
             for key in stop:
-                print(stop[key], oldPlaceId)
                 if stop[key] == oldPlaceId:
-                    print(key)
                     scopedVar = key
                     break
         del stop[scopedVar]
@@ -267,17 +312,60 @@ class TripClass:
 
 
 t = TripClass()
-t.createNewTrip("Santa Rosa, California", "Petaluma, California", 100, 2, 2, 2, False) 
+t.createNewTrip("Santa Rosa, California", "Holland, Mi", 100, 3 * 60 * 60, datetime.time(hour=18).isoformat(), datetime.datetime(year=2020, month=12, day=29, hour=10, minute=13).isoformat(), False, datetime.time(hour=8).isoformat()) 
 
-# t.createFromJson(t.createNewTrip("4625 Parktrail ct, santa rosa, ca", "San Diego, California", 100, 5555, 2, 2, False))
 results = t.getNextStopDetails("mexican")
-# print(json.dumps(results))
 placeId = results["restaurants"][0]["place_id"]
 t.addFood(placeId)
-t.getDirections()
-print(t.cache)
-t.editStop(placeId, "asdf")
-print(t.cache)
-t.removeStop("asdf")
-print(t.cache)
-t.updateDirections()
+l = TripClass()
+l.createFromJson(t.getDirections())
+t = l
+
+results = t.getNextStopDetails("mexican")
+placeId = results["restaurants"][0]["place_id"]
+t.addFood(placeId)
+l = TripClass()
+l.createFromJson(t.getDirections())
+t = l
+
+results = t.getNextStopDetails("mexican")
+print(results)
+placeId = results["restaurants"][0]["place_id"]
+t.addFood(placeId)
+l = TripClass()
+l.createFromJson(t.getDirections())
+t = l
+
+results = t.getNextStopDetails("mexican")
+placeId = results["restaurants"][0]["place_id"]
+t.addFood(placeId)
+l = TripClass()
+l.createFromJson(t.getDirections())
+t = l
+
+results = t.getNextStopDetails("mexican")
+placeId = results["restaurants"][0]["place_id"]
+t.addFood(placeId)
+t.addHotel(results["hotels"][0]['place_id'])
+l = TripClass()
+l.createFromJson(t.getDirections())
+t = l
+
+results = t.getNextStopDetails("mexican")
+placeId = results["restaurants"][0]["place_id"]
+t.addFood(placeId)
+l = TripClass()
+l.createFromJson(t.getDirections())
+t = l
+
+
+
+# l = TripClass()
+# l.createFromJson(t.getDirections())
+# print(t.cache)
+# l.addFood(results["restaurants"][4]["place_id"])
+# l.addGasStation(results["restaurants"][2]["place_id"])
+# directions = json.loads(l.getDirections())
+# # print(directions)
+# # print("\n \n",l.cache)
+# print(l.getDirections())
