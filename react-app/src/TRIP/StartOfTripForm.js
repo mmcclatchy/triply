@@ -98,7 +98,7 @@ const StartOfTripForm = ({ setToggle }) => {
     }
     const newBox = document.getElementById('options').lastChild.lastChild;
     // console.log(newBox);
-    newBox.checked = true;
+    newBox.checked = false;
   }, [options.length]);
 
   // *** Post Trip Info to the Backend ***

@@ -18,15 +18,13 @@ const Stepper = () => {
 
   // *** Local State ***
   const [back, disableBack] = useState(false);
-  
 
   // *** Use Effect Hooks ***
   useEffect(() => {
     if (step === 1) disableBack(true);
     if (step > 1) disableBack(false);
   }, [step]);
-  
-  
+
   // *** Actions ***
   const nextHandler = () => {
     const stop = {
@@ -64,23 +62,16 @@ const Stepper = () => {
     // Work-Around: Render out "Selected" Again
   };
 
+  const converter = require('number-to-words');
+
   // *** JSX ***
   return (
-    <div style={{ border: '1px solid black', width: '75%' }}>
-      <h1>Stepper</h1>
+    <div className='Stepper__Container'>
+      <h1>Itinerary Stop Generator</h1>
 
       {suggestions[step] ? (
         <>
-          <h2>Stop {step}</h2>
-          {/* <h3>Selected</h3> */}
-          {/* {[data[step]] &&
-            Object.values(data[stepZ]).map(stopType => {
-              return (
-                <div>
-                  {stopType.type}: {stopType.name}
-                </div>
-              );
-            })} */}
+          <h2>{converter.toWordsOrdinal(step)} Stop Options</h2>
 
           <Suggestions data={suggestions[step]} />
 
