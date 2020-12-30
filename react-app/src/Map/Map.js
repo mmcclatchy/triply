@@ -73,6 +73,10 @@ const InitMap = ({}) => {
       setZoom(10)
       setCenter()
       setRestaurants("")
+      const matches = document.querySelectorAll("div.gm-style-iw, div.gm-style-iw-c, div.gm-style-iw-t")
+      for (let i = 0; i < matches.length; i++){
+        matches[i].classList.add("invisible")
+      }
     }
   }, [tripComplete])
 
@@ -92,7 +96,7 @@ const InitMap = ({}) => {
       setCenter(currentSuggestions.centerOfSearch)
       setZoom(15)
     }
-  }, [suggestions,tripComplete])
+  }, [suggestions])
 
   // Create a Google Maps request to render the route
   useEffect(() => {
