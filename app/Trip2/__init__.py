@@ -250,16 +250,6 @@ class TripClass:
             return []
         return [*result['results']]
 
-    # def completeTrip(self):
-    #     return {
-    #         "tripComplete": True,
-    #         "stopISO": None,    # TODO: determine Trip end time
-    #         "centerOfSearch": None,
-    #         "restaurants": None,
-    #         'gasStations': None,
-    #         'hotels': None
-    #     }
-
     def addGasStation(self, placeId):
         self.buffer.append((placeId, "gas"))
 
