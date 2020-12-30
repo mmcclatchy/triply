@@ -5,12 +5,14 @@ import {
   GoogleMap,
   withScriptjs,
   withGoogleMap,
-  DirectionsRenderer
+  DirectionsRenderer,
+  InfoWindow
 } from 'react-google-maps';
 import {
   setDurationAction,
   setDistanceAction
 } from '../store/actions/directions';
+import './Map.css';
 
 
 const InitMap = ({}) => {
@@ -27,6 +29,7 @@ const InitMap = ({}) => {
   );
   const dispatch = useDispatch();
   const suggestions = useSelector(state => state.stepper.suggestions);
+  const tripComplete = useSelector(state => state.stepper.tripComplete);
   const currentSuggestions = suggestions[Object.keys(suggestions)[Object.keys(suggestions).length - 1]]
 
 
@@ -34,6 +37,8 @@ const InitMap = ({}) => {
   const [directions, setDirections] = useState(false);
   const [waypoints, setWaypoints] = useState([]);
   const [restaurants, setRestaurants] = useState("")
+  const [center, setCenter] = useState({ lat: 40.99136, lng: -72.534203 });
+  const [zoom, setZoom] = useState(10);
 
 
   // *** Google Maps ***
@@ -62,6 +67,15 @@ const InitMap = ({}) => {
     console.log('getWaypointsFrom: ', getWaypointsFrom(nodes))
   }, [geocoded])
 
+
+  useEffect(() => {
+    if (tripComplete) {
+      setZoom(10)
+      setCenter()
+      setRestaurants("")
+    }
+  }, [tripComplete])
+
   // Adding suggestion info windows to the map
   useEffect(() => {
     if (suggestions[1]) {
@@ -70,10 +84,15 @@ const InitMap = ({}) => {
         currentSuggestions.restaurants[1],
         currentSuggestions.restaurants[2]
       ])
+      const matches = document.querySelectorAll("div.gm-style-iw, div.gm-style-iw-c, div.gm-style-iw-t")
+      for (let i = 0; i < matches.length; i++){
+        matches[i].classList.add("invisible")
+      }
+       console.log(matches, "these are the matches")
       setCenter(currentSuggestions.centerOfSearch)
       setZoom(15)
     }
-  }, [suggestions])
+  }, [suggestions,tripComplete])
 
   // Create a Google Maps request to render the route
   useEffect(() => {
@@ -140,6 +159,7 @@ const InitMap = ({}) => {
                 <InfoWindow
                   style={{backgroundColor:"red"}}
                   key={suggestion.place_id}
+                  zIndex={10}
                   position={{ lat: suggestion.geometry.location.lat, lng: suggestion.geometry.location.lng }}
                 >
                   <div>
