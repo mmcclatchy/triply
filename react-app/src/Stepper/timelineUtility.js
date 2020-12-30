@@ -1,12 +1,10 @@
 import React from 'react';
-import FastfoodIcon from '@material-ui/icons/Fastfood';
-import HotelIcon from '@material-ui/icons/Hotel';
-import LocalGasStationIcon from '@material-ui/icons/LocalGasStation';
 import ExploreIcon from '@material-ui/icons/Explore';
 import DriveEtaIcon from '@material-ui/icons/DriveEta';
 import gasIcon from '../assets/GasStation.svg';
 import hotelIcon from '../assets/hotel.svg';
 import foodIcon from '../assets/food.svg';
+import { requirePropFactory } from '@material-ui/core';
 
 Date.prototype.addHours = function (h) {
   this.setTime(this.getTime() + h * 60 * 60 * 1000);
@@ -78,4 +76,23 @@ export const populateNode = (current, array) => {
     }
     return false;
   });
+};
+
+export const getStarIcon = rating => {
+  const rounded = Math.round(parseFloat(rating) * 2) / 2;
+  return (
+    <img
+      src={require(`../assets/stars/${rounded}.png`)}
+      style={{ width: '90%' }}
+    />
+  );
+};
+
+export const getPriceDisplay = price => {
+  const parsed = parseInt(price);
+  let output = '';
+  for (let i = 1; i <= parsed; i++) {
+    output += '$';
+  }
+  return output;
 };

@@ -1,7 +1,10 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-
+import './Stepper.css';
 import Node from './Node';
+import hotelIcon from '../assets/hotel.svg';
+import gasIcon from '../assets/GasStation.svg';
+import foodIcon from '../assets/restaurant.svg';
 
 //**************************************************************
 
@@ -17,56 +20,68 @@ const Suggestions = ({ data }) => {
   );
 
   // *** Shorten Suggestions ***
-  const threeHotels = hotels.slice(0, 1);
-  const threeRestaurants = restaurants.slice(0, 1);
-  const threeGasStations = gasStations.slice(0, 1);
+  const threeHotels = hotels.slice(0, 3);
+  const threeRestaurants = restaurants.slice(0, 3);
+  const threeGasStations = gasStations.slice(0, 3);
 
   // *** JSX ***
   return (
     <div>
-      <h2>Suggestions For {data.time}</h2>
+      <div className='Type__Container'>
+        <img src={foodIcon} style={{ width: '50px' }} />
+        <h1>Food</h1>
+      </div>
+      <div className='node__container'>
+        {threeRestaurants &&
+          threeRestaurants.map((food, index) => {
+            return (
+              <Node
+                data={food}
+                type='restaurants'
+                key={index}
+                index={index}
+                className='node_restaurants'
+              />
+            );
+          })}
+      </div>
 
-      <h3>Hotels</h3>
-      {threeHotels &&
-        threeHotels.map((hotel, index) => {
-          return (
-            <Node
-              data={hotel}
-              type='hotels'
-              key={index}
-              index={index}
-              className='node_hotels'
-            />
-          );
-        })}
-
-      <h3>Food</h3>
-      {threeRestaurants &&
-        threeRestaurants.map((food, index) => {
-          return (
-            <Node
-              data={food}
-              type='restaurants'
-              key={index}
-              index={index}
-              className='node_restaurants'
-            />
-          );
-        })}
-
-      <h3>Refill</h3>
-      {threeGasStations &&
-        threeGasStations.map((gas, index) => {
-          return (
-            <Node
-              data={gas}
-              type='gasStations'
-              key={index}
-              index={index}
-              className='gas_station_id'
-            />
-          );
-        })}
+      <div className='Type__Container'>
+        <img src={gasIcon} style={{ width: '50px' }} />
+        <h1>Refill</h1>
+      </div>
+      <div className='node__container'>
+        {threeGasStations &&
+          threeGasStations.map((gas, index) => {
+            return (
+              <Node
+                data={gas}
+                type='gasStations'
+                key={index}
+                index={index}
+                className='gas_station_id'
+              />
+            );
+          })}
+      </div>
+      <div className='Type__Container'>
+        <img src={hotelIcon} style={{ width: '50px' }} />
+        <h1>Hotels</h1>
+      </div>
+      <div className='node__container'>
+        {threeHotels &&
+          threeHotels.map((hotel, index) => {
+            return (
+              <Node
+                data={hotel}
+                type='hotels'
+                key={index}
+                index={index}
+                className='node_hotels'
+              />
+            );
+          })}
+      </div>
     </div>
   );
 };
