@@ -33,6 +33,7 @@ const InitMap = ({}) => {
   // *** Local State ***
   const [directions, setDirections] = useState(false);
   const [waypoints, setWaypoints] = useState([]);
+  const [restaurants, setRestaurants] = useState("")
 
 
   // *** Google Maps ***
@@ -60,6 +61,19 @@ const InitMap = ({}) => {
     setWaypoints(getWaypointsFrom(nodes))
     console.log('getWaypointsFrom: ', getWaypointsFrom(nodes))
   }, [geocoded])
+
+  // Adding suggestion info windows to the map
+  useEffect(() => {
+    if (suggestions[1]) {
+      setRestaurants([
+        currentSuggestions.restaurants[0],
+        currentSuggestions.restaurants[1],
+        currentSuggestions.restaurants[2]
+      ])
+      setCenter(currentSuggestions.centerOfSearch)
+      setZoom(15)
+    }
+  }, [suggestions])
 
   // Create a Google Maps request to render the route
   useEffect(() => {
