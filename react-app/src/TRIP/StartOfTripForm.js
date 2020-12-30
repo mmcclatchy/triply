@@ -127,6 +127,7 @@ const StartOfTripForm = ({ setToggle }) => {
             endTimeForDay,
             timeBetweenStops,
             avoidTolls,
+            dailyStartTime,
             milesToRefuel: 350 //! Placeholder until new API works
           },
           preferences: {

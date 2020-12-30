@@ -73,7 +73,8 @@ def post_trip(user_id):
         timeBetweenStops=int(data['timeBetweenStops']),
         endTimeForDay=data['endTimeForDay'],
         startISO=data['startISO'],  # + '00:000Z', # ! No Timezone
-        avoidTolls=data['avoidTolls']
+        avoidTolls=data['avoidTolls'],
+        dailyStartTime=data['dailyStartTime']
     )
 
     # Create a model of the Trip for the DB

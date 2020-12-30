@@ -44,45 +44,29 @@ def post_stop(trip_id):
     # Find the trip in which this stop is associated
     trip = Trip.query.filter(Trip.id == trip_id).first()
 
-    # If the place ids include a hotel, send suggestions
-    # for food and gas based on the location of the hotel
-    # if any([place for place in data['places'] if place['type'] == 'hotel']):
-    #     trip_algo = TripClass()
-    #     food_and_gas = trip_algo.getFoodAndGasNearLocation(
-    #         food_pref, hotel['placeId']
-    #     )
-    #     return jsonify({
-    #         'suggestions': {'suggestions': food_and_gas, 'hotel': hotel}
-    #     })
-
-    trip_algo = TripClass()
-
+    # Create a new instance of the algorithm and
     # Reconstruct algorithm from the directions of the Trip
+    trip_algo = TripClass()
     trip_algo.createFromJson(trip.directions)
 
+    # Add Stop selections if they exist and pass the skipId if not
     if data['restaurant']:
         trip_algo.addFood(data['restaurant']['place_id'])
 
     if data['gasStation']:
         trip_algo.addGasStation(data['gasStation']['place_id'])
 
-    # ! Hotels are being skipped over for now
     if data['hotel']:
         trip_algo.addHotel(data['hotel']['place_id'])
 
     if (data['restaurant'] is None and
-        data['gasStation'] is None and
-        data['hotel'] is None):
+            data['gasStation'] is None and
+            data['hotel'] is None):
 
         trip_algo.skipStop(data['skipId'])
 
-    # If a hotel was chosen prior to the food and/or gas,
-    # add the hotel to place_ids and stop_keys
-    # if data['hotel']:
-    #     place_ids = [data['hotel']] + place_ids
-    #     stop_keys = ['h'] + stop_keys
-    # ! ------------------------------------
-
+    # Determine which food preference to query by rotating through
+    # food_query per stop
     food_query = data['foodQuery']
     food_pref = food_query[data['tripStopNum'] % len(food_query)]
 
@@ -153,29 +137,30 @@ def post_stop(trip_id):
             star_min=data['starMin'],
             star_max=data['starMax'])
 
-        # for cuisine in data['cuisines']:
-        #     c = Cuisine.query.filter(Cuisine.name == cuisine).first()
-        #     if isinstance(c, Cuisine):
-        #         stop.cuisines.append(c)
-        #     else:
-        #         cuisine_type = Cuisine(name=cuisine)
-        #         stop.cuisines.append(cuisine_type)
-
-        # Determine cuisine based on preferences and what has already been eaten
-
+        # Update directions and place in the Trips Model
         directions = trip_algo.getDirections()
         trip.directions = directions
 
+        # Update the database with all changes
         db.session.add(trip)
         db.session.add(stop)
         db.session.commit()
+
+        # Get suggestions for next stop or mark trip as complete
+        suggestions = trip_algo.getNextStopDetails(foodQuery=food_pref)
+        trip_complete = False
+
+        if not suggestions:
+            trip_complete = True
+
+        # Create a dictionary to return to the front end
         stop_info = {
-            # 'payload': {'stops': normalize(stop.to_dict())}
             'suggestions': trip_algo.getNextStopDetails(foodQuery=food_pref),
             'directions': {
                 'itinerary': directions,
                 'foodQuery': food_query
-            }
+            },
+            'tripComplete': trip_complete
         }
         stop_json = jsonify(stop_info)
         return stop_json

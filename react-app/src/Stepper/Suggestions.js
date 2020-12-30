@@ -17,9 +17,9 @@ const Suggestions = ({ data }) => {
   );
 
   // *** Shorten Suggestions ***
-  const threeHotels = hotels.slice(0, 1);
-  const threeRestaurants = restaurants.slice(0, 1);
-  const threeGasStations = gasStations.slice(0, 1);
+  const threeHotels = hotels?.slice(0, 1);
+  const threeRestaurants = restaurants?.slice(0, 1);
+  const threeGasStations = gasStations?.slice(0, 1);
 
   // *** JSX ***
   return (
