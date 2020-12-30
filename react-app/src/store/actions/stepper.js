@@ -35,7 +35,7 @@ export const fetchImg = (place, step, type, index) => async dispatch => {
   if (place.photos) {
     const reference = place.photos[0].photo_reference;
     console.log(reference);
-    photoUrl = `https://maps.googleapis.com/maps/api/place/photo?maxwidth=300&photoreference=${reference}&key=${key}`;
+    photoUrl = `https://maps.googleapis.com/maps/api/place/photo?maxwidth=250&photoreference=${reference}&key=${key}`;
     dispatch({
       type: SET_PLACE_IMG,
       payload: { photoUrl, step, type, index }

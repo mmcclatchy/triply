@@ -5,18 +5,15 @@ import { fetchImg, setNode, unsetNode } from '../store/actions/stepper';
 import gasStationsImg from '../images/gas.jpg';
 import restaurantsImg from '../images/restaurant.jpg';
 import hotelsImg from '../images/hotel.jpg';
-import {
-  Card,
-  CardMedia,
-  Button,
-  requirePropFactory
-} from '@material-ui/core';
+import { Card, CardMedia, Button } from '@material-ui/core';
+import hotelIcon from '../assets/hotel.svg';
+import gasIcon from '../assets/GasStation.svg';
+import foodIcon from '../assets/restaurant.svg';
 import { getIcon, getStarIcon, getPriceDisplay } from './timelineUtility';
 
 //*************************************************************
 
 const Node = ({ data, type, index }) => {
-  console.log(data);
   // *** Redux ***
   const step = useSelector(state => state.stepper.step);
   const nodes = useSelector(state => state.stepper.nodes);
@@ -74,12 +71,13 @@ const Node = ({ data, type, index }) => {
   };
 
   // Default Images Icon Version for types
-  const typeImg2 = type => {
+  const typeIcon = type => {
     if (type === 'restaurants')
-      return <img src={require('../assets/food.svg')} />;
+      return <img src={foodIcon} className='node__image' />;
     if (type === 'gasStations')
-      return <img src={require('../assets/GasStation.svg')} />;
-    if (type === 'hotels') return <img src={require('../assets/hotel.svg')} />;
+      return <img src={gasIcon} className='node__image' />;
+    if (type === 'hotels')
+      return <img src={hotelIcon} className='node__image' />;
   };
 
   return (
@@ -89,9 +87,13 @@ const Node = ({ data, type, index }) => {
         {data.user_ratings_total} Reviews
       </div>
       <CardMedia>
-        {place ? (
-          <img src={photoUrl || typeImg2(type)} className='node__image' />
-        ) : null}
+        {photoUrl ? (
+          <>
+            <img src={photoUrl} className='node__image' />
+          </>
+        ) : (
+          <>{typeIcon(type)}</>
+        )}
       </CardMedia>
 
       <div className='node__title'>
