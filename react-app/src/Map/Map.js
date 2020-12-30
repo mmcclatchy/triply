@@ -123,11 +123,38 @@ const InitMap = ({}) => {
   // *** JSX ***
   return (
     <>
-      <GoogleMap
+       {!restaurants ?
+        <GoogleMap
+          zoom={12}
+          id={"newMap"}
+          center={center}>
+          {directions ? <DirectionsRenderer directions={directions} /> : null}
+        </GoogleMap> :
+        <GoogleMap
+          id="newMap"
+          zoom={zoom}
+          center={center}>
+          {restaurants &&
+            restaurants.map(suggestion => {
+              return (
+                <InfoWindow
+                  style={{backgroundColor:"red"}}
+                  key={suggestion.place_id}
+                  position={{ lat: suggestion.geometry.location.lat, lng: suggestion.geometry.location.lng }}
+                >
+                  <div>
+                    <h4>{suggestion.name}</h4>
+                  </div>
+                </InfoWindow>)
+            })
+          }
+          </GoogleMap>
+      }
+      {/* <GoogleMap
         defaultZoom={10}
         defaultCenter={{ lat: 40.99136, lng: -72.534203 }}>
         {directions ? <DirectionsRenderer directions={directions} /> : console.log('DIRECTIONS ARE NOT RENDERING')}
-      </GoogleMap>
+      </GoogleMap> */}
     </>
   );
 };
