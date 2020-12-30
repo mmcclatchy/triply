@@ -26,22 +26,24 @@ const InitMap = ({}) => {
     state => state.directions.itinerary?.geocoded_waypoints
   );
   const dispatch = useDispatch();
+  const suggestions = useSelector(state => state.stepper.suggestions);
+  const currentSuggestions = suggestions[Object.keys(suggestions)[Object.keys(suggestions).length - 1]]
 
-  
+
   // *** Local State ***
   const [directions, setDirections] = useState(false);
   const [waypoints, setWaypoints] = useState([]);
 
-  
+
   // *** Google Maps ***
   const directionsService = new google.maps.DirectionsService();
 
-  
+
   // *** Helper Functions ***
   // Return an array of each waypoint from the stepper.nodes slice of state
   const getWaypointsFrom = nodes => {
     const waypoints = []
-    
+
     for (const stop of Object.values(nodes)) {
       for (const waypoint of Object.values(stop)) {
         const { location } = waypoint.geometry;
@@ -50,21 +52,21 @@ const InitMap = ({}) => {
     }
     setWaypoints(waypoints);
   }
-  
-  
+
+
   // *** Use Effect Hooks ***
 
   useEffect(() => {
     setWaypoints(getWaypointsFrom(nodes))
     console.log('getWaypointsFrom: ', getWaypointsFrom(nodes))
   }, [geocoded])
-  
+
   // Create a Google Maps request to render the route
   useEffect(() => {
     if (!reduxOrigin && !reduxDestination) {
       return;
     }
-    
+
     const setRoute = () => {
       console.log('WAYPOINTS: ', waypoints)
       directionsService.route(
@@ -80,7 +82,7 @@ const InitMap = ({}) => {
             departureTime: new Date(reduxStartTime)
           },
           travelMode: google.maps.TravelMode.DRIVING,
-          waypoints,  
+          waypoints,
           avoidTolls,
         },
         (response, status) => {
@@ -100,10 +102,10 @@ const InitMap = ({}) => {
       );
     };
     setRoute();
-     
+
   }, [reduxOrigin, reduxDestination, waypoints]);
 
-  
+
   // *** JSX ***
   return (
     <>
