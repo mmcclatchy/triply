@@ -7,10 +7,13 @@ import { useSelector } from 'react-redux';
 import './TripPage.css';
 import Timeline from '../Stepper/Timeline';
 import SuggestionStepper from '../Stepper/Stepper';
+import TripComplete from './TripComplete';
 
 const TripPage = () => {
   const [toggle, setToggle] = useState(true);
   const nodes = useSelector(state => state.stepper.nodes);
+  const tripComplete = useSelector(state => state.stepper.tripComplete);
+  
   return (
     <>
       <div className='trip__container'>
@@ -27,11 +30,12 @@ const TripPage = () => {
 
         <div className='trip__container--inner'>
           <TripSummary />
-          {toggle ? (
-            <StartOfTripForm setToggle={setToggle} />
-          ) : (
-            <SuggestionStepper />
-          )}
+          {toggle 
+            ? <StartOfTripForm setToggle={setToggle} />
+            : tripComplete
+                ? <TripComplete />
+                : <SuggestionStepper />
+          }
         </div>
       </div>
     </>
