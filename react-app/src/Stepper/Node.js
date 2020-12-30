@@ -5,7 +5,12 @@ import { fetchImg, setNode, unsetNode } from '../store/actions/stepper';
 import gasStationsImg from '../images/gas.jpg';
 import restaurantsImg from '../images/restaurant.jpg';
 import hotelsImg from '../images/hotel.jpg';
-import { Card, CardMedia, Button } from '@material-ui/core';
+import {
+  Card,
+  CardMedia,
+  Button,
+  requirePropFactory
+} from '@material-ui/core';
 import { getIcon, getStarIcon, getPriceDisplay } from './timelineUtility';
 
 //*************************************************************
@@ -68,6 +73,15 @@ const Node = ({ data, type, index }) => {
     if (type === 'hotels') return hotelsImg;
   };
 
+  // Default Images Icon Version for types
+  const typeImg2 = type => {
+    if (type === 'restaurants')
+      return <img src={require('../assets/food.svg')} />;
+    if (type === 'gasStations')
+      return <img src={require('../assets/GasStation.svg')} />;
+    if (type === 'hotels') return <img src={require('../assets/hotel.svg')} />;
+  };
+
   return (
     <Card elevation={3} className='node'>
       <div>
@@ -76,7 +90,7 @@ const Node = ({ data, type, index }) => {
       </div>
       <CardMedia>
         {place ? (
-          <img src={photoUrl || typeImg(type)} className='node__image' />
+          <img src={photoUrl || typeImg2(type)} className='node__image' />
         ) : null}
       </CardMedia>
 

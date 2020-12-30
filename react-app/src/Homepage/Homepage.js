@@ -19,10 +19,6 @@ const Homepage = ({ authenticated, setAuthenticated }) => {
     dispatch(getTrips(userId));
   }, []);
 
-  const accessTest = () => {
-    return history.push('/test-environment');
-  };
-
   return (
     <div className='homepage_body'>
       <div className='header__content'>
@@ -33,7 +29,6 @@ const Homepage = ({ authenticated, setAuthenticated }) => {
             setAuthenticated={setAuthenticated}
             userId={userId}
           />
-          <button onClick={accessTest}>Test Environment</button>
         </div>
       </div>
       <div className='form_header'>Plan your next Road trip</div>

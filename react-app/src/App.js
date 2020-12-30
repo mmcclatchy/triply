@@ -51,10 +51,6 @@ function App() {
         <TripPage />
       </Route>
 
-      <Route path='/test-environment' exact={true}>
-        <TestEnvironment />
-      </Route>
-
       <Route path='/profile/:userId' authenticated={authenticated}>
         <View />
       </Route>
