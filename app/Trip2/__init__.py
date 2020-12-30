@@ -177,8 +177,10 @@ class TripClass:
 
     def getTimeTillNextHotel(self, hotelForce):
         #checks if last stop was hotel and then forces next stop not to be
-        if self.cache["stopArray"][-1].get("hotel") or not hotelForce:
-            return 10000000
+        if self.cache["stopArray"][-1].get("hotel") or \
+            not self.cache['endTimeForDay'] or \
+            not hotelForce:
+                return 10000000
         ref = datetime.time.fromisoformat(self.cache["endTimeForDay"])
         endTimeForDay = datetime.datetime(year=1, month=1, day=1, hour=ref.hour, minute=ref.minute, second=ref.second)
         ref = ref = datetime.datetime.fromisoformat(self.cache["stopArray"][-1]['time']).time()
