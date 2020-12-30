@@ -23,13 +23,8 @@ export default function stepperReducer(state = initState, { type, payload }) {
 
     case ADD_NODE:
       const array = state.nodes[state.step];
-      let data = payload;
 
-      if (!array) {
-        data = [payload];
-      } else {
-        data = [...array, payload];
-      }
+      const data = array  ?  [...array, payload]  :  [payload];
 
       const newNode = { ...state.nodes, [state.step]: data };
       return { ...state, nodes: newNode };
