@@ -210,7 +210,7 @@ class TripClass:
         self.updateDirections()
         queries = self.getNextStopLocation(**kwargs)
         if not queries:
-            return None
+            return self.completeTrip()
         print('***\n\nQueries: ', queries, '\n\n***')
         if kwargs.get("hotel"):
             queries["hotelStop"] = kwargs.get("hotel")
@@ -241,13 +241,24 @@ class TripClass:
             "centerOfSearch": queries["location"],
             'restaurants': self.filterResults(foodResults),
             'gasStations': self.filterResults(gasResults),
-            'hotels': self.filterResults(hotelResults)
+            'hotels': self.filterResults(hotelResults),
+            'tripComplete': False
         }
 
     def filterResults(self, result):
         if result is False:
             return []
         return [*result['results']]
+    
+    def completeTrip(self):
+        return {
+            "tripComplete": True,
+            "stopISO": None,    # TODO: determine Trip end time
+            "centerOfSearch": None,
+            "restaurants": None,
+            'gasStations': None,
+            'hotels': None
+        }
 
     def addGasStation(self, placeId):
         self.buffer.append((placeId, "gas"))
