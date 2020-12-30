@@ -1,15 +1,44 @@
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans+Condensed:wght@700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
 
 .Stepper__Container {
   font-family: 'Open Sans Condensed', sans-serif;
   padding: 10px;
+  width: 95%;
+  text-align: -webkit-center;
+}
+.node__container {
+  display: flex;
+  justify-content: center;
+}
+
+.node {
+  display: flex;
   width: 100%;
+  padding: 10px;
+  margin: 5px;
+  padding-top: 15px;
+  align-items: center;
+  flex-direction: column;
+  place-content: center;
+  border: 1px solid rgb(215, 211, 211);
+}
+
+.node__title {
+  margin-block-end: auto;
+  max-height: fit-content;
+}
+
+.node__image {
+  min-height: 180px;
+  min-width: 250px;
+  max-height: 200px;
+  min-width: 250px;
 }
 
 .Timeline__Card {
   padding: 10px;
   margin: 3px;
-
   border: 1px solid rgb(103, 98, 98);
 }
 
@@ -23,6 +52,17 @@
     rgba(179, 225, 73, 1) 47%,
     rgba(0, 212, 255, 1) 100%
   );
+}
+
+.Stop__Header {
+  width: 90%;
+  border: 1px solid rgb(141, 137, 137);
+}
+
+.Type__Container {
+  display: flex;
+  justify-content: center;
+  margin: 5px;
 }
 
 /*********************** LOADER *******************************/

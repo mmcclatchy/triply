@@ -16,7 +16,8 @@
   flex-direction: column;
   overflow: auto;
   height: 98vh;
-
+  width: 100%;
+  align-items: center;
   padding: 5px;
 }
 
@@ -24,12 +25,14 @@
   text-align-last: start;
   -webkit-text-stroke-width: medium;
   padding: 10px;
+  width: 40%;
 }
 
 .trip__map {
   height: fit-content;
   border-right: 1px solid black;
   border-left: 1px solid black;
+  width: 100%;
 }
 
 .trip_summary_container {
