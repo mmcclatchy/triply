@@ -9,6 +9,7 @@ import { setAuth, setName, setId } from '../store/actions/authentication';
 import {setOriginAction, setDestinationAction, setStartTimeAction, setDistanceAction, setDurationAction, clearDirections} from '../store/actions/directions'
 import { greeting } from '../services/utilities';
 import { clearTrips } from '../store/actions/trips';
+import { clearStepper } from '../store/actions/stepper';
 
  const NavBar = () => {
   const history = useHistory();
@@ -29,6 +30,7 @@ import { clearTrips } from '../store/actions/trips';
     dispatch(setId(""));
     dispatch(clearTrips())
     dispatch(clearDirections())
+    dispatch(clearStepper())
   };
 
   return (

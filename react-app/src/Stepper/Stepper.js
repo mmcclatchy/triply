@@ -6,7 +6,7 @@ import Suggestions from './Suggestions';
 import { postStop } from '../store/actions/stops';
 import { Paper, Button } from '@material-ui/core';
 
-//*************************************************************
+//**********************************************************
 
 const Stepper = () => {
   // *** Redux ***

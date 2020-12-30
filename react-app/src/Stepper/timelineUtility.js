@@ -79,7 +79,7 @@ export const populateNode = (current, array) => {
 };
 
 export const getStarIcon = rating => {
-  const rounded = Math.round(parseFloat(rating) * 2) / 2;
+  const rounded = Math.round(parseFloat(rating) * 2) / 2 || 0;
   return (
     <img
       src={require(`../assets/stars/${rounded}.png`)}

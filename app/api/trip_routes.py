@@ -55,7 +55,6 @@ def post_trip(user_id):
 
     # User's food preferences
     food_query = req['preferences']['foodQuery']
-    print("**********\n\n\n", food_query)
 
     # Convert miles to meters for distance per tank of selected car
     fuel_distance = round(data['milesToRefuel'] * 1609.34)
@@ -73,8 +72,9 @@ def post_trip(user_id):
         metersToRefuel=fuel_distance,
         timeBetweenStops=int(data['timeBetweenStops']),
         endTimeForDay=data['endTimeForDay'],
-        startISO=data['startISO'] + '00:000Z',  # ! This is a placeholding work around
-        avoidTolls=data['avoidTolls']
+        startISO=data['startISO'],  # + '00:000Z', # ! No Timezone
+        avoidTolls=data['avoidTolls'],
+        dailyStartTime=data['dailyStartTime']
     )
 
     # Create a model of the Trip for the DB
@@ -85,7 +85,9 @@ def post_trip(user_id):
         directions=directions_json
     )
 
-    next_stop_suggestions = trip_algo.getNextStopDetails(foodQuery=food_query[0])
+    next_stop_suggestions = trip_algo.getNextStopDetails(
+        foodQuery=food_query[0]
+    )
 
     try:
         db.session.add(trip)

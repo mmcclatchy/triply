@@ -3,7 +3,8 @@ import {
   ADD_NODE,
   DELETE_NODE,
   UPDATE_STEP,
-  SET_PLACE_IMG
+  SET_PLACE_IMG,
+  CLEAR_STEPPER
 } from '../constants/constants';
 
 // pass the suggestions from the backend as the arguments
@@ -17,6 +18,8 @@ export const deleteNode = payload => ({ type: DELETE_NODE, payload });
 
 // pass the number of the step as the argument
 export const updateStep = payload => ({ type: UPDATE_STEP, payload });
+
+export const clearStepper = () => ({ type: CLEAR_STEPPER })
 
 //------------------------------------------------------------
 

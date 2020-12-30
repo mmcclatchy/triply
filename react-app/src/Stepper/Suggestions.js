@@ -8,7 +8,7 @@ import foodIcon from '../assets/restaurant.svg';
 
 //**************************************************************
 
-const Suggestions = ({ data }) => {
+const Suggestions = () => {
   // *** Redux ***
   const step = useSelector(state => state.stepper.step);
   const hotels = useSelector(state => state.stepper.suggestions[step].hotels);

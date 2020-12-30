@@ -28,13 +28,15 @@ const StartOfTripForm = ({ setToggle }) => {
   const startLocation = useSelector(state => state.directions.origin);
   const endLocation = useSelector(state => state.directions.destination);
   const startTime = useSelector(state => state.directions.startTime);
-  // console.log(trip);
 
+  
   // *** Local State ***
   const [car, setCar] = useState([]);
   const [selectedCar, setSelectedCar] = useState('1');
   const [timeBetweenStops, setTimeBetweenStops] = useState(5400);
   const [endTimeForDay, setEndTimeForDay] = useState(18000);
+  const [dailyStartTime, setDailyStartTime] = useState("");
+  const [disabled, setDisabled] = useState(true);
   const [avoidTolls, setAvoidTolls] = useState(false);
   const [options, setOptions] = useState([
     'Mexican',
@@ -46,10 +48,15 @@ const StartOfTripForm = ({ setToggle }) => {
   const [additionalOption, setAdditionalOption] = useState('');
   const [selectedFoods, setSelectedFoods] = useState(['Food']);
 
+  
   // *** Helper Functions ***
   const handleCarChange = e => setSelectedCar(e.target.value);
   const handleStopChange = e => setTimeBetweenStops(e.target.value);
-  const handleSleepChange = e => setEndTimeForDay(e.target.value);
+  const handleSleepChange = e => {
+    e.target.value === '' ? setDisabled(true) : setDisabled(false);
+    setEndTimeForDay(e.target.value);
+  }
+  const handleDailyStartTimeChange = e => setDailyStartTime(e.target.value);
   const handleCheck = e => setAvoidTolls(e.target.checked);
   const handleAdditionalOptionChange = e =>
     setAdditionalOption(e.target.value);
@@ -66,6 +73,7 @@ const StartOfTripForm = ({ setToggle }) => {
     setAdditionalOption('');
   };
 
+  
   // *** Add and Removes Foods from Selected Array ***
   const handleCheckOfFood = e => {
     if (selectedFoods.includes(e.target.value)) {
@@ -75,8 +83,8 @@ const StartOfTripForm = ({ setToggle }) => {
     if (e.target.value) setSelectedFoods([...selectedFoods, e.target.value]);
   };
 
+  
   // *** Use Effect Hooks ***
-
   // On Mount: Get User's Car Data
   useEffect(() => {
     if (!userId) {
@@ -90,8 +98,13 @@ const StartOfTripForm = ({ setToggle }) => {
     };
     getCars();
   }, []);
+  
+  // Re-Render when a hotel time is chosen
+  useEffect(() => {
+    console.log('disabled: ', disabled)
+  }, [disabled])
 
-  // *** Re-Render Options and Add Option to Selected Foods ***
+  // Re-Render Options and Add Option to Selected Foods
   useEffect(() => {
     if (options.length === 5) return;
     const newBox = document.getElementById('options').lastChild.lastChild;
@@ -99,6 +112,7 @@ const StartOfTripForm = ({ setToggle }) => {
     setSelectedFoods([...selectedFoods, newBox.value]);
   }, [options.length]);
 
+  
   // *** Post Trip Info to the Backend ***
   const saveInfo = e => {
     dispatch(
@@ -113,6 +127,7 @@ const StartOfTripForm = ({ setToggle }) => {
             endTimeForDay,
             timeBetweenStops,
             avoidTolls,
+            dailyStartTime,
             milesToRefuel: 350 //! Placeholder until new API works
           },
           preferences: {
@@ -125,6 +140,7 @@ const StartOfTripForm = ({ setToggle }) => {
     setToggle(false);
   };
 
+  
   // *** JSX ***
 
   return (
@@ -178,13 +194,66 @@ const StartOfTripForm = ({ setToggle }) => {
           <br />
           <HotelIcon />
           <div>
-            <label>How often do you want to sleep?</label>
+            <label>What time do you want to stop for a hotel?</label>
             <select value={endTimeForDay} onChange={handleSleepChange}>
-              <option value={18000}>Every Four to Six Hours</option>
-              <option value={28800}>Every Seven to Nine Hours</option>
-              <option value={39600}>Every Ten to Twelve Hours</option>
-              <option value={14400}>Every Thirteen to Fifteen Hours</option>
-              <option value={1000000}>What's a sleep?</option>
+              <option value={''} selected>I don't need a hotel</option>
+              <option value={'00:00:00'}>12 AM</option>
+              <option value={'00:01:00'}>1 AM</option>
+              <option value={'00:02:00'}>2 AM</option>
+              <option value={'00:03:00'}>3 AM</option>
+              <option value={'00:04:00'}>4 AM</option>
+              <option value={'00:05:00'}>5 AM</option>
+              <option value={'00:06:00'}>6 AM</option>
+              <option value={'00:07:00'}>7 AM</option>
+              <option value={'00:08:00'}>8 AM</option>
+              <option value={'00:09:00'}>9 AM</option>
+              <option value={'00:10:00'}>10 AM</option>
+              <option value={'00:11:00'}>11 AM</option>
+              <option value={'00:12:00'}>12 PM</option>
+              <option value={'00:13:00'}>1 PM</option>
+              <option value={'00:14:00'}>2 PM</option>
+              <option value={'00:15:00'}>3 PM</option>
+              <option value={'00:16:00'}>4 PM</option>
+              <option value={'00:17:00'}>5 PM</option>
+              <option value={'00:18:00'}>6 PM</option>
+              <option value={'00:19:00'}>7 PM</option>
+              <option value={'00:20:00'}>8 PM</option>
+              <option value={'00:21:00'}>9 PM</option>
+              <option value={'00:22:00'}>10 PM</option>
+              <option value={'00:23:00'}>11 PM</option>
+            </select>
+          </div>
+          <div>
+            <label>What time will you get back on the road?</label>
+            <select 
+              value={dailyStartTime} 
+              onChange={handleDailyStartTimeChange} 
+              disabled={disabled}
+            >
+              <option value={'00:00:00'}>12 AM</option>
+              <option value={'00:01:00'}>1 AM</option>
+              <option value={'00:02:00'}>2 AM</option>
+              <option value={'00:03:00'}>3 AM</option>
+              <option value={'00:04:00'}>4 AM</option>
+              <option value={'00:05:00'}>5 AM</option>
+              <option value={'00:06:00'}>6 AM</option>
+              <option value={'00:07:00'}>7 AM</option>
+              <option value={'00:08:00'}>8 AM</option>
+              <option value={'00:09:00'}>9 AM</option>
+              <option value={'00:10:00'}>10 AM</option>
+              <option value={'00:11:00'}>11 AM</option>
+              <option value={'00:12:00'}>12 PM</option>
+              <option value={'00:13:00'}>1 PM</option>
+              <option value={'00:14:00'}>2 PM</option>
+              <option value={'00:15:00'}>3 PM</option>
+              <option value={'00:16:00'}>4 PM</option>
+              <option value={'00:17:00'}>5 PM</option>
+              <option value={'00:18:00'}>6 PM</option>
+              <option value={'00:19:00'}>7 PM</option>
+              <option value={'00:20:00'}>8 PM</option>
+              <option value={'00:21:00'}>9 PM</option>
+              <option value={'00:22:00'}>10 PM</option>
+              <option value={'00:23:00'}>11 PM</option>
             </select>
           </div>
           <br />
