@@ -49,7 +49,18 @@ const Node = ({ data, type, index }) => {
   }, []);
 
   // Re-render node after photo is fetched
-  useEffect(() => {}, [photoUrl]);
+  useEffect(() => {
+    // (async () => {
+    //   const image = await fetch(photoUrl, {
+    //     method: 'GET',
+    //     headers: {
+    //       'Content-Type': 'application/json'
+    //     },
+    //     redirect: 'follow'
+    //   });
+    //   console.log(image);
+    // })();
+  }, [photoUrl]);
 
   // *** Actions ***
   const registerNode = () => {
@@ -89,7 +100,11 @@ const Node = ({ data, type, index }) => {
       <CardMedia>
         {photoUrl ? (
           <>
-            <img src={photoUrl} className='node__image' />
+            <img
+              src={photoUrl}
+              className='node__image'
+              referrerpolicy='no-referrer'
+            />
           </>
         ) : (
           <>{typeIcon(type)}</>
