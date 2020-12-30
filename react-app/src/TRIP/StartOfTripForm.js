@@ -181,13 +181,13 @@ const StartOfTripForm = ({ setToggle }) => {
             <label>What time do you want to stop for a hotel?</label>
             <select value={endTimeForDay} onChange={handleSleepChange}>
               <option value={null} selected>I don't need a hotel</option>
-              <option value={'00:05:00'}>5 PM</option>
-              <option value={'00:06:00'}>6 PM</option>
-              <option value={'00:07:00'}>7 PM</option>
-              <option value={'00:08:00'}>8 PM</option>
-              <option value={'00:09:00'}>9 PM</option>
-              <option value={'00:10:00'}>10 PM</option>
-              <option value={'00:11:00'}>11 PM</option>
+              <option value={'00:17:00'}>5 PM</option>
+              <option value={'00:18:00'}>6 PM</option>
+              <option value={'00:19:00'}>7 PM</option>
+              <option value={'00:20:00'}>8 PM</option>
+              <option value={'00:21:00'}>9 PM</option>
+              <option value={'00:22:00'}>10 PM</option>
+              <option value={'00:23:00'}>11 PM</option>
               <option value={'00:12:00'}>12 AM</option>
               <option value={'00:01:00'}>1 AM</option>
               <option value={'00:02:00'}>2 AM</option>
@@ -201,10 +201,10 @@ const StartOfTripForm = ({ setToggle }) => {
               <option value={'00:10:00'}>10 AM</option>
               <option value={'00:11:00'}>11 AM</option>
               <option value={'00:11:00'}>12 PM</option>
-              <option value={'00:01:00'}>1 PM</option>
-              <option value={'00:02:00'}>2 PM</option>
-              <option value={'00:03:00'}>3 PM</option>
-              <option value={'00:04:00'}>4 PM</option>
+              <option value={'00:13:00'}>1 PM</option>
+              <option value={'00:14:00'}>2 PM</option>
+              <option value={'00:15:00'}>3 PM</option>
+              <option value={'00:16:00'}>4 PM</option>
             </select>
           </div>
           <br />
