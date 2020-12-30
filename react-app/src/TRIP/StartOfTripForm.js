@@ -178,13 +178,33 @@ const StartOfTripForm = ({ setToggle }) => {
           <br />
           <HotelIcon />
           <div>
-            <label>How often do you want to sleep?</label>
+            <label>What time do you want to stop for a hotel?</label>
             <select value={endTimeForDay} onChange={handleSleepChange}>
-              <option value={18000}>Every Four to Six Hours</option>
-              <option value={28800}>Every Seven to Nine Hours</option>
-              <option value={39600}>Every Ten to Twelve Hours</option>
-              <option value={14400}>Every Thirteen to Fifteen Hours</option>
-              <option value={1000000}>What's a sleep?</option>
+              <option value={null} selected>I don't need a hotel</option>
+              <option value={'00:05:00'}>5 PM</option>
+              <option value={'00:06:00'}>6 PM</option>
+              <option value={'00:07:00'}>7 PM</option>
+              <option value={'00:08:00'}>8 PM</option>
+              <option value={'00:09:00'}>9 PM</option>
+              <option value={'00:10:00'}>10 PM</option>
+              <option value={'00:11:00'}>11 PM</option>
+              <option value={'00:12:00'}>12 AM</option>
+              <option value={'00:01:00'}>1 AM</option>
+              <option value={'00:02:00'}>2 AM</option>
+              <option value={'00:03:00'}>3 AM</option>
+              <option value={'00:04:00'}>4 AM</option>
+              <option value={'00:05:00'}>5 AM</option>
+              <option value={'00:06:00'}>6 AM</option>
+              <option value={'00:07:00'}>7 AM</option>
+              <option value={'00:08:00'}>8 AM</option>
+              <option value={'00:09:00'}>9 AM</option>
+              <option value={'00:10:00'}>10 AM</option>
+              <option value={'00:11:00'}>11 AM</option>
+              <option value={'00:11:00'}>12 PM</option>
+              <option value={'00:01:00'}>1 PM</option>
+              <option value={'00:02:00'}>2 PM</option>
+              <option value={'00:03:00'}>3 PM</option>
+              <option value={'00:04:00'}>4 PM</option>
             </select>
           </div>
           <br />
