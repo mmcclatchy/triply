@@ -52,6 +52,14 @@ const Timeline = () => {
               <Paper elevation={3} className='Timeline__Divider'>
                 {converter.toWordsOrdinal(node).toUpperCase()} STOP
               </Paper>
+              <Paper elevation={3} className='Timeline__Card'>
+                <a className='Card__Clock'>
+                  {getIcon('clock')}  
+                </a>
+                <a className='Card__Time'>
+                  {getEndTime(start, duration)}
+                </a>
+              </Paper>
               {nodes[node].map(e => {
                 return (
                   <Paper elevation={3} className='Timeline__Card'>

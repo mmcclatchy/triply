@@ -1,6 +1,7 @@
 import React from 'react';
 import ExploreIcon from '@material-ui/icons/Explore';
 import DriveEtaIcon from '@material-ui/icons/DriveEta';
+import clockIcon from '../assets/clock.svg';
 import gasIcon from '../assets/GasStation.svg';
 import hotelIcon from '../assets/hotel.svg';
 import foodIcon from '../assets/food.svg';
@@ -28,6 +29,9 @@ export const getIcon = type => {
   }
   if (type === 'gasStations') {
     return <img src={gasIcon} style={{ width: '20px' }} />;
+  }
+  if (type === 'clock') {
+    return <img src={clockIcon} style={{ width: '20px' }} />;
   }
   if (type === 'Destination') {
     return <ExploreIcon color='secondary' />;
