@@ -59,11 +59,11 @@ def post_trip(user_id):
     # Convert miles to meters for distance per tank of selected car
     fuel_distance = round(data['milesToRefuel'] * 1609.34)
 
-    # origin = 'New York City, NY'
-    # destination = 'Miami, FL'
     origin = data['startLocation']
     destination = data['endLocation']
 
+    print('***\n\nEnd Time: ', data['endTimeForDay'], '\n\n***')
+    print('***\n\nEnd Time: ', data['dailyStartTime'], '\n\n***')
     # Create an instance of the trip algorithm and generate a new trip
     trip_algo = TripClass()
     directions_json = trip_algo.createNewTrip(
@@ -85,8 +85,10 @@ def post_trip(user_id):
         directions=directions_json
     )
 
+    hotel_needed = True if data['endTimeForDay'] else False
     next_stop_suggestions = trip_algo.getNextStopDetails(
-        foodQuery=food_query[0]
+        foodQuery=food_query[0],
+        hotel=hotel_needed
     )
 
     try:
