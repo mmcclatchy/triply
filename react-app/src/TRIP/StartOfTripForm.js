@@ -34,7 +34,7 @@ const StartOfTripForm = ({ setToggle }) => {
   const [car, setCar] = useState([]);
   const [selectedCar, setSelectedCar] = useState('1');
   const [timeBetweenStops, setTimeBetweenStops] = useState(5400);
-  const [endTimeForDay, setEndTimeForDay] = useState(18000);
+  const [endTimeForDay, setEndTimeForDay] = useState(null);
   const [dailyStartTime, setDailyStartTime] = useState("");
   const [disabled, setDisabled] = useState(true);
   const [avoidTolls, setAvoidTolls] = useState(false);
@@ -127,7 +127,7 @@ const StartOfTripForm = ({ setToggle }) => {
             endTimeForDay,
             timeBetweenStops,
             avoidTolls,
-            dailyStartTime,
+            dailyStartTime: endTimeForDay ? dailyStartTime : null,
             milesToRefuel: 350 //! Placeholder until new API works
           },
           preferences: {
@@ -196,7 +196,7 @@ const StartOfTripForm = ({ setToggle }) => {
           <div>
             <label>What time do you want to stop for a hotel?</label>
             <select value={endTimeForDay} onChange={handleSleepChange}>
-              <option value={''} selected>I don't need a hotel</option>
+              <option value={null} selected>I don't need a hotel</option>
               <option value={'00:00:00'}>12 AM</option>
               <option value={'00:01:00'}>1 AM</option>
               <option value={'00:02:00'}>2 AM</option>

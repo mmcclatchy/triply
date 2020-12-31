@@ -177,6 +177,8 @@ class TripClass:
 
     def getTimeTillNextHotel(self, hotelForce):
         #checks if last stop was hotel and then forces next stop not to be
+        if not self.cache["endTimeForDay"]:
+            return 1000000000
         if self.cache["stopArray"][-1].get("hotel") or not hotelForce:
             return 10000000
         ref = datetime.time.fromisoformat(self.cache["endTimeForDay"])
@@ -204,9 +206,12 @@ class TripClass:
     def getNextStopDetails(self, foodQuery, **kwargs):
         self.tempCache = self.cache
         if kwargs.get("push"):
+            if not self.cache['endTimeForDay']:
+                self.tempCache['endTimeForDay'] = 100000000
+            else:
+                endTimeOfDay = datetime.time.fromisoformat(self.tempCache["endTimeForDay"])
+                self.tempCache["endTimeForDay"] = (datetime.datetime(year=1, month=1, day=1, hour=endTimeOfDay.hour, minute=endTimeOfDay.minute, second=endTimeOfDay.second) + datetime.timedelta(hours=1)).time().isoformat()
             self.tempCache["timeBetweenStops"] += 60 * 60
-            endTimeOfDay = datetime.time.fromisoformat(self.tempCache["endTimeForDay"])
-            self.tempCache["endTimeForDay"] = (datetime.datetime(year=1, month=1, day=1, hour=endTimeOfDay.hour, minute=endTimeOfDay.minute, second=endTimeOfDay.second) + datetime.timedelta(hours=1)).time().isoformat()
         self.updateDirections()
         queries = self.getNextStopLocation(**kwargs)
         if not queries:
@@ -233,6 +238,7 @@ class TripClass:
             r = requests.get(url + "&rankby=distance&keyword=" + parse.quote(foodQuery))
         foodResults = r.json()
         if not len(foodResults["results"]):
+            push = True if self.cache['endTimeForDay'] else False
             print("got in here")
             return self.getNextStopDetails(foodQuery, push=True, **kwargs)
 
