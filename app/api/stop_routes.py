@@ -155,7 +155,7 @@ def post_stop(trip_id):
 
         # Create a dictionary to return to the front end
         stop_info = {
-            'suggestions': trip_algo.getNextStopDetails(foodQuery=food_pref),
+            'suggestions': suggestions,
             'directions': {
                 'itinerary': directions,
                 'foodQuery': food_query

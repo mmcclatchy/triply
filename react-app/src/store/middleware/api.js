@@ -24,7 +24,12 @@ const api = ({ dispatch, getState }) => next => async action => {
   });
 
   if (response.ok) {
-    const { payload, suggestions, directions, tripComplete } = await response.json(); 
+    const { 
+      payload, 
+      suggestions, 
+      directions, 
+      tripComplete 
+    } = await response.json(); 
     
     if (directions) dispatch({ 
       type: SET_DIRECTIONS, 

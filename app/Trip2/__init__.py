@@ -207,7 +207,7 @@ class TripClass:
         self.tempCache = self.cache
         if kwargs.get("push"):
             if not self.cache['endTimeForDay']:
-                self.tempCache['endTimeForDay'] = 100000000
+                self.tempCache['endTimeForDay'] = None
             else:
                 endTimeOfDay = datetime.time.fromisoformat(self.tempCache["endTimeForDay"])
                 self.tempCache["endTimeForDay"] = (datetime.datetime(year=1, month=1, day=1, hour=endTimeOfDay.hour, minute=endTimeOfDay.minute, second=endTimeOfDay.second) + datetime.timedelta(hours=1)).time().isoformat()
@@ -216,7 +216,7 @@ class TripClass:
         queries = self.getNextStopLocation(**kwargs)
         if not queries:
             return None
-        print('***\n\nQueries: ', queries, '\n\n***')
+            
         if kwargs.get("hotel"):
             queries["hotelStop"] = kwargs.get("hotel")
         if kwargs.get("gas"):
