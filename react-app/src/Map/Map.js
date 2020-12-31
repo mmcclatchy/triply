@@ -13,6 +13,9 @@ import {
   setDistanceAction
 } from '../store/actions/directions';
 import './Map.css';
+import foodIcon from '../assets/restaurant.svg';
+import gasIcon from '../assets/GasStation.svg';
+import hotelIcon from '../assets/hotel.svg';
 
 
 const InitMap = ({}) => {
@@ -37,6 +40,8 @@ const InitMap = ({}) => {
   const [directions, setDirections] = useState(false);
   const [waypoints, setWaypoints] = useState([]);
   const [restaurants, setRestaurants] = useState("")
+  const [gasStations, setGasStations] = useState("")
+  const [hotels, setHotels] = useState("")
   const [center, setCenter] = useState({ lat: 40.99136, lng: -72.534203 });
   const [zoom, setZoom] = useState(10);
 
@@ -73,6 +78,8 @@ const InitMap = ({}) => {
       setZoom(10)
       setCenter()
       setRestaurants("")
+      setGasStations("")
+      setHotels("")
       const matches = document.querySelectorAll("div.gm-style-iw, div.gm-style-iw-c, div.gm-style-iw-t")
       for (let i = 0; i < matches.length; i++){
         matches[i].classList.add("invisible")
@@ -83,18 +90,42 @@ const InitMap = ({}) => {
   // Adding suggestion info windows to the map
   useEffect(() => {
     if (suggestions[1]) {
-      setRestaurants([
-        currentSuggestions.restaurants[0],
-        currentSuggestions.restaurants[1],
-        currentSuggestions.restaurants[2]
-      ])
+      const restaurantSuggestions = []
+      let i = 0
+      while (i < 3 && currentSuggestions.restaurants[i]) {
+        restaurantSuggestions.push(currentSuggestions.restaurants[i])
+        i++
+      }
+      setRestaurants(
+        restaurantSuggestions
+      )
+
+      const gasStationSuggestions = []
+      let j = 0
+      while (j < 3 && currentSuggestions.gasStations[j]) {
+        gasStationSuggestions.push(currentSuggestions.gasStations[j])
+        j++
+      }
+      setGasStations(
+        gasStationSuggestions
+      )
+
+      const hotelSuggestions = []
+      let k = 0
+      while (k < 3 && currentSuggestions.hotels[k]) {
+        hotelSuggestions.push(currentSuggestions.hotels[k])
+        k++
+      }
+      setHotels(
+        hotelSuggestions
+      )
+
       const matches = document.querySelectorAll("div.gm-style-iw, div.gm-style-iw-c, div.gm-style-iw-t")
       for (let i = 0; i < matches.length; i++){
         matches[i].classList.add("invisible")
       }
-       console.log(matches, "these are the matches")
       setCenter(currentSuggestions.centerOfSearch)
-      setZoom(15)
+      setZoom(14)
     }
   }, [suggestions])
 
@@ -157,28 +188,54 @@ const InitMap = ({}) => {
           id="newMap"
           zoom={zoom}
           center={center}>
-          {restaurants &&
+          {restaurants[0] &&
             restaurants.map(suggestion => {
               return (
                 <InfoWindow
-                  style={{backgroundColor:"red"}}
                   key={suggestion.place_id}
                   zIndex={10}
                   position={{ lat: suggestion.geometry.location.lat, lng: suggestion.geometry.location.lng }}
                 >
-                  <div>
-                    <h4>{suggestion.name}</h4>
+                  <div style={{display: "flex", justifyContent:"center", alignItems:"center"}}>
+                    <img src={foodIcon} style={{ width: "3em", margin: "1em" }}/>
+                    <h3>{suggestion.name}</h3>
+                  </div>
+                </InfoWindow>)
+            })
+          }
+           {gasStations[0] &&
+            gasStations.map(suggestion => {
+              return (
+                <InfoWindow
+
+                  key={suggestion.place_id}
+                  zIndex={10}
+                  position={{ lat: suggestion.geometry.location.lat, lng: suggestion.geometry.location.lng }}
+                >
+                 <div style={{display: "flex", justifyContent:"center", alignItems:"center"}}>
+                    <img src={gasIcon} style={{ width: "3em", margin: "1em" }}/>
+                    <h3>{suggestion.name}</h3>
+                  </div>
+                </InfoWindow>)
+            })
+          }
+           {hotels[0] &&
+            hotels.map(suggestion => {
+              return (
+                <InfoWindow
+                  key={suggestion.place_id}
+                  zIndex={10}
+                  position={{ lat: suggestion.geometry.location.lat, lng: suggestion.geometry.location.lng }}
+                >
+                  <div style={{display: "flex", justifyContent:"center", alignItems:"center"}}>
+                    <img src={hotelIcon} style={{ width: "3em", margin: "1em" }}/>
+                    <h3>{suggestion.name}</h3>
                   </div>
                 </InfoWindow>)
             })
           }
           </GoogleMap>
       }
-      {/* <GoogleMap
-        defaultZoom={10}
-        defaultCenter={{ lat: 40.99136, lng: -72.534203 }}>
-        {directions ? <DirectionsRenderer directions={directions} /> : console.log('DIRECTIONS ARE NOT RENDERING')}
-      </GoogleMap> */}
     </>
   );
 };
