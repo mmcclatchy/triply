@@ -16,14 +16,16 @@ const Timeline = () => {
   );
   
   const getEndTime = (start, duration) => {
-    const durationSplit = duration.split(' ')
+    if (!duration) return;
+    
+    const durationSplit = duration.split(' ');
     if (durationSplit[3] === 'mins') durationSplit[3] = 'minutes';
     
     const durationObj = {
       [durationSplit[1]]: parseInt(durationSplit[0]) || 0,
       [durationSplit[3]]: parseInt(durationSplit[2]) || 0
     }
-    
+    console.log('durations Obj: ', durationObj)
     return DateTime.fromISO(start)
       .plus(durationObj)
       .toLocaleString(DateTime.DATETIME_SHORT);
