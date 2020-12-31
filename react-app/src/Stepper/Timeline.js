@@ -11,18 +11,23 @@ const Timeline = () => {
   const destination = useSelector(state => state.directions.destination);
   const start = useSelector(state => state.directions.startTime);
   const duration = useSelector(state => state.directions.duration);
-  const stops = useSelector(
-    state => state.directions?.itinerary.cache?.stopArray
-  );
   const startTime = DateTime.fromISO(start).toLocaleString(
     DateTime.DATETIME_SHORT
   );
-  const endTime = DateTime.fromISO(start)
-    .plus({
-      [duration.split(' ')[1]]: parseInt(duration.split(' ')[0] || 0),
-      [duration.split(' ')[3]]: parseInt(duration.split(' ')[2] || 0)
-    })
-    .toLocaleString(DateTime.DATETIME_SHORT);
+  
+  const getEndTime = (start, duration) => {
+    const durationSplit = duration.split(' ')
+    if (durationSplit[3] === 'mins') durationSplit[3] = 'minutes';
+    
+    const durationObj = {
+      [durationSplit[1]]: parseInt(durationSplit[0]) || 0,
+      [durationSplit[3]]: parseInt(durationSplit[2]) || 0
+    }
+    
+    return DateTime.fromISO(start)
+      .plus(durationObj)
+      .toLocaleString(DateTime.DATETIME_SHORT);
+  }
 
   const converter = require('number-to-words');
 
@@ -45,16 +50,6 @@ const Timeline = () => {
               <Paper elevation={3} className='Timeline__Divider'>
                 {converter.toWordsOrdinal(node).toUpperCase()} STOP
               </Paper>
-              {
-                stops?.[node]?.time && 
-                  <Paper elevation={3} className='Timeline__Card'>
-                    <div>
-                      {DateTime.fromISO(stops?.[node]?.time).toLocaleString(
-                        DateTime.DATETIME_SHORT
-                      )}
-                    </div>
-                  </Paper>
-              }
               {nodes[node].map(e => {
                 return (
                   <Paper elevation={3} className='Timeline__Card'>
@@ -72,7 +67,7 @@ const Timeline = () => {
         })}
       <Paper elevation={3} className='Timeline__Card'>
         <h4>{getIcon('Destination')} Arriving</h4>
-        <div>{endTime}</div>
+        <div>{getEndTime(start, duration)}</div>
         <div>{destination}</div>
       </Paper>
     </div>
