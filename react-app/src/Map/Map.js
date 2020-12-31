@@ -19,6 +19,7 @@ const InitMap = ({}) => {
   const nodes = useSelector(state => state.stepper.nodes);
   const avoidTolls = useSelector(state => state.directions.avoidTolls);
   const reduxOrigin = useSelector(state => state.directions.origin);
+  const step = useSelector(state => state.stepper.step);
   const reduxDestination = useSelector(
     state => state.directions.destination
   );
