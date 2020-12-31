@@ -11,6 +11,9 @@ const Timeline = () => {
   const destination = useSelector(state => state.directions.destination);
   const start = useSelector(state => state.directions.startTime);
   const duration = useSelector(state => state.directions.duration);
+  const stops = useSelector(
+    state => state.directions?.itinerary.cache?.stopArray
+  );
   const startTime = DateTime.fromISO(start).toLocaleString(
     DateTime.DATETIME_SHORT
   );
@@ -42,6 +45,16 @@ const Timeline = () => {
               <Paper elevation={3} className='Timeline__Divider'>
                 {converter.toWordsOrdinal(node).toUpperCase()} STOP
               </Paper>
+              {
+                stops?.[node]?.time && 
+                  <Paper elevation={3} className='Timeline__Card'>
+                    <div>
+                      {DateTime.fromISO(stops?.[node]?.time).toLocaleString(
+                        DateTime.DATETIME_SHORT
+                      )}
+                    </div>
+                  </Paper>
+              }
               {nodes[node].map(e => {
                 return (
                   <Paper elevation={3} className='Timeline__Card'>
