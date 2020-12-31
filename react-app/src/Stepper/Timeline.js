@@ -11,9 +11,17 @@ const Timeline = () => {
   const destination = useSelector(state => state.directions.destination);
   const start = useSelector(state => state.directions.startTime);
   const duration = useSelector(state => state.directions.duration);
+  const suggestions = useSelector(state => state.stepper.suggestions);
   const startTime = DateTime.fromISO(start).toLocaleString(
     DateTime.DATETIME_SHORT
   );
+  
+  const getStopTime = (node, suggestions) => {
+    if (!suggestions[node]) return;
+    
+    const stopISO = suggestions[node].stopISO;
+    return DateTime.fromISO(stopISO).toLocaleString(DateTime.DATETIME_SHORT);
+  }
   
   const getEndTime = (start, duration) => {
     if (!duration) return;
@@ -57,7 +65,7 @@ const Timeline = () => {
                   {getIcon('clock')}  
                 </a>
                 <a className='Card__Time'>
-                  {getEndTime(start, duration)}
+                  {getStopTime(node, suggestions)}
                 </a>
               </Paper>
               {nodes[node].map(e => {

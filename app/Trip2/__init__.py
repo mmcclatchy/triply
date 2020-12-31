@@ -185,20 +185,24 @@ class TripClass:
         endTimeForDay = datetime.datetime(year=1, month=1, day=1, hour=ref.hour, minute=ref.minute, second=ref.second)
         ref = ref = datetime.datetime.fromisoformat(self.cache["stopArray"][-1]['time']).time()
         lastStopTime = datetime.datetime(year=1, month=1, day=1, hour=ref.hour, minute=ref.minute, second=ref.second)
-        delta = endTimeForDay - lastStopTime
+        delta = abs(endTimeForDay - lastStopTime)
 
         #check if different day to see if delta needs to be flipped
         currentStop = lastStopTime + datetime.timedelta(seconds=self.cache["timeBetweenStops"])
 
+        print(f'***\n\n {endTimeForDay}\n{lastStopTime}\n{delta}\n{currentStop} ')
         mod = 1
-        if currentStop.hour - lastStopTime.hour < 0:
-            mod = -1
 
         seconds = delta.total_seconds() * mod
-
-        if seconds <  -1 * (4 * 60 * 60):
+        print('***\n\n', seconds, '\n\n***')
+        if seconds < -1 * (4 * 60 * 60):
             return 10000000
 
+        if seconds < 0:
+            mod = -1
+        
+        seconds = mod * seconds
+        
         return seconds
 
     # kwargs: hotel as bool, gas as bool
