@@ -86,13 +86,19 @@ const InitMap = ({}) => {
         (response, status) => {
           if (status === 'OK') {
             console.log('GOOGLE RESPONSE: ', response)
+            // Set Duration and Distance of Initial API call, then let the
+            // algo handle it from then on
+            if (step < 2) {
+              dispatch(
+                setDurationAction(response.routes[0].legs[0].duration.text)
+              );
+              dispatch(
+                setDistanceAction(response.routes[0].legs[0].distance.text)
+              );
+            }
+            
             setDirections(response);
-            dispatch(
-              setDurationAction(response.routes[0].legs[0].duration.text)
-            );
-            dispatch(
-              setDistanceAction(response.routes[0].legs[0].distance.text)
-            );
+              
           } else {
             window.alert('Directions request failed due to ' + status);
           }
