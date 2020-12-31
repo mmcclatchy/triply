@@ -68,7 +68,7 @@ def post_stop(trip_id):
     # Determine which food preference to query by rotating through
     # food_query per stop
     food_query = data['foodQuery']
-    food_pref = food_query[data['tripStopNum'] + 1 % len(food_query)]
+    food_pref = food_query[data['tripStopNum'] % len(food_query)]
     print(f'***\n\nFood Pref: {food_pref} \n\n***')
 
     try:
