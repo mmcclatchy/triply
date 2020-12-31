@@ -69,6 +69,7 @@ def post_stop(trip_id):
     # food_query per stop
     food_query = data['foodQuery']
     food_pref = food_query[data['tripStopNum'] % len(food_query)]
+    print(f'***\n\nFood Pref: {food_pref} \n\n***')
 
     try:
 
@@ -155,7 +156,7 @@ def post_stop(trip_id):
 
         # Create a dictionary to return to the front end
         stop_info = {
-            'suggestions': trip_algo.getNextStopDetails(foodQuery=food_pref),
+            'suggestions': suggestions,
             'directions': {
                 'itinerary': directions,
                 'foodQuery': food_query
