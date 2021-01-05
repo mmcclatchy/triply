@@ -8,6 +8,7 @@ import View from './shared_components/Drawer';
 import Homepage from './Homepage/Homepage';
 import { authenticate } from './services/auth';
 import TripPage from './TRIP/TripPage';
+import Footer from './shared_components/Footer'
 import { setAuth } from './store/actions/authentication';
 import SuggestionStepper from './Suggestions/SuggestionStepper';
 import TestEnvironment from './TestEnvironment/TestEnvironment';
@@ -49,6 +50,7 @@ function App() {
 
       <Route path='/create-trip' exact={true}>
         <TripPage />
+        <Footer />
       </Route>
 
       <Route path='/profile/:userId' authenticated={authenticated}>
@@ -60,6 +62,7 @@ function App() {
           authenticated={authenticated}
           setAuthenticated={setAuthenticated}
         />
+        <Footer />
       </Route>
     </BrowserRouter>
   );
