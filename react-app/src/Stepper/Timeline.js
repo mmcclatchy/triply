@@ -33,7 +33,7 @@ const Timeline = () => {
       [durationSplit[1]]: parseInt(durationSplit[0]) || 0,
       [durationSplit[3]]: parseInt(durationSplit[2]) || 0
     }
-    console.log('durations Obj: ', durationObj)
+    // console.log('durations Obj: ', durationObj)
     return DateTime.fromISO(start)
       .plus(durationObj)
       .toLocaleString(DateTime.DATETIME_SHORT);
