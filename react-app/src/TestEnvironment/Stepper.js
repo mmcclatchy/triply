@@ -18,7 +18,7 @@ const Stepper = ({ suggestions, step }) => {
   };
 
   const submitTrip = () => {
-    console.log(data);
+    // console.log(data);
   };
 
   useEffect(() => {
