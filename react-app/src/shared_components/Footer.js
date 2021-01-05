@@ -46,8 +46,10 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "space-between"
   },
   gitHub: {
-    heigh: "2.6em",
-    width: "2.6em",
+    padding: ".4em",
+    height: "2.3em",
+    width: "2.3em",
+    borderRadius: "2.3em"
   },
   icons: {
     display: "flex",
@@ -56,7 +58,9 @@ const useStyles = makeStyles((theme) => ({
   infoContainer: {
     display: "flex",
     alignItems: "center",
-    justifyContent: "center"
+    justifyContent: "center",
+    background: "black",
+    color: "yellow"
   },
   linkedIn: {
     heigh: "2em",
@@ -91,7 +95,7 @@ export default function Footer() {
           <div
             onClick={() => setDrawerOpen(true)}
             className={classes.drawerButton}>
-          About the creator
+          About the creators
           </div>
           <Drawer
           anchor="bottom"
@@ -101,8 +105,89 @@ export default function Footer() {
           <div className={classes.infoContainer}>
           <img
             className={classes.profilePic}
+            src="https://drama-deets.s3.amazonaws.com/AlyciaProfilePic.jpeg"
+              alt="Profile Pic" />
+            <span className={classes.aboutMe}>Hi! My name is Ryan, I'm an artist/software engineer based in NYC. I hope that you find this site is useful, if you have any ideas or suggestions I'd be happy to hear from you. Also my github and linkedIn pages are listed below.
+              <br></br>
+              <span className={classes.icons}>
+              <a
+                href="https://www.linkedin.com/in/alycia-l-aba19279/"
+                className={classes.aTag}>
+                <img
+                  className={classes.linkedIn}
+                  src="https://drama-deets.s3.amazonaws.com/linkedin.svg"
+                  alt="LinkedIn icon"/>
+              </a>
+              <a
+                href="https://github.com/ALW93"
+                className={classes.aTag}>
+                <img
+                  className={classes.gitHub}
+                  src="https://drama-deets.s3.amazonaws.com/githubIcon.png"
+                  alt="Github icon"/>
+                </a>
+                </span>
+            </span>
+          </div>
+          <div className={classes.infoContainer}>
+          <img
+            className={classes.profilePic}
+            src="https://drama-deets.s3.amazonaws.com/BrandonProfilepic.jpeg"
+              alt="Profile Pic" />
+            <span className={classes.aboutMe}>Hi! My name is Ryan, I'm an artist/software engineer based in NYC. I hope that you find this site is useful, if you have any ideas or suggestions I'd be happy to hear from you. Also my github and linkedIn pages are listed below.
+              <br></br>
+              <span className={classes.icons}>
+              <a
+                href="https://www.linkedin.com/in/brandon-bartlett-14026a112/"
+                className={classes.aTag}>
+                <img
+                  className={classes.linkedIn}
+                  src="https://drama-deets.s3.amazonaws.com/linkedin.svg"
+                  alt="LinkedIn icon"/>
+              </a>
+              <a
+                href="https://github.com/bacbartlett"
+                className={classes.aTag}>
+                <img
+                  className={classes.gitHub}
+                  src="https://drama-deets.s3.amazonaws.com/githubIcon.png"
+                  alt="Github icon"/>
+                </a>
+                </span>
+            </span>
+          </div>
+          <div className={classes.infoContainer}>
+          <img
+            className={classes.profilePic}
+            src="https://drama-deets.s3.amazonaws.com/markProfilePic.jpeg"
+              alt="Profile Pic" />
+            <span className={classes.aboutMe}>Hi! My name is Ryan, I'm an artist/software engineer based in NYC. I hope that you find this site is useful, if you have any ideas or suggestions I'd be happy to hear from you. Also my github and linkedIn pages are listed below.
+              <br></br>
+              <span className={classes.icons}>
+              <a
+                href="https://www.linkedin.com/in/mark-mcclatchy-155367bb/"
+                className={classes.aTag}>
+                <img
+                  className={classes.linkedIn}
+                  src="https://drama-deets.s3.amazonaws.com/linkedin.svg"
+                  alt="LinkedIn icon"/>
+              </a>
+              <a
+                href="https://github.com/mmcclatchy"
+                className={classes.aTag}>
+                <img
+                  className={classes.gitHub}
+                  src="https://drama-deets.s3.amazonaws.com/githubIcon.png"
+                  alt="Github icon"/>
+                </a>
+                </span>
+            </span>
+          </div>
+          <div className={classes.infoContainer}>
+          <img
+            className={classes.profilePic}
             src="https://drama-deets.s3.amazonaws.com/ryanprofile.jpeg"
-            alt="Profile Pic" />
+              alt="Profile Pic" />
             <span className={classes.aboutMe}>Hi! My name is Ryan, I'm an artist/software engineer based in NYC. I hope that you find this site is useful, if you have any ideas or suggestions I'd be happy to hear from you. Also my github and linkedIn pages are listed below.
               <br></br>
               <span className={classes.icons}>
