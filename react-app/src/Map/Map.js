@@ -70,7 +70,7 @@ const InitMap = ({}) => {
 
   useEffect(() => {
     setWaypoints(getWaypointsFrom(nodes))
-    console.log('getWaypointsFrom: ', getWaypointsFrom(nodes))
+    // console.log('getWaypointsFrom: ', getWaypointsFrom(nodes))
   }, [geocoded])
 
 
@@ -137,7 +137,7 @@ const InitMap = ({}) => {
     }
 
     const setRoute = () => {
-      console.log('WAYPOINTS: ', waypoints)
+      // console.log('WAYPOINTS: ', waypoints)
       directionsService.route(
         {
           origin: {
@@ -156,7 +156,7 @@ const InitMap = ({}) => {
         },
         (response, status) => {
           if (status === 'OK') {
-            console.log('GOOGLE RESPONSE: ', response)
+            // console.log('GOOGLE RESPONSE: ', response)
             // Set Duration and Distance of Initial API call, then let the
             // algo handle it from then on
             if (step < 2) {

@@ -101,7 +101,7 @@ const StartOfTripForm = ({ setToggle }) => {
   
   // Re-Render when a hotel time is chosen
   useEffect(() => {
-    console.log('disabled: ', disabled)
+    // console.log('disabled: ', disabled)
   }, [disabled])
 
   // Re-Render Options and Add Option to Selected Foods
