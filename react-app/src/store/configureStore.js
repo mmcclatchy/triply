@@ -26,11 +26,11 @@ export const reducer = combineReducers({
   trips,
   // stops,
   cars,
-  setDuration,
+  // setDuration,
   // suggestions,
   stepper,
   // timeline,
-  testenv
+  // testenv
 });
 
 const persistedState = loadState();

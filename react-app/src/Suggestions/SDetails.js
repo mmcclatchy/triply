@@ -19,17 +19,17 @@ const SDetails = ({
   setR
 }) => {
   const registerHotel = index => {
-    console.log('new hotel');
+    // console.log('new hotel');
     setH(() => new Set([...h, index]));
   };
 
   const registerRestaurant = index => {
-    console.log('new food');
+    // console.log('new food');
     setR(() => new Set([...r, index]));
   };
 
   const registerGas = index => {
-    console.log('new gas');
+    // console.log('new gas');
     setG(() => new Set([...g, index]));
   };
 

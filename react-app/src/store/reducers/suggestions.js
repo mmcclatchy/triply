@@ -5,7 +5,7 @@ export default function reducer(state = [], { type, payload }) {
   Object.freeze(state);
   switch (type) {
     case SET_SUGGESTIONS: 
-      console.log('SUGGESTIONS REDUCER: ', type, payload)
+      // console.log('SUGGESTIONS REDUCER: ', type, payload)
       return [...state, payload]
       // return [
       //   {

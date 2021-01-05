@@ -72,7 +72,7 @@ foo.newNode({
 
 const generateContent = array => {
   let obj = {};
-  console.log(array);
+  // console.log(array);
   // array.forEach((n, i) => {
   //   let step = obj[i + 1];
   //   if (step === undefined) {
@@ -82,4 +82,4 @@ const generateContent = array => {
   return obj;
 };
 
-console.log(generateContent(foo.output));
+// console.log(generateContent(foo.output));

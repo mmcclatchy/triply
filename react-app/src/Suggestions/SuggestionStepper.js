@@ -44,13 +44,13 @@ const useStyles = makeStyles(theme => ({
 const generateContent = array => {
   let obj = {};
   array.forEach((n, i) => {
-    console.log("INSIDE")
+    // console.log("INSIDE")
     let step = obj[i];
     if (step === undefined) {
       obj[i] = n;
     }
   });
-  console.log("THIS IS THE OBJ", obj)
+  // console.log("THIS IS THE OBJ", obj)
   return obj;
 };
 
@@ -69,9 +69,9 @@ export default function SuggestionStepper() {
   const suggestions = useSelector(state => state.suggestions)
   
   const classes = useStyles();
-  console.log("I just wiped content")
+  // console.log("I just wiped content")
   useEffect(() => {
-    console.log('SUGGESTIONS IN STEPPER', suggestions)
+    // console.log('SUGGESTIONS IN STEPPER', suggestions)
     if (!suggestions.length) return
       setContent(generateContent(suggestions));
     
@@ -91,16 +91,16 @@ export default function SuggestionStepper() {
   }, [suggestions]);
 
   useEffect(() => {
-    console.log("steps were changed", content)
+    // console.log("steps were changed", content)
     if (!content) return
     function getContent() {
       const info = content[activeStep];
-      console.log(info, "!!!!!!!!!")
+      // console.log(info, "!!!!!!!!!")
       if (info) {
         setData(info);
         setHotels(info.suggestions.Hotel);
         setRestaurants(info.suggestions.Restaurant);
-        console.log(info.suggestions.Restaurant, "!!!!!!!!!!!!!!!!!!!!!!!!!")
+        // console.log(info.suggestions.Restaurant, "!!!!!!!!!!!!!!!!!!!!!!!!!")
         setGasStations(info.suggestions.Gas);
       }
     }
@@ -125,7 +125,7 @@ export default function SuggestionStepper() {
   }
 
   const submitHandler = () => {
-    console.log([...h, ...r, ...g]);
+    // console.log([...h, ...r, ...g]);
     if (h.size) {
       h.forEach(e => {
         const info = hotels[e];
@@ -135,7 +135,7 @@ export default function SuggestionStepper() {
           coordinates: data.coordinates,
           time: data.time
         };
-        console.log(new_stop);
+        // console.log(new_stop);
         // setStop(new_stop);
       });
     }
@@ -148,7 +148,7 @@ export default function SuggestionStepper() {
           coordinates: data.coordinates,
           time: data.time
         };
-        console.log(new_stop);
+        // console.log(new_stop);
         // setStop(new_stop);
       });
     }
@@ -161,7 +161,7 @@ export default function SuggestionStepper() {
           coordinates: data.coordinates,
           time: data.time
         };
-        console.log(new_stop);
+        // console.log(new_stop);
         // setStop(new_stop);
       });
     }
@@ -171,7 +171,7 @@ export default function SuggestionStepper() {
   };
 
   // useEffect(() => {
-  //   console.log(stop);
+    // console.log(stop);
   //   //dispatch(postStop(stop, tripId));
   // }, [stop]);
 

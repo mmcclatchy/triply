@@ -14,7 +14,7 @@ const api = ({ dispatch, getState }) => next => async action => {
   const { endpoint, method, body, actionConst } = action.payload;
   
   
-  console.log('api middleware', action.payload);
+  // console.log('api middleware', action.payload);
   
   
   const response = await fetch(`${baseUrl}${endpoint}`, {
