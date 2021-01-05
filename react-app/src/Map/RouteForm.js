@@ -26,6 +26,8 @@ const RouteForm = ({}) => {
   const userId = useSelector(state => state.authentication.userId);
   const or = useSelector(state => state.directions.origin);
   const de = useSelector(state => state.directions.destination);
+
+
   // const autoOrigin = new google.maps.places.Autocomplete(originField);
   // const autoOrigin2 = new google.maps.places.Autocomplete(destinationField);
 
@@ -108,11 +110,17 @@ const RouteForm = ({}) => {
   return (
     <>
       <div className='route_form'>
+        <div
+          className='form_header'
+          style={{fontSize:'2em', marginRight:'0', marginBottom:'0'}}
+        >
+          To get started fill out the fields below.
+          </div>
         <div className='route_input_container'>
           <TextField
             id='origin'
             className='route_form_input'
-            label='Origin'
+            placeholder='Where are you starting from?'
             variant='standard'
             InputProps={{ disableUnderline: true }}
             inputProps={{ style: { textAlign: 'center' } }}
@@ -120,10 +128,16 @@ const RouteForm = ({}) => {
             onChange={updateOriginFormContent}
           />
         </div>
-        <div className='route_input_container'>
+        {/* <div
+          className='form_header'
+          style={{fontSize:'2em', marginRight:'0', marginBottom:'-.3em'}}
+        >
+          Step 2: Fill out your destination.
+          </div> */}
+        <div className='route_input_container' style={{marginBottom:"1em"}}>
           <TextField
             id='destination'
-            label='Destination'
+            placeholder='Where are you going?'
             InputProps={{ disableUnderline: true }}
             inputProps={{ style: { textAlign: 'center' } }}
             className='route_form_input'
@@ -132,7 +146,12 @@ const RouteForm = ({}) => {
             onChange={updateDestinationFormContent}
             />
         </div>
-
+        {/* <div
+          className='form_header'
+          style={{fontSize:'2em', marginRight:'0', marginBottom:'-.1em'}}
+        >
+          Step 3: When are you leaving?
+          </div> */}
         <div className='buttons'>
           <TimePicker />
         </div>

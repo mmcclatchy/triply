@@ -34,6 +34,7 @@ const Homepage = ({ authenticated, setAuthenticated }) => {
       <div className='form_header'>Plan your next Road trip</div>
       <RouteForm />
       {/* <div className='tag_container'> */}
+      
       <h1 className='homepage__tagline'>Make every </h1>
       <h1 className='homepage__tagline2'>drive an adventure</h1>
       {/* </div> */}

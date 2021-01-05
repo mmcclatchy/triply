@@ -65,7 +65,7 @@ const LoginForm = () => {
 
   return (
     <div className='login__container'>
-      <div className='login__logo' />
+      <img src='../assets/triply_logo_black.png' className='login__logo' />
       <div className={classes.login_header}>Welcome Back!</div>
       <form onSubmit={onLogin}>
         <div style={{ color: 'red' }}>

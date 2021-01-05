@@ -10,21 +10,18 @@ const useStyles = makeStyles(theme => ({
     flexWrap: 'wrap',
     justifyContent: 'center',
     width: '30vw',
-    borderRadius: '.75em'
+    // borderRadius: '.75em'
   },
   textField: {
     '& .MuiInputLabel-formControl': {
       position: 'unset',
-      background: 'white'
+      background: 'white',
     }
   },
   textField: {
-    // marginLeft: theme.spacing(1),
-    // marginRight: '2vw',
     width: 275,
     background: 'white',
     borderRadius: '.8em',
-    position: ''
   }
 }));
 
@@ -33,11 +30,11 @@ export default function DateAndTimePickers() {
   const dispatch = useDispatch();
   const classes = useStyles();
   const [startTimeContent, setStartTimeContent] = useState('');
-  
+
   useEffect(() => {
     dispatch(setStartTimeAction(startTimeContent));
   }, [startTimeContent])
-  
+
   const updateStartTime = e => {
     setStartTimeContent(e.target.value);
   };
@@ -53,7 +50,9 @@ export default function DateAndTimePickers() {
           onChange={updateStartTime}
           className={classes.textField}
           InputLabelProps={{
-            shrink: true
+            shrink: true,
+            marginLeft: '.5em',
+            fontSize: '1em'
           }}
         />
       </form>
