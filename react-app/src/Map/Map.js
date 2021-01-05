@@ -57,7 +57,7 @@ const InitMap = ({}) => {
         waypointsArr.push({ location, stopover: true });
       }
     }
-    console.log(waypointsArr)
+    // console.log(waypointsArr)
     setWaypoints(waypointsArr);
   }
 
@@ -66,7 +66,7 @@ const InitMap = ({}) => {
 
   useEffect(() => {
     setWaypoints(getWaypointsFrom(nodes))
-    console.log('getWaypointsFrom: ', getWaypointsFrom(nodes))
+    // console.log('getWaypointsFrom: ', getWaypointsFrom(nodes))
   }, [itinerary])
   
 

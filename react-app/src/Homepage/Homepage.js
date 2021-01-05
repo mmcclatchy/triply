@@ -14,8 +14,8 @@ const Homepage = ({ authenticated, setAuthenticated }) => {
   const history = useHistory();
   useEffect(() => {}, []);
   useEffect(() => {
-    console.log(userId);
-    console.log('trippppppssss', trips);
+    // console.log(userId);
+    // console.log('trippppppssss', trips);
     dispatch(getTrips(userId));
   }, []);
 
