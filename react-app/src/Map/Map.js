@@ -25,18 +25,13 @@ const InitMap = ({}) => {
   const avoidTolls = useSelector(state => state.directions.avoidTolls);
   const reduxOrigin = useSelector(state => state.directions.origin);
   const step = useSelector(state => state.stepper.step);
-  const reduxDestination = useSelector(
-    state => state.directions.destination
-  );
-  const geocoded = useSelector(
-    state => state.directions.itinerary?.geocoded_waypoints
-  );
+  const reduxDestination = useSelector(state => state.directions.destination);
+  const itinerary = useSelector(state => state.directions.itinerary)
   const dispatch = useDispatch();
   const suggestions = useSelector(state => state.stepper.suggestions);
   const tripComplete = useSelector(state => state.stepper.tripComplete);
-  const currentSuggestions = suggestions[Object.keys(suggestions)[Object.keys(suggestions).length - 1]]
-
-
+  
+  
   // *** Local State ***
   const [directions, setDirections] = useState(false);
   const [waypoints, setWaypoints] = useState([]);
@@ -49,30 +44,31 @@ const InitMap = ({}) => {
 
   // *** Google Maps ***
   const directionsService = new google.maps.DirectionsService();
-
+  
 
   // *** Helper Functions ***
   // Return an array of each waypoint from the stepper.nodes slice of state
   const getWaypointsFrom = nodes => {
-    const waypoints = []
-
+    const waypointsArr = []
+    
     for (const stop of Object.values(nodes)) {
       for (const waypoint of Object.values(stop)) {
         const { location } = waypoint.geometry;
-        waypoints.push({ location, stopover: true });
+        waypointsArr.push({ location, stopover: true });
       }
     }
-    setWaypoints(waypoints);
+    console.log(waypointsArr)
+    setWaypoints(waypointsArr);
   }
 
-
+  
   // *** Use Effect Hooks ***
 
   useEffect(() => {
     setWaypoints(getWaypointsFrom(nodes))
-    // console.log('getWaypointsFrom: ', getWaypointsFrom(nodes))
-  }, [geocoded])
-
+    console.log('getWaypointsFrom: ', getWaypointsFrom(nodes))
+  }, [itinerary])
+  
 
   useEffect(() => {
     if (tripComplete) {
@@ -87,9 +83,12 @@ const InitMap = ({}) => {
       }
     }
   }, [tripComplete])
-
+  
   // Adding suggestion info windows to the map
   useEffect(() => {
+    const stopNums = Object.keys(suggestions)
+    const currentSuggestions = suggestions[stopNums[stopNums.length - 1]]
+    
     if (suggestions[1]) {
       const restaurantSuggestions = []
       let i = 0
@@ -177,71 +176,73 @@ const InitMap = ({}) => {
       );
     };
     setRoute();
-
+    console.log('RENDER MAP')
   }, [reduxOrigin, reduxDestination, waypoints]);
 
 
   // *** JSX ***
   return (
     <>
-       {!restaurants ?
-        <GoogleMap
-          zoom={12}
-          id={"newMap"}
-          center={center}>
-          {directions ? <DirectionsRenderer directions={directions} /> : null}
-        </GoogleMap> :
-        <GoogleMap
-          id="newMap"
-          zoom={zoom}
-          center={center}>
-          {restaurants[0] &&
-            restaurants.map(suggestion => {
-              return (
-                <InfoWindow
-                  key={suggestion.place_id}
-                  zIndex={10}
-                  position={{ lat: suggestion.geometry.location.lat, lng: suggestion.geometry.location.lng }}
-                >
-                  <div style={{display: "flex", justifyContent:"center", alignItems:"center"}}>
-                    <img src={foodIcon} style={{ width: "3em", margin: "1em" }}/>
-                    <h3>{suggestion.name}</h3>
-                  </div>
-                </InfoWindow>)
-            })
-          }
-           {gasStations[0] &&
-            gasStations.map(suggestion => {
-              return (
-                <InfoWindow
+      {
+        !restaurants 
+          ? <GoogleMap
+              zoom={12}
+              id={"newMap"}
+              center={center}>
+              {directions ? <DirectionsRenderer directions={directions} /> : null}
+            </GoogleMap> 
+          : <GoogleMap
+              id="newMap"
+              zoom={zoom}
+              center={center}
+            >
+              {
+                restaurants[0] && restaurants.map(suggestion => {
+                  return (
+                    <InfoWindow
+                      key={suggestion.place_id}
+                      zIndex={10}
+                      position={{ lat: suggestion.geometry.location.lat, lng: suggestion.geometry.location.lng }}
+                    >
+                      <div style={{display: "flex", justifyContent:"center", alignItems:"center"}}>
+                        <img src={foodIcon} style={{ width: "3em", margin: "1em" }}/>
+                        <h3>{suggestion.name}</h3>
+                      </div>
+                    </InfoWindow>)
+                })
+              }
+              {
+                gasStations[0] && gasStations.map(suggestion => {
+                  return (
+                    <InfoWindow
 
-                  key={suggestion.place_id}
-                  zIndex={10}
-                  position={{ lat: suggestion.geometry.location.lat, lng: suggestion.geometry.location.lng }}
-                >
-                 <div style={{display: "flex", justifyContent:"center", alignItems:"center"}}>
-                    <img src={gasIcon} style={{ width: "3em", margin: "1em" }}/>
-                    <h3>{suggestion.name}</h3>
-                  </div>
-                </InfoWindow>)
-            })
-          }
-           {hotels[0] &&
-            hotels.map(suggestion => {
-              return (
-                <InfoWindow
-                  key={suggestion.place_id}
-                  zIndex={10}
-                  position={{ lat: suggestion.geometry.location.lat, lng: suggestion.geometry.location.lng }}
-                >
-                  <div style={{display: "flex", justifyContent:"center", alignItems:"center"}}>
-                    <img src={hotelIcon} style={{ width: "3em", margin: "1em" }}/>
-                    <h3>{suggestion.name}</h3>
-                  </div>
-                </InfoWindow>)
-            })
-          }
-          </GoogleMap>
+                      key={suggestion.place_id}
+                      zIndex={10}
+                      position={{ lat: suggestion.geometry.location.lat, lng: suggestion.geometry.location.lng }}
+                    >
+                    <div style={{display: "flex", justifyContent:"center", alignItems:"center"}}>
+                        <img src={gasIcon} style={{ width: "3em", margin: "1em" }}/>
+                        <h3>{suggestion.name}</h3>
+                      </div>
+                    </InfoWindow>)
+                })
+              }
+              {
+                hotels[0] && hotels.map(suggestion => {
+                  return (
+                    <InfoWindow
+                      key={suggestion.place_id}
+                      zIndex={10}
+                      position={{ lat: suggestion.geometry.location.lat, lng: suggestion.geometry.location.lng }}
+                    >
+                      <div style={{display: "flex", justifyContent:"center", alignItems:"center"}}>
+                        <img src={hotelIcon} style={{ width: "3em", margin: "1em" }}/>
+                        <h3>{suggestion.name}</h3>
+                      </div>
+                    </InfoWindow>)
+                })
+              }
+            </GoogleMap>
       }
     </>
   );
