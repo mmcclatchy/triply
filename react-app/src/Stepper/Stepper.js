@@ -82,10 +82,10 @@ const Stepper = () => {
             label='Hotels' />
 
           <Button variant='outlined' disabled={back} onClick={prevHandler}>
-            Back
+            Prev Stop
           </Button>
           <Button variant='outlined' onClick={nextHandler}>
-            Next
+            Next Stop
           </Button>
         </>
       ) : (

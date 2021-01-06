@@ -7,6 +7,11 @@
   width: 95%;
   text-align: -webkit-center;
 }
+
+.Stepper__Container button {
+  margin: 10px;
+}
+
 .node__container {
   display: flex;
   justify-content: center;
