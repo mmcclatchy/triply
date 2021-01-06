@@ -30,6 +30,7 @@ const InitMap = ({}) => {
   const dispatch = useDispatch();
   const suggestions = useSelector(state => state.stepper.suggestions);
   const tripComplete = useSelector(state => state.stepper.tripComplete);
+  const displayedSuggestions = useSelector(state => state.stepper.displayedSuggestions)
   
   
   // *** Local State ***
@@ -84,50 +85,55 @@ const InitMap = ({}) => {
     }
   }, [tripComplete])
   
-  // Adding suggestion info windows to the map
   useEffect(() => {
-    const stopNums = Object.keys(suggestions)
-    const currentSuggestions = suggestions[stopNums[stopNums.length - 1]]
+    console.log('displayedSuggestions: ', displayedSuggestions?.restaurants)
+  }, [displayedSuggestions])
+  
+  
+  // Adding suggestion info windows to the map
+  // useEffect(() => {
+  //   const stopNums = Object.keys(suggestions)
+  //   const currentSuggestions = suggestions[stopNums[stopNums.length - 1]]
     
-    if (suggestions[1]) {
-      const restaurantSuggestions = []
-      let i = 0
-      while (i < 3 && currentSuggestions.restaurants[i]) {
-        restaurantSuggestions.push(currentSuggestions.restaurants[i])
-        i++
-      }
-      setRestaurants(
-        restaurantSuggestions
-      )
+  //   if (suggestions[1]) {
+  //     const restaurantSuggestions = []
+  //     let i = 0
+  //     while (i < 3 && currentSuggestions.restaurants[i]) {
+  //       restaurantSuggestions.push(currentSuggestions.restaurants[i])
+  //       i++
+  //     }
+  //     setRestaurants(
+  //       restaurantSuggestions
+  //     )
 
-      const gasStationSuggestions = []
-      let j = 0
-      while (j < 3 && currentSuggestions.gasStations[j]) {
-        gasStationSuggestions.push(currentSuggestions.gasStations[j])
-        j++
-      }
-      setGasStations(
-        gasStationSuggestions
-      )
+  //     const gasStationSuggestions = []
+  //     let j = 0
+  //     while (j < 3 && currentSuggestions.gasStations[j]) {
+  //       gasStationSuggestions.push(currentSuggestions.gasStations[j])
+  //       j++
+  //     }
+  //     setGasStations(
+  //       gasStationSuggestions
+  //     )
 
-      const hotelSuggestions = []
-      let k = 0
-      while (k < 3 && currentSuggestions.hotels[k]) {
-        hotelSuggestions.push(currentSuggestions.hotels[k])
-        k++
-      }
-      setHotels(
-        hotelSuggestions
-      )
+  //     const hotelSuggestions = []
+  //     let k = 0
+  //     while (k < 3 && currentSuggestions.hotels[k]) {
+  //       hotelSuggestions.push(currentSuggestions.hotels[k])
+  //       k++
+  //     }
+  //     setHotels(
+  //       hotelSuggestions
+  //     )
 
-      const matches = document.querySelectorAll("div.gm-style-iw, div.gm-style-iw-c, div.gm-style-iw-t")
-      for (let i = 0; i < matches.length; i++){
-        matches[i].classList.add("invisible")
-      }
-      setCenter(currentSuggestions.centerOfSearch)
-      setZoom(14)
-    }
-  }, [suggestions])
+  //     const matches = document.querySelectorAll("div.gm-style-iw, div.gm-style-iw-c, div.gm-style-iw-t")
+  //     for (let i = 0; i < matches.length; i++){
+  //       matches[i].classList.add("invisible")
+  //     }
+  //     setCenter(currentSuggestions.centerOfSearch)
+  //     setZoom(14)
+  //   }
+  // }, [suggestions])
 
   // Create a Google Maps request to render the route
   useEffect(() => {
@@ -184,7 +190,7 @@ const InitMap = ({}) => {
   return (
     <>
       {
-        !restaurants 
+        !displayedSuggestions?.restaurants || !displayedSuggestions?.gasStations 
           ? <GoogleMap
               zoom={12}
               id={"newMap"}
@@ -197,7 +203,8 @@ const InitMap = ({}) => {
               center={center}
             >
               {
-                restaurants[0] && restaurants.map(suggestion => {
+                displayedSuggestions?.restaurants.map(suggestion => {
+                  console.log('RESTAURANT SUGGESTION INFO WINDOW: ', suggestion)
                   return (
                     <InfoWindow
                       key={suggestion.place_id}
@@ -212,7 +219,7 @@ const InitMap = ({}) => {
                 })
               }
               {
-                gasStations[0] && gasStations.map(suggestion => {
+                displayedSuggestions?.gasStations.map(suggestion => {
                   return (
                     <InfoWindow
 
@@ -228,7 +235,7 @@ const InitMap = ({}) => {
                 })
               }
               {
-                hotels[0] && hotels.map(suggestion => {
+                displayedSuggestions?.hotels.map(suggestion => {
                   return (
                     <InfoWindow
                       key={suggestion.place_id}
