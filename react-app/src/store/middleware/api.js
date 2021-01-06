@@ -14,7 +14,6 @@ const api = ({ dispatch, getState }) => next => async action => {
   const { endpoint, method, body, actionConst } = action.payload;
   
   
-  // console.log('api middleware', action.payload);
   
   
   const response = await fetch(`${baseUrl}${endpoint}`, {
@@ -22,7 +21,7 @@ const api = ({ dispatch, getState }) => next => async action => {
     headers: { 'Content-Type': 'application/json' },
     body: body
   });
-
+  
   if (response.ok) {
     const { 
       payload, 
@@ -39,6 +38,9 @@ const api = ({ dispatch, getState }) => next => async action => {
         avoidTolls: directions.avoidTolls,
       }
     });
+    
+    console.log('api middleware: suggestions: ', suggestions);
+    
     if (suggestions) dispatch({ type: ADD_SUG, payload: suggestions });
     
     dispatch({ type: TRIP_COMPLETE, payload: tripComplete });
