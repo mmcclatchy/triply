@@ -1,10 +1,16 @@
 .route_form {
   display: flex;
+  flex-direction: column;
   width:100dw;
   height: 3.5em;
-  margin-left: 2em;
-  justify-content: flex-end;
-  margin-right: 3em;
+  align-items: flex-end;
+  justify-content: flex-start;
+  padding: .5em;
+  margin-right: 10em;
+}
+
+.route_input_container {
+  padding: .5em;
 }
 
 .route_form_input {
@@ -24,19 +30,8 @@
   height: 3.4em;
 }
 
-
-
-.buttons {
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 1.5em;
-  margin-right: 8em;
-  align-items: center;
-
-}
-
 .submit_container {
-  display: flex;
-  margin-right: 6.5em;
+  width: 30vw;
+  text-align: center;
   margin-top: 1.5em
 }

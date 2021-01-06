@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: "1.5em",
     color: "yellow",
     cursor: "pointer",
-    fontSize: "1.5em",
+    fontSize: "1em",
     height: "auto",
     width: "fit-content",
     "&:hover": {

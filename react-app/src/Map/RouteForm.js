@@ -26,6 +26,8 @@ const RouteForm = ({}) => {
   const userId = useSelector(state => state.authentication.userId);
   const or = useSelector(state => state.directions.origin);
   const de = useSelector(state => state.directions.destination);
+
+
   // const autoOrigin = new google.maps.places.Autocomplete(originField);
   // const autoOrigin2 = new google.maps.places.Autocomplete(destinationField);
 
@@ -94,7 +96,7 @@ const RouteForm = ({}) => {
     //   startLocation: or,
     //   endLocation: de
     // };
-    
+
     // dispatch(postTrip(new_trip, userId));
     return history.push(`/create-trip`);
   };
@@ -108,56 +110,62 @@ const RouteForm = ({}) => {
   return (
     <>
       <div className='route_form'>
-        <TextField
-          id='origin'
-          className='route_form_input'
-          label='Origin'
-          variant='standard'
-          InputProps={{ disableUnderline: true }}
-          inputProps={{ style: { textAlign: 'center' } }}
-          value={originFormContent}
-          onChange={updateOriginFormContent}
-        />
-        <TextField
-          id='destination'
-          label='Destination'
-          InputProps={{ disableUnderline: true }}
-          inputProps={{ style: { textAlign: 'center' } }}
-          className='route_form_input'
-          variant='standard'
-          value={destinationFormContent}
-          onChange={updateDestinationFormContent}
-        />
-      </div>
-      <div className='buttons'>
-        <TimePicker />
+        <div
+          className='form_header'
+          style={{fontSize:'2em', marginRight:'0', marginBottom:'0'}}
+        >
+          To get started fill out the fields below.
+          </div>
+        <div className='route_input_container'>
+          <TextField
+            id='origin'
+            className='route_form_input'
+            placeholder='Where are you starting from?'
+            variant='standard'
+            InputProps={{ disableUnderline: true }}
+            inputProps={{ style: { textAlign: 'center' } }}
+            value={originFormContent}
+            onChange={updateOriginFormContent}
+          />
+        </div>
+        {/* <div
+          className='form_header'
+          style={{fontSize:'2em', marginRight:'0', marginBottom:'-.3em'}}
+        >
+          Step 2: Fill out your destination.
+          </div> */}
+        <div className='route_input_container' style={{marginBottom:"1em"}}>
+          <TextField
+            id='destination'
+            placeholder='Where are you going?'
+            InputProps={{ disableUnderline: true }}
+            inputProps={{ style: { textAlign: 'center' } }}
+            className='route_form_input'
+            variant='standard'
+            value={destinationFormContent}
+            onChange={updateDestinationFormContent}
+            />
+        </div>
+        {/* <div
+          className='form_header'
+          style={{fontSize:'2em', marginRight:'0', marginBottom:'-.1em'}}
+        >
+          Step 3: When are you leaving?
+          </div> */}
+        <div className='buttons'>
+          <TimePicker />
+        </div>
         <div className='submit_container'>
           <Button
             className='submit_route'
             variant='contained'
             style={{
               backgroundColor: 'yellow',
-              fontWeight: 'bold',
-              marginBottom: '1.7em'
             }}
             onClick={handleClick}>
             Set Route
           </Button>
         </div>
-        {/* <NavLink to='create-trip'>
-          <Button
-            className='api_button'
-            style={{
-              backgroundColor: 'yellow',
-              fontWeight: 'bold'
-            }}
-            variant='contained'>
-            W/O API Call
-          </Button>
-        </NavLink>
-        <NavLink to='/timeline'>
-        <Button variant='contained'>Access Timeline</Button>
-        </NavLink> */}
       </div>
     </>
   );

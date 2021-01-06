@@ -31,8 +31,8 @@ const InitMap = ({}) => {
   const suggestions = useSelector(state => state.stepper.suggestions);
   const tripComplete = useSelector(state => state.stepper.tripComplete);
   const displayedSuggestions = useSelector(state => state.stepper.displayedSuggestions)
-  
-  
+
+
   // *** Local State ***
   const [directions, setDirections] = useState(false);
   const [waypoints, setWaypoints] = useState([]);
@@ -45,13 +45,13 @@ const InitMap = ({}) => {
 
   // *** Google Maps ***
   const directionsService = new google.maps.DirectionsService();
-  
+
 
   // *** Helper Functions ***
   // Return an array of each waypoint from the stepper.nodes slice of state
   const getWaypointsFrom = nodes => {
     const waypointsArr = []
-    
+
     for (const stop of Object.values(nodes)) {
       for (const waypoint of Object.values(stop)) {
         const { location } = waypoint.geometry;
@@ -63,14 +63,14 @@ const InitMap = ({}) => {
     setWaypoints(waypointsArr);
   }
 
-  
+
   // *** Use Effect Hooks ***
 
   useEffect(() => {
     getWaypointsFrom(nodes)
-    console.log('getWaypointsFrom: ', getWaypointsFrom(nodes))
+    // console.log('getWaypointsFrom: ', getWaypointsFrom(nodes))
   }, [itinerary])
-  
+
 
   useEffect(() => {
     if (tripComplete) {
@@ -85,12 +85,12 @@ const InitMap = ({}) => {
       }
     }
   }, [tripComplete])
-  
-  
+
+
   useEffect(() => {
     // console.log('displayedSuggestions: ', displayedSuggestions?.restaurants)
   }, [displayedSuggestions])
-  
+
 
   // Create a Google Maps request to render the route
   useEffect(() => {
@@ -129,9 +129,9 @@ const InitMap = ({}) => {
                 setDistanceAction(response.routes[0].legs[0].distance.text)
               );
             }
-            
+
             setDirections(response);
-              
+
           } else {
             window.alert('Directions request failed due to ' + status);
           }
@@ -147,13 +147,13 @@ const InitMap = ({}) => {
   return (
     <>
       {
-        !displayedSuggestions?.restaurants || !displayedSuggestions?.gasStations 
+        !displayedSuggestions?.restaurants || !displayedSuggestions?.gasStations
           ? <GoogleMap
               zoom={12}
               id={"newMap"}
               center={center}>
               {directions ? <DirectionsRenderer directions={directions} /> : null}
-            </GoogleMap> 
+            </GoogleMap>
           : <GoogleMap
               id="newMap"
               zoom={zoom}
@@ -179,7 +179,6 @@ const InitMap = ({}) => {
                 displayedSuggestions?.gasStations.map(suggestion => {
                   return (
                     <InfoWindow
-
                       key={suggestion.place_id}
                       zIndex={10}
                       position={{ lat: suggestion.geometry.location.lat, lng: suggestion.geometry.location.lng }}

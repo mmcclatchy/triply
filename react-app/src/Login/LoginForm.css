@@ -1,7 +1,13 @@
 .login__logo {
-  background-image: url("../assets/triply_logo.png");
-  width: 300px;
-  height: 112px;
+  /* background-image: url('../assets/triply_logo_black.png');
+  background-size: 70%;
+  background-repeat: no-repeat; */
+  margin-top: 2vh;
+  margin-bottom: 1vh;
+  /* margin-left: 8vw; */
+  width: 25vw;
+  height: 30vh;
+  display: flex
 }
 
 .login__container {
@@ -9,4 +15,3 @@
   margin: auto;
   text-align: -webkit-center;
 }
-
