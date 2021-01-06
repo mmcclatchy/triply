@@ -1,20 +1,23 @@
 import React, { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import './Stepper.css';
 import Node from './Node';
 import hotelIcon from '../assets/hotel.svg';
 import gasIcon from '../assets/GasStation.svg';
 import foodIcon from '../assets/restaurant.svg';
 import Button from '@material-ui/core/Button';
+import { setDisplayedSuggestions } from '../store/actions/stepper';
 
 //**************************************************************
 
 const Suggestions = ({ type, typeName, label }) => {
+  // *** Redux ***
+  const currentSuggestions = useSelector(state => state.stepper.displayedSuggestions);
+  const dispatch = useDispatch();
+  
   
   // *** Local State ***
-  const [nodeIndex, setNodeIndex] = useState(0);
-  const [suggestions, setSuggestions] = useState([]);
-  
+  const [nodeIndex, setNodeIndex] = useState(0);  
   
 
   // *** Helper Functions ***
@@ -30,8 +33,11 @@ const Suggestions = ({ type, typeName, label }) => {
   
   // *** Use Effects ***
   useEffect(() => {
-    setSuggestions(type.slice(nodeIndex, nodeIndex + 3))
-  }, [nodeIndex])
+    const suggestions = type.slice(nodeIndex, nodeIndex + 3)
+    dispatch(setDisplayedSuggestions(typeName, suggestions))
+  }, [nodeIndex]);
+  
+  useEffect(() => {}, [currentSuggestions])
   
 
   
@@ -96,8 +102,8 @@ const Suggestions = ({ type, typeName, label }) => {
       </div>
       
       <div className='node__container'>
-        {suggestions &&
-          suggestions.map((suggestion, i) => {
+        {
+          currentSuggestions?.[typeName].map((suggestion, i) => {
             return (
               <Node
                 data={suggestion}
@@ -107,7 +113,8 @@ const Suggestions = ({ type, typeName, label }) => {
                 className={`node_${typeName}`}
               />
             );
-          })}
+          })
+        }
       </div>
       
     </div>

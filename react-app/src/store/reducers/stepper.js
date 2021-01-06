@@ -5,7 +5,9 @@ import {
   UPDATE_STEP,
   SET_PLACE_IMG,
   CLEAR_STEPPER,
-  TRIP_COMPLETE
+  TRIP_COMPLETE, 
+  SET_DISPLAYED_SUGGESTIONS,
+  CLEAR_DISPLAYED_SUGGESTIONS,
 } from '../constants/constants';
 
 const initState = {
@@ -17,6 +19,8 @@ const initState = {
 export default function stepperReducer(state = initState, { type, payload }) {
   Object.freeze(state);
 
+  let displayedSuggestions;
+  
   switch (type) {
     case ADD_SUG:
       const newSuggestions = { ...state.suggestions, [state.step]: payload };
@@ -66,6 +70,13 @@ export default function stepperReducer(state = initState, { type, payload }) {
       newState.suggestions[step][type][index].photoUrl = photoUrl;
       return newState;
 
+    case SET_DISPLAYED_SUGGESTIONS:
+      displayedSuggestions = { ...state.displayedSuggestions, ...payload };
+      return { ...state, displayedSuggestions }
+      
+    case CLEAR_DISPLAYED_SUGGESTIONS:
+      displayedSuggestions = {};
+      return { ...state, displayedSuggestions }
       
     default:
       return state;

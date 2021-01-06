@@ -48,7 +48,9 @@ export const DELETE_NODE = 'Triply/Stepper/DELETE_NODE';
 export const UPDATE_STEP = 'Triply/Stepper/UPDATE_STEP';
 export const SET_PLACE_IMG = 'Triply/Stepper/SET_PLACE_IMG';
 export const CLEAR_STEPPER = 'Triply/Stepper/CLEAR_STEPPER';
-export const TRIP_COMPLETE = 'Triply/Stepper/TRIP_COMPLETE'
+export const TRIP_COMPLETE = 'Triply/Stepper/TRIP_COMPLETE';
+export const SET_DISPLAYED_SUGGESTIONS = 'Triply/Stepper/SET_DISPLAYED_SUGGESTIONS';
+export const CLEAR_DISPLAYED_SUGGESTIONS = 'Triply/Stepper/CLEAR_DISPLAYED_SUGGESTIONS';
 
 
 // ---------------------- Directions ---------------------------
