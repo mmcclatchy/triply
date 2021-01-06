@@ -103,7 +103,7 @@ const Suggestions = ({ type, typeName, label }) => {
       
       <div className='node__container'>
         {
-          currentSuggestions?.[typeName].map((suggestion, i) => {
+          currentSuggestions?.[typeName]?.map((suggestion, i) => {
             return (
               <Node
                 data={suggestion}

@@ -58,7 +58,8 @@ const InitMap = ({}) => {
         waypointsArr.push({ location, stopover: true });
       }
     }
-    // console.log(waypointsArr)
+    console.log('GET WAYPOINTS FROM: NODE: ', nodes)
+    console.log('GET WAYPOINTS FROM: ARRAY:', waypointsArr)
     setWaypoints(waypointsArr);
   }
 
@@ -66,8 +67,8 @@ const InitMap = ({}) => {
   // *** Use Effect Hooks ***
 
   useEffect(() => {
-    setWaypoints(getWaypointsFrom(nodes))
-    // console.log('getWaypointsFrom: ', getWaypointsFrom(nodes))
+    getWaypointsFrom(nodes)
+    console.log('getWaypointsFrom: ', getWaypointsFrom(nodes))
   }, [itinerary])
   
 
@@ -160,7 +161,7 @@ const InitMap = ({}) => {
             >
               {
                 displayedSuggestions?.restaurants.map(suggestion => {
-                  console.log('RESTAURANT SUGGESTION INFO WINDOW: ', suggestion)
+                  {/* console.log('RESTAURANT SUGGESTION INFO WINDOW: ', suggestion) */}
                   return (
                     <InfoWindow
                       key={suggestion.place_id}
