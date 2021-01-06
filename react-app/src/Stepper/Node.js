@@ -17,11 +17,11 @@ const Node = ({ data, type, index }) => {
   // *** Redux ***
   const step = useSelector(state => state.stepper.step);
   const nodes = useSelector(state => state.stepper.nodes);
-  const place = useSelector(
-    state => state.stepper.suggestions[step][type][index]
-  );
+  // const place = useSelector(
+  //   state => state.stepper.suggestions[step][type][index]
+  // );
   const photoUrl = useSelector(
-    state => state.stepper.suggestions[step][type][index].photoUrl
+    state => state.stepper.suggestions?.[step]?.[type]?.[index]?.photoUrl
   );
   const dispatch = useDispatch();
 
