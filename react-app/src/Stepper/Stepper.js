@@ -18,15 +18,18 @@ const Stepper = () => {
   const foodQuery = useSelector(state => state.directions.foodQuery);
   const dispatch = useDispatch();
 
+  
   // *** Local State ***
   const [back, disableBack] = useState(false);
 
+  
   // *** Use Effect Hooks ***
   useEffect(() => {
     if (step === 1) disableBack(true);
     if (step > 1) disableBack(false);
   }, [step]);
 
+  
   // *** Actions ***
   const nextHandler = () => {
     const stop = {

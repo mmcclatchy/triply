@@ -17,6 +17,7 @@ const Node = ({ data, type, index }) => {
   // *** Redux ***
   const step = useSelector(state => state.stepper.step);
   const nodes = useSelector(state => state.stepper.nodes);
+  const displayedSuggestions = useSelector(state => state.stepper.displayedSuggestions);
   const photoUrl = useSelector(
     state => state.stepper.suggestions?.[step]?.[type]?.[index]?.photoUrl
   );
@@ -39,7 +40,7 @@ const Node = ({ data, type, index }) => {
         }
       });
     }
-  }, [step, nodes]);
+  }, [step, nodes, displayedSuggestions[type]]);
 
   // On Mount: Retrieve place image from Google and store in Redux
   useEffect(() => {
