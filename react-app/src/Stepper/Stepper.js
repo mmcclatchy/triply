@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import './Stepper.css';
-import { updateStep } from '../store/actions/stepper';
+import { updateStep, clearDisplayedSuggestion } from '../store/actions/stepper';
 import Suggestions from './Suggestions';
 import { postStop } from '../store/actions/stops';
 import { Paper, Button } from '@material-ui/core';
+const converter = require('number-to-words');
 
 //**********************************************************
 
@@ -44,9 +45,10 @@ const Stepper = () => {
       starMax: null,
       time: null
     };
-    console.log('STOP: ', stop);
+    // console.log('STOP: ', stop);
     dispatch(postStop(stop, tripId));
     dispatch(updateStep(step + 1));
+    dispatch(clearDisplayedSuggestion())
   };
 
   const prevHandler = () => {
@@ -57,7 +59,6 @@ const Stepper = () => {
     // TODO: Submit completed trip
   };
 
-  const converter = require('number-to-words');
 
   // *** JSX ***
   return (
@@ -68,13 +69,24 @@ const Stepper = () => {
             <h1>BOOK {converter.toWordsOrdinal(step).toUpperCase()} STOP</h1>
           </Paper>
 
-          <Suggestions data={suggestions[step]} />
+          <Suggestions 
+            type={suggestions?.[step]?.restaurants} 
+            typeName={'restaurants'} 
+            label='Restaurants' />
+          <Suggestions 
+            type={suggestions?.[step]?.gasStations} 
+            typeName={'gasStations'}
+            label='Gas Stations' />
+          <Suggestions 
+            type={suggestions?.[step]?.hotels} 
+            typeName={'hotels'}
+            label='Hotels' />
 
           <Button variant='outlined' disabled={back} onClick={prevHandler}>
-            Back
+            Prev Stop
           </Button>
           <Button variant='outlined' onClick={nextHandler}>
-            Next
+            Next Stop
           </Button>
         </>
       ) : (

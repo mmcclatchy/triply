@@ -7,7 +7,7 @@ export default function reducer(state = initialState, { type, payload }) {
   Object.freeze(state);
   switch (type) {
     case SET_TRIP:
-      console.log('TRIP REDUCER: ', type, payload)
+      // console.log('TRIP REDUCER: ', type, payload)
       return { ...state, ...payload };
 
     case DELETE_TRIP:
