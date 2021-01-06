@@ -17,17 +17,16 @@ const Node = ({ data, type, index }) => {
   // *** Redux ***
   const step = useSelector(state => state.stepper.step);
   const nodes = useSelector(state => state.stepper.nodes);
-  // const place = useSelector(
-  //   state => state.stepper.suggestions[step][type][index]
-  // );
   const photoUrl = useSelector(
     state => state.stepper.suggestions?.[step]?.[type]?.[index]?.photoUrl
   );
   const dispatch = useDispatch();
 
+  
   // *** Local State ***
   const [booked, setBooked] = useState(false);
 
+  
   // *** Use Effect Hooks ***
   useEffect(() => {
     setBooked(false);
@@ -44,24 +43,13 @@ const Node = ({ data, type, index }) => {
 
   // On Mount: Retrieve place image from Google and store in Redux
   useEffect(() => {
-    // if (place.photoUrl) return;
     dispatch(fetchImg(data, step, type, index));
-  }, []);
+  }, [data]);
 
   // Re-render node after photo is fetched
-  useEffect(() => {
-    // (async () => {
-    //   const image = await fetch(photoUrl, {
-    //     method: 'GET',
-    //     headers: {
-    //       'Content-Type': 'application/json'
-    //     },
-    //     redirect: 'follow'
-    //   });
-    //   console.log(image);
-    // })();
-  }, [photoUrl]);
+  useEffect(() => {}, [photoUrl]);
 
+  
   // *** Actions ***
   const registerNode = () => {
     const payload = { ...data, type: type };
@@ -74,13 +62,6 @@ const Node = ({ data, type, index }) => {
     setBooked(false);
   };
 
-  // Default Images for types
-  const typeImg = type => {
-    if (type === 'restaurants') return restaurantsImg;
-    if (type === 'gasStations') return gasStationsImg;
-    if (type === 'hotels') return hotelsImg;
-  };
-
   // Default Images Icon Version for types
   const typeIcon = type => {
     if (type === 'restaurants')
@@ -91,6 +72,8 @@ const Node = ({ data, type, index }) => {
       return <img src={hotelIcon} className='node__image' />;
   };
 
+  
+  // *** JSX ***
   return (
     <Card elevation={3} className='node'>
       <div>

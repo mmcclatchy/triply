@@ -10,16 +10,6 @@ import Button from '@material-ui/core/Button';
 //**************************************************************
 
 const Suggestions = ({ type, typeName, label }) => {
-  // *** Redux ***
-  // const step = useSelector(state => state.stepper.step);
-  // const hotels = useSelector(state => state.stepper.suggestions[step].hotels);
-  // const restaurants = useSelector(
-  //   state => state.stepper.suggestions[step].restaurants
-  // );
-  // const gasStations = useSelector(
-  //   state => state.stepper.suggestions[step].gasStations
-  // );
-  
   
   // *** Local State ***
   const [nodeIndex, setNodeIndex] = useState(0);
@@ -119,48 +109,7 @@ const Suggestions = ({ type, typeName, label }) => {
             );
           })}
       </div>
-
-
-
-
-
-
-      {/* <div className='Type__Container'>
-        <img src={gasIcon} style={{ width: '50px' }} />
-        <h1>Refill</h1>
-      </div>
-      <div className='node__container'>
-        {threeGasStations &&
-          threeGasStations.map((gas, index) => {
-            return (
-              <Node
-                data={gas}
-                type='gasStations'
-                key={index}
-                index={index}
-                className='gas_station_id'
-              />
-            );
-          })}
-      </div>
-      <div className='Type__Container'>
-        <img src={hotelIcon} style={{ width: '50px' }} />
-        <h1>Hotels</h1>
-      </div>
-      <div className='node__container'>
-        {threeHotels &&
-          threeHotels.map((hotel, index) => {
-            return (
-              <Node
-                data={hotel}
-                type='hotels'
-                key={index}
-                index={index}
-                className='node_hotels'
-              />
-            );
-          })}
-      </div> */}
+      
     </div>
   );
 };
