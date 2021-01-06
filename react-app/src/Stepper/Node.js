@@ -30,7 +30,7 @@ const Node = ({ data, type, index }) => {
   // *** Use Effect Hooks ***
   useEffect(() => {
     setBooked(false);
-    console.log(nodes[step]);
+    // console.log(nodes[step]);
 
     if (nodes[step]) {
       nodes[step].forEach(e => {

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import './Stepper.css';
-import { updateStep } from '../store/actions/stepper';
+import { updateStep, clearDisplayedSuggestion } from '../store/actions/stepper';
 import Suggestions from './Suggestions';
 import { postStop } from '../store/actions/stops';
 import { Paper, Button } from '@material-ui/core';
@@ -45,9 +45,10 @@ const Stepper = () => {
       starMax: null,
       time: null
     };
-    console.log('STOP: ', stop);
+    // console.log('STOP: ', stop);
     dispatch(postStop(stop, tripId));
     dispatch(updateStep(step + 1));
+    dispatch(clearDisplayedSuggestion())
   };
 
   const prevHandler = () => {

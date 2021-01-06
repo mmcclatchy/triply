@@ -85,55 +85,11 @@ const InitMap = ({}) => {
     }
   }, [tripComplete])
   
+  
   useEffect(() => {
-    console.log('displayedSuggestions: ', displayedSuggestions?.restaurants)
+    // console.log('displayedSuggestions: ', displayedSuggestions?.restaurants)
   }, [displayedSuggestions])
   
-  
-  // Adding suggestion info windows to the map
-  // useEffect(() => {
-  //   const stopNums = Object.keys(suggestions)
-  //   const currentSuggestions = suggestions[stopNums[stopNums.length - 1]]
-    
-  //   if (suggestions[1]) {
-  //     const restaurantSuggestions = []
-  //     let i = 0
-  //     while (i < 3 && currentSuggestions.restaurants[i]) {
-  //       restaurantSuggestions.push(currentSuggestions.restaurants[i])
-  //       i++
-  //     }
-  //     setRestaurants(
-  //       restaurantSuggestions
-  //     )
-
-  //     const gasStationSuggestions = []
-  //     let j = 0
-  //     while (j < 3 && currentSuggestions.gasStations[j]) {
-  //       gasStationSuggestions.push(currentSuggestions.gasStations[j])
-  //       j++
-  //     }
-  //     setGasStations(
-  //       gasStationSuggestions
-  //     )
-
-  //     const hotelSuggestions = []
-  //     let k = 0
-  //     while (k < 3 && currentSuggestions.hotels[k]) {
-  //       hotelSuggestions.push(currentSuggestions.hotels[k])
-  //       k++
-  //     }
-  //     setHotels(
-  //       hotelSuggestions
-  //     )
-
-  //     const matches = document.querySelectorAll("div.gm-style-iw, div.gm-style-iw-c, div.gm-style-iw-t")
-  //     for (let i = 0; i < matches.length; i++){
-  //       matches[i].classList.add("invisible")
-  //     }
-  //     setCenter(currentSuggestions.centerOfSearch)
-  //     setZoom(14)
-  //   }
-  // }, [suggestions])
 
   // Create a Google Maps request to render the route
   useEffect(() => {
@@ -182,7 +138,7 @@ const InitMap = ({}) => {
       );
     };
     setRoute();
-    console.log('RENDER MAP')
+    // console.log('RENDER MAP')
   }, [reduxOrigin, reduxDestination, waypoints]);
 
 

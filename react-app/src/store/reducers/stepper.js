@@ -65,7 +65,7 @@ export default function stepperReducer(state = initState, { type, payload }) {
     case SET_PLACE_IMG:
       const newState = { ...state }
       const { photoUrl, step, type, index } = payload;
-      console.log('SET_PLACE_IMG: ', payload);
+      // console.log('SET_PLACE_IMG: ', payload);
 
       newState.suggestions[step][type][index].photoUrl = photoUrl;
       return newState;

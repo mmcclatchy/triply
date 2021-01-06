@@ -5,7 +5,8 @@ import {
   UPDATE_STEP,
   SET_PLACE_IMG,
   CLEAR_STEPPER,
-  SET_DISPLAYED_SUGGESTIONS
+  SET_DISPLAYED_SUGGESTIONS,
+  CLEAR_DISPLAYED_SUGGESTIONS,
 } from '../constants/constants';
 
 // pass the suggestions from the backend as the arguments
@@ -26,7 +27,9 @@ export const clearStepper = () => ({ type: CLEAR_STEPPER });
 export const setDisplayedSuggestions = (typeName, suggestions) => ({ 
   type: SET_DISPLAYED_SUGGESTIONS,
   payload: { [typeName]: suggestions },
-})
+});
+
+export const clearDisplayedSuggestion = () => ({ type: CLEAR_DISPLAYED_SUGGESTIONS })
 
 //------------------------------------------------------------
 
@@ -40,12 +43,15 @@ export const unsetNode = id => async dispatch => dispatch(deleteNode(id));
 // Place in Redux within the places data
 export const fetchImg = (place, step, type, index) => async dispatch => {
   if (!place || !type) return;
+  
   const key = process.env.REACT_APP_GOOGLE_KEY;
   let photoUrl;
+  
   if (place.photos) {
     const reference = place.photos[0].photo_reference;
-    console.log(reference);
+    
     photoUrl = `https://maps.googleapis.com/maps/api/place/photo?maxwidth=250&photoreference=${reference}&key=${key}`;
+    
     dispatch({
       type: SET_PLACE_IMG,
       payload: { photoUrl, step, type, index }
