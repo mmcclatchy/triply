@@ -10,7 +10,7 @@ import {
 } from '../constants/constants';
 
 // pass the suggestions from the backend as the arguments
-export const addSuggestion = payload => ({ type: ADD_SUG, payload });
+export const addSuggestion = payload => (console.log("add suggestion", payload), { type: ADD_SUG, payload });
 
 // pass the new node as the argument to be added
 export const addNode = payload => ({ type: ADD_NODE, payload });
@@ -24,7 +24,7 @@ export const updateStep = payload => ({ type: UPDATE_STEP, payload });
 export const clearStepper = () => ({ type: CLEAR_STEPPER });
 
 // pass the suggestions type and an array of suggestions as the argument
-export const setDisplayedSuggestions = (typeName, suggestions) => ({ 
+export const setDisplayedSuggestions = (typeName, suggestions) => ({
   type: SET_DISPLAYED_SUGGESTIONS,
   payload: { [typeName]: suggestions },
 });
@@ -43,15 +43,15 @@ export const unsetNode = id => async dispatch => dispatch(deleteNode(id));
 // Place in Redux within the places data
 export const fetchImg = (place, step, type, index) => async dispatch => {
   if (!place || !type) return;
-  
+
   const key = process.env.REACT_APP_GOOGLE_KEY;
   let photoUrl;
-  
+
   if (place.photos) {
     const reference = place.photos[0].photo_reference;
-    
+
     photoUrl = `https://maps.googleapis.com/maps/api/place/photo?maxwidth=250&photoreference=${reference}&key=${key}`;
-    
+
     dispatch({
       type: SET_PLACE_IMG,
       payload: { photoUrl, step, type, index }
