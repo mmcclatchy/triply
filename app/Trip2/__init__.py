@@ -179,6 +179,7 @@ class TripClass:
 
     def removeDayFromTimeDelta(self, delta):
         delta = datetime.timedelta(seconds=abs(delta.total_seconds()))
+        print(delta, ";;;;;;;;;;;;")
         while(delta.total_seconds() > 86400):
             delta = datetime.timedelta(seconds=delta.total_seconds() - 86400)
         return delta
@@ -191,14 +192,17 @@ class TripClass:
         ref = datetime.datetime.fromisoformat(self.cache["stopArray"][-1]['time']).time()
         lastStopTime = datetime.datetime(year=1, month=1, day=1, hour=ref.hour, minute=ref.minute, second=ref.second)
 
-        #figure out which way to subtract and subtract
+        # figure out which way to subtract and subtract
+        print(endTimeForDay - lastStopTime, '!!!!')
+        print(lastStopTime - endTimeForDay, '!!!!')
         delta1 = self.removeDayFromTimeDelta(endTimeForDay - lastStopTime)
         delta2 = self.removeDayFromTimeDelta(lastStopTime - endTimeForDay)
         print(delta1)
         print(delta2)
+        return
         delta = datetime.timedelta(seconds=min(abs(delta1.total_seconds()), abs(delta2.total_seconds())))
 
-        #check if different day to see if delta needs to be flipped
+        # check if different day to see if delta needs to be flipped
         currentStop = lastStopTime + datetime.timedelta(seconds=self.cache["timeBetweenStops"])
 
         print(f'{endTimeForDay}\n{lastStopTime}\n{delta}\n{currentStop} ***\n\n ')
