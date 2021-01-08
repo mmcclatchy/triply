@@ -1,12 +1,13 @@
 import React, { useState, forwardRef } from 'react';
-import { Button, Dialog, Slide } from '@material-ui/core';
+import { Button, Dialog, Slide, TextField } from '@material-ui/core';
+import QRCode from 'qrcode.react';
 
 const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction='up' ref={ref} {...props} />;
 });
 
 export default function EndModal() {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(true);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -27,12 +28,19 @@ export default function EndModal() {
         keepMounted
         maxWidth='lg'
         onClose={handleClose}>
-        <div style={{ width: '500px', height: '400px' }}>
-          <div style={{ width: '80%', height: '80%', margin: 'auto' }}>
-            <h1>Options</h1>
-            <li>QR CODE to Phone</li>
-            <li>Email Google Directions</li>
-            <li>Text to Phone</li>
+        <div className='endmodal__container'>
+          <div className='endmodal__qr'>
+            <h1>Send to your Mobile Device</h1>
+            <QRCode value='https://triplyroadtripapp.herokuapp.com/' />
+            <h1>Scan QR</h1>
+          </div>
+          <div className='endmodal__email'>
+            <h1>Send to Email</h1>
+            <TextField type='email'></TextField>
+            <div>
+              <Button variant='outlined'>Send</Button>
+              <Button variant='outlined'>Resend</Button>
+            </div>
           </div>
         </div>
       </Dialog>
