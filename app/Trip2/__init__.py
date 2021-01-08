@@ -6,6 +6,7 @@ import copy
 import json
 import os
 import datetime
+import copy
 
 
 # To Do:
@@ -208,7 +209,7 @@ class TripClass:
 
     def getNextStopDetails(self, foodQuery, **kwargs):
         if not hasattr(self, "tempCache"):
-            self.tempCache = self.cache
+            self.tempCache = copy.deepcopy(self.cache)
         if kwargs.get("push"):
             if not self.cache['endTimeForDay']:
                 self.tempCache['endTimeForDay'] = None
@@ -326,7 +327,7 @@ class TripClass:
         print("Here is the time being logged for this stop:", newStop)
 
         self.cache["stopArray"].append(newStop)
-
+        print("SAVING AS CACHE:", self.cache)
         r["cache"] = self.cache
 
         self.directions = r
