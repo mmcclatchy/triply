@@ -178,16 +178,16 @@ class TripClass:
         return estimatedTimeThere + r["routes"][0]["legs"][-2]["duration"]["value"]
 
     def getTimeTillNextHotel(self, hotelForce):
-        #checks if last stop was hotel and then forces next stop not to be
         if not self.cache["endTimeForDay"]:
             return 1000000000
-        if self.cache["stopArray"][-1].get("hotel") or not hotelForce:
-            return 10000000
         ref = datetime.time.fromisoformat(self.cache["endTimeForDay"])
         endTimeForDay = datetime.datetime(year=1, month=1, day=1, hour=ref.hour, minute=ref.minute, second=ref.second)
         ref = datetime.datetime.fromisoformat(self.cache["stopArray"][-1]['time']).time()
         lastStopTime = datetime.datetime(year=1, month=1, day=1, hour=ref.hour, minute=ref.minute, second=ref.second)
         delta = endTimeForDay - lastStopTime
+        # remove day difference
+        while(abs(delta.total_seconds()) > 86400):
+            delta = datetime.timedelta(seconds=abs(delta.total_seconds()) - 86400)
 
         #check if different day to see if delta needs to be flipped
         currentStop = lastStopTime + datetime.timedelta(seconds=self.cache["timeBetweenStops"])
