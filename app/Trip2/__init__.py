@@ -146,7 +146,7 @@ class TripClass:
         delta = datetime.timedelta(seconds=buffer)
         lastStopTime = datetime.datetime.fromisoformat(self.tempCache["stopArray"][-1]["time"])
         stopISO = (lastStopTime + delta).time().isoformat()
-        print(hotelStop)
+        print("HOTEL STOP:", hotelStop)
         return{
             "stopISO": stopISO,
             "location": vertext,
@@ -219,6 +219,7 @@ class TripClass:
     # kwargs: hotel as bool, gas as bool
 
     def getNextStopDetails(self, foodQuery, **kwargs):
+        print("\n \n \n ******THIS IS THE CACHE!!!!!!", self.cache)
         if not hasattr(self, "tempCache"):
             self.tempCache = copy.deepcopy(self.cache)
         if kwargs.get("push"):
@@ -236,12 +237,14 @@ class TripClass:
 
         if kwargs.get("hotel"):
             queries["hotelStop"] = kwargs.get("hotel")
+            print("FORCE SETTING HOTEL STOP!!!!",  queries["hotelStop"])
         if kwargs.get("gas"):
             queries["gasStop"] = kwargs.get("gas")
         url = self.basicLocalSearch + "&location="+str(queries["location"]["lat"]) + "," + str(queries["location"]["lng"])
 
         hotelResults = False
         if queries["hotelStop"]:
+            print("HOTEL STOP WAS TRUE SOMEHOW!!!!!!")
             r = requests.get(url + "&rankby=distance&type=lodging")
             hotelResults = r.json()
             # print(hotelResults)
