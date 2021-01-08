@@ -1,6 +1,7 @@
 import React, { useState, forwardRef } from 'react';
 import { Button, Dialog, Slide, TextField } from '@material-ui/core';
 import QRCode from 'qrcode.react';
+import EmailService from './EmailService';
 
 const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction='up' ref={ref} {...props} />;
@@ -36,11 +37,7 @@ export default function EndModal() {
           </div>
           <div className='endmodal__email'>
             <h1>Send to Email</h1>
-            <TextField type='email'></TextField>
-            <div>
-              <Button variant='outlined'>Send</Button>
-              <Button variant='outlined'>Resend</Button>
-            </div>
+            <EmailService />
           </div>
         </div>
       </Dialog>
