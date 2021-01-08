@@ -8,7 +8,14 @@ import './TripPage.css';
 import Timeline from '../Stepper/Timeline';
 import SuggestionStepper from '../Stepper/Stepper';
 import TripComplete from './TripComplete';
-import {setOriginAction, setDestinationAction, setStartTimeAction, setDistanceAction, setDurationAction, clearDirections} from '../store/actions/directions';
+import {
+  setOriginAction,
+  setDestinationAction,
+  setStartTimeAction,
+  setDistanceAction,
+  setDurationAction,
+  clearDirections
+} from '../store/actions/directions';
 import { clearTrips } from '../store/actions/trips';
 import { clearStepper } from '../store/actions/stepper';
 
@@ -17,20 +24,20 @@ const TripPage = () => {
   const nodes = useSelector(state => state.stepper.nodes);
   const tripComplete = useSelector(state => state.stepper.tripComplete);
   const dispatch = useDispatch();
-  
+
   const handleClick = () => {
-    dispatch(setOriginAction(""));
-    dispatch(setDestinationAction(""));
-    dispatch(setStartTimeAction(""));
-    dispatch(setDistanceAction(""));
-    dispatch(setDurationAction(""));
+    dispatch(setOriginAction(''));
+    dispatch(setDestinationAction(''));
+    dispatch(setStartTimeAction(''));
+    dispatch(setDistanceAction(''));
+    dispatch(setDurationAction(''));
     // dispatch(setName(""));
     // dispatch(setId(""));
-    dispatch(clearTrips())
-    dispatch(clearDirections())
-    dispatch(clearStepper())
-  }
-  
+    dispatch(clearTrips());
+    dispatch(clearDirections());
+    dispatch(clearStepper());
+  };
+
   return (
     <>
       <div className='trip__container'>
@@ -46,13 +53,17 @@ const TripPage = () => {
         </div>
 
         <div className='trip__container--inner'>
-          <TripSummary />
-          {toggle 
-            ? <StartOfTripForm setToggle={setToggle} />
-            : tripComplete
-                ? <TripComplete />
-                : <SuggestionStepper />
-          }
+          <TripComplete />
+          {/* {toggle ? (
+            <>
+              <TripSummary view={false} />
+              <StartOfTripForm setToggle={setToggle} />
+            </>
+          ) : tripComplete ? (
+            <TripComplete />
+          ) : (
+            <SuggestionStepper />
+          )} */}
         </div>
       </div>
     </>

@@ -5,10 +5,9 @@ import DriveEtaIcon from '@material-ui/icons/DriveEta';
 import { postTrip } from '../store/actions/trips';
 import './TripPage.css';
 
-const TripSummary = () => {
-  const [details, setDetails] = useState(false);
+const TripSummary = ({ view }) => {
+  const [details, setDetails] = useState(view);
   const userName = useSelector(state => state.authentication.userName);
-  const dispatch = useDispatch();
 
   const distance = useSelector(state => state.directions.distance);
   const duration = useSelector(state => state.directions.duration);
