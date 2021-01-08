@@ -101,10 +101,8 @@ class TripClass:
             h = False
         timeTillNextHotel = self.getTimeTillNextHotel(h)
 
-        # handles if later in the day
+        # set as default value
         hotelStop = False
-        if timeTillNextHotel < 0:
-            timeTillNextHotel = 9999999999999
 
         # "end" to signify that the trip is ending
         end = False
@@ -112,7 +110,7 @@ class TripClass:
             end = False
             if step["duration"]["value"] + buffer > timeTillNextHotel:
                 break
-            if step["duration"]["value"] + buffer > self.cache["timeBetweenStops"]:
+            if step["duration"]["value"] + buffer > self.tempCache["timeBetweenStops"]:
                 break
             buffer += step["duration"]["value"]
             distance += step["distance"]["value"]
@@ -125,16 +123,15 @@ class TripClass:
         vertextes = decodePolyline(step["polyline"]["points"])
         lastVertext = step["start_location"]
 
-
         for vertext in vertextes:
             distanceToNextVertext = self.getDistanceBetweenTwoPoints(lastVertext, vertext)
             timeToNextVertext = (distanceToNextVertext / averageMetersPerSecondInStep)
             # print(distanceToNextVertext, timeToNextVertext, averageMetersPerSecondInStep)
             # print(buffer + timeToNextVertext, timeTillNextHotel, ":comparing these:", self.cache["timeBetweenStops"])
-            if buffer + timeToNextVertext > self.cache["timeBetweenStops"]:
-                break
             if buffer + timeToNextVertext > timeTillNextHotel:
                 hotelStop = True
+                break
+            if buffer + timeToNextVertext > self.tempCache["timeBetweenStops"]:
                 break
             buffer += timeToNextVertext
             distance += distanceToNextVertext
@@ -142,11 +139,11 @@ class TripClass:
 
 
         # we now have the vertext. Now we need to look for the places nearby
-        needGas = distance * 2 > self.cache["metersToRefuel"]
+        needGas = distance * 2 > self.tempCache["metersToRefuel"]
 
         delta = datetime.timedelta(seconds=buffer)
-        lastStopTime = datetime.datetime.fromisoformat(self.cache["stopArray"][-1]["time"])
-        stopISO = (lastStopTime + delta).isoformat()
+        lastStopTime = datetime.datetime.fromisoformat(self.tempCache["stopArray"][-1]["time"])
+        stopISO = (lastStopTime + delta).time().isoformat()
         print(hotelStop)
         return{
             "stopISO": stopISO,
@@ -182,19 +179,26 @@ class TripClass:
         return delta
 
     def getTimeTillNextHotel(self, hotelForce):
-        if not self.cache["endTimeForDay"]:
+        if not hotelForce:
             return 1000000000
-        ref = datetime.time.fromisoformat(self.cache["endTimeForDay"])
+        print("\n \n \n")
+        if not self.tempCache["endTimeForDay"]:
+            return 1000000000
+        ref = datetime.time.fromisoformat(self.tempCache["endTimeForDay"])
         endTimeForDay = datetime.datetime(year=1, month=1, day=1, hour=ref.hour, minute=ref.minute, second=ref.second)
         ref = datetime.datetime.fromisoformat(self.cache["stopArray"][-1]['time']).time()
         lastStopTime = datetime.datetime(year=1, month=1, day=1, hour=ref.hour, minute=ref.minute, second=ref.second)
 
         delta = self.normalizeTime(endTimeForDay - lastStopTime)
+        print("End Time for Day:", endTimeForDay)
+        print("Last Stop Time:", lastStopTime)
+        print("The delta subtracting end from last:", delta)
 
         # check if different day to see if delta needs to be flipped
         currentStop = lastStopTime + datetime.timedelta(seconds=self.cache["timeBetweenStops"])
+        print("Current stop time is:", currentStop)
 
-        print(f'{endTimeForDay}\n{lastStopTime}\n{delta}\n{currentStop} ***\n\n ')
+        # print(f'{endTimeForDay}\n{lastStopTime}\n{delta}\n{currentStop} ***\n\n ')
 
         seconds = delta.total_seconds()
         # print('***\n\n', seconds, '\n\n***')
@@ -203,7 +207,8 @@ class TripClass:
     # kwargs: hotel as bool, gas as bool
 
     def getNextStopDetails(self, foodQuery, **kwargs):
-        self.tempCache = self.cache
+        if not hasattr(self, "tempCache"):
+            self.tempCache = self.cache
         if kwargs.get("push"):
             if not self.cache['endTimeForDay']:
                 self.tempCache['endTimeForDay'] = None
@@ -227,7 +232,9 @@ class TripClass:
         if queries["hotelStop"]:
             r = requests.get(url + "&rankby=distance&type=lodging")
             hotelResults = r.json()
+            # print(hotelResults)
             if not len(hotelResults["results"]):
+                print("Could not find any hotels here:")
                 if kwargs.get("push"):
                     return self.getNextStopDetails(foodQuery, **kwargs)
                 return self.getNextStopDetails(foodQuery, push=True, **kwargs)
@@ -244,6 +251,7 @@ class TripClass:
         if not len(foodResults["results"]):
             # push = True if self.cache['endTimeForDay'] else False
             # print("got in here")
+            print("Could not find any food here:")
             if kwargs.get("push"):
                 return self.getNextStopDetails(foodQuery, **kwargs)
             return self.getNextStopDetails(foodQuery, push=True, **kwargs)
@@ -315,6 +323,7 @@ class TripClass:
         delta = datetime.timedelta(seconds=self.calculateTimeAtStopAndLastDrive(r))
         newTime = datetime.datetime.fromisoformat(self.cache["stopArray"][-1]["time"]) + delta
         newStop["time"] = newTime.isoformat()
+        print("Here is the time being logged for this stop:", newStop)
 
         self.cache["stopArray"].append(newStop)
 
@@ -357,6 +366,7 @@ t.addFood(placeId)
 l = TripClass()
 l.createFromJson(t.getDirections())
 t = l
+print("Set of tempcache **********************", hasattr(l, "tempcache"))
 
 results = t.getNextStopDetails("mexican")
 placeId = results["restaurants"][0]["place_id"]
@@ -364,6 +374,7 @@ t.addFood(placeId)
 l = TripClass()
 l.createFromJson(t.getDirections())
 t = l
+print("Set of tempcache **********************", hasattr(l, "tempcache"))
 
 results = t.getNextStopDetails("mexican")
 placeId = results["restaurants"][0]["place_id"]
@@ -371,14 +382,17 @@ t.addFood(placeId)
 l = TripClass()
 l.createFromJson(t.getDirections())
 t = l
+print("Set of tempcache **********************", hasattr(l, "tempcache"))
 
 results = t.getNextStopDetails("mexican")
 placeId = results["restaurants"][0]["place_id"]
 t.addFood(placeId)
 t.addHotel(results["hotels"][0]["place_id"])
+print("ADDING HOTEL!!!!!")
 l = TripClass()
 l.createFromJson(t.getDirections())
 t = l
+print("Set of tempcache **********************", hasattr(l, "tempcache"))
 
 results = t.getNextStopDetails("mexican")
 placeId = results["restaurants"][0]["place_id"]
@@ -386,6 +400,7 @@ t.addFood(placeId)
 l = TripClass()
 l.createFromJson(t.getDirections())
 t = l
+print("Set of tempcache **********************", hasattr(l, "tempcache"))
 
 results = t.getNextStopDetails("mexican")
 placeId = results["restaurants"][0]["place_id"]
@@ -393,6 +408,7 @@ t.addFood(placeId)
 l = TripClass()
 l.createFromJson(t.getDirections())
 t = l
+print("Set of tempcache **********************", hasattr(l, "tempcache"))
 
 # results = t.getNextStopDetails("mexican")
 # print(results)
