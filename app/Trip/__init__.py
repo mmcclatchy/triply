@@ -157,7 +157,7 @@ class TripClass:
             url = url + "&" + i + "=" + kwargs[i]
         if self.tolls:
             url += "&avoid=tolls"
-        # print(url)
+        print(******************, url)
         return url
 
     def decodePolyline(self, encoded):

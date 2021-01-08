@@ -107,6 +107,8 @@ const RouteForm = ({}) => {
     setDestinationFormContent(e.target.value);
   };
 
+  const today = new Date()
+
   return (
     <>
       <div className='route_form'>
@@ -153,7 +155,7 @@ const RouteForm = ({}) => {
           Step 3: When are you leaving?
           </div> */}
         <div className='buttons'>
-          <TimePicker />
+          <TimePicker  />
         </div>
         <div className='submit_container'>
           <Button

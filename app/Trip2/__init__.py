@@ -119,12 +119,12 @@ class TripClass:
         if end:
             return None
 
-        
+
         averageMetersPerSecondInStep = step["distance"]["value"] / step["duration"]["value"]
         vertextes = decodePolyline(step["polyline"]["points"])
         lastVertext = step["start_location"]
-        
-        
+
+
         for vertext in vertextes:
             distanceToNextVertext = self.getDistanceBetweenTwoPoints(lastVertext, vertext)
             timeToNextVertext = (distanceToNextVertext / averageMetersPerSecondInStep)
@@ -146,7 +146,7 @@ class TripClass:
         delta = datetime.timedelta(seconds=buffer)
         lastStopTime = datetime.datetime.fromisoformat(self.cache["stopArray"][-1]["time"])
         stopISO = (lastStopTime + delta).isoformat()
-        
+
         return{
             "stopISO": stopISO,
             "location": vertext,
@@ -194,15 +194,15 @@ class TripClass:
         mod = 1
 
         seconds = delta.total_seconds() * mod
-        print('***\n\n', seconds, '\n\n***')
+        # print('***\n\n', seconds, '\n\n***')
         if seconds < -1 * (4 * 60 * 60):
             return 10000000
 
         if seconds < 0:
             mod = -1
-        
+
         seconds = mod * seconds
-        
+
         return seconds
 
     # kwargs: hotel as bool, gas as bool
@@ -220,13 +220,13 @@ class TripClass:
         queries = self.getNextStopLocation(**kwargs)
         if not queries:
             return None
-            
+
         if kwargs.get("hotel"):
             queries["hotelStop"] = kwargs.get("hotel")
         if kwargs.get("gas"):
             queries["gasStop"] = kwargs.get("gas")
         url = self.basicLocalSearch + "&location="+str(queries["location"]["lat"]) + "," + str(queries["location"]["lng"])
-        
+
         hotelResults = False
         if queries["hotelStop"]:
             r = requests.get(url + "&rankby=distance&type=lodging")
@@ -243,7 +243,7 @@ class TripClass:
         foodResults = r.json()
         if not len(foodResults["results"]):
             push = True if self.cache['endTimeForDay'] else False
-            print("got in here")
+            # print("got in here")
             return self.getNextStopDetails(foodQuery, push=True, **kwargs)
 
         return {
@@ -285,11 +285,11 @@ class TripClass:
                 if id == "time":
                     continue
                 placeIds.append(stop[id])
-        
+
         newStop = {}
         for stop in self.buffer:
             placeIds.append(stop[0])
-            newStop[stop[1]] = stop[0] 
+            newStop[stop[1]] = stop[0]
             # if stop[1] == "food":
             #     newStop["food"] = stop[0]
             # if stop[1] == "gas":
@@ -325,7 +325,7 @@ class TripClass:
         self.updateDirections()
         return json.dumps(self.directions)
 
-    
+
     def editStop(self, oldPlaceId, newPlaceId):
         for stop in self.cache["stopArray"]:
             for key in stop:
@@ -341,14 +341,14 @@ class TripClass:
                     break
         del stop[scopedVar]
 
-        
+
 
 
 
 
 
 # t = TripClass()
-# t.createNewTrip("Santa Rosa, California", "Holland, Mi", 100, 4 * 60 * 60, datetime.time(hour=2).isoformat(), datetime.datetime(year=2020, month=12, day=29, hour=10, minute=13).isoformat(), False, datetime.time(hour=8).isoformat()) 
+# t.createNewTrip("Santa Rosa, California", "Holland, Mi", 100, 4 * 60 * 60, datetime.time(hour=2).isoformat(), datetime.datetime(year=2020, month=12, day=29, hour=10, minute=13).isoformat(), False, datetime.time(hour=8).isoformat())
 # results = t.getNextStopDetails("mexican")
 # placeId = results["restaurants"][0]["place_id"]
 # t.addFood(placeId)
