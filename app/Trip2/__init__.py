@@ -131,6 +131,7 @@ class TripClass:
             # print(buffer + timeToNextVertext, timeTillNextHotel, ":comparing these:", self.cache["timeBetweenStops"])
             if buffer + timeToNextVertext > timeTillNextHotel:
                 hotelStop = True
+                print("THIS IS THE TIME TILL NEXT HOTEL!!!!", timeTillNextHotel)
                 break
             if buffer + timeToNextVertext > self.tempCache["timeBetweenStops"]:
                 break
@@ -156,6 +157,13 @@ class TripClass:
     def calculateTimeAtStopAndLastDrive(self, r):
         lastStop = self.cache["stopArray"][-1]
         estimatedTimeThere = 0
+        legs = 0
+        if lastStop.get("gas"):
+            estimatedTimeThere += 10 * 60
+            legs += 1
+        if lastStop.get("food"):
+            estimatedTimeThere += 20 * 60
+            legs += 1
         if lastStop.get("hotel"):
             # there has got to be an easier way to do this...but I don't know it
             # python does not support subtraction between time objects and so...
@@ -164,15 +172,18 @@ class TripClass:
             # so who is really at fault?
             ref = datetime.time.fromisoformat(self.cache["dailyStartTime"])
             startTime = datetime.datetime(year=1, month=1, day=2, hour=ref.hour, minute=ref.minute, second=ref.second)
-            ref = datetime.datetime.fromisoformat(self.cache["stopArray"][-1]['time']).time()
+            ref = datetime.datetime.fromisoformat(self.cache["stopArray"][-2]['time']).time()
             lastStopTime = datetime.datetime(year=1, month=1, day=1, hour=ref.hour, minute=ref.minute, second=ref.second)
             delta = startTime - lastStopTime
-            return delta.total_seconds()
-        if lastStop.get("gas"):
-            estimatedTimeThere += 10 * 60
-        if lastStop.get("food"):
-            estimatedTimeThere += 20 * 60
-        return estimatedTimeThere + r["routes"][0]["legs"][-2]["duration"]["value"]
+            legs += 1
+            estimatedTimeThere = delta.total_seconds()
+        
+        for leg in range(legs):
+            print(leg)
+            estimatedTimeThere += r["routes"][0]["legs"][-2 - leg]["duration"]["value"]
+        print("ETT:", estimatedTimeThere)
+
+        return estimatedTimeThere
 
     def normalizeTime(self, delta):
         while(delta.total_seconds() < 0):
@@ -321,13 +332,13 @@ class TripClass:
         r = r.json()
 
         # create a time delta from the most recent added leg
+        self.cache["stopArray"].append(newStop)
         delta = datetime.timedelta(seconds=self.calculateTimeAtStopAndLastDrive(r))
-        newTime = datetime.datetime.fromisoformat(self.cache["stopArray"][-1]["time"]) + delta
+        newTime = datetime.datetime.fromisoformat(self.cache["stopArray"][-2]["time"]) + delta
         newStop["time"] = newTime.isoformat()
         print("Here is the time being logged for this stop:", newStop)
 
-        self.cache["stopArray"].append(newStop)
-        print("SAVING AS CACHE:", self.cache)
+        
         r["cache"] = self.cache
 
         self.directions = r
@@ -359,57 +370,66 @@ class TripClass:
 
 
 
-t = TripClass()
-t.createNewTrip("Santa Rosa, California", "Holland, Mi", 100, 4 * 60 * 60, datetime.time(hour=2).isoformat(), datetime.datetime(year=2020, month=12, day=29, hour=10, minute=13).isoformat(), False, datetime.time(hour=8).isoformat())
-results = t.getNextStopDetails("mexican")
-placeId = results["restaurants"][0]["place_id"]
-t.addFood(placeId)
-l = TripClass()
-l.createFromJson(t.getDirections())
-t = l
-print("Set of tempcache **********************", hasattr(l, "tempcache"))
+# t = TripClass()
+# t.createNewTrip("Santa Rosa, California", "Holland, Mi", 100, 4 * 60 * 60, datetime.time(hour=22).isoformat(), datetime.datetime(year=2020, month=12, day=29, hour=10, minute=13).isoformat(), False, datetime.time(hour=8).isoformat())
+# results = t.getNextStopDetails("mexican")
+# print(results["hotels"])
+# placeId = results["restaurants"][0]["place_id"]
+# t.addFood(placeId)
+# l = TripClass()
+# l.createFromJson(t.getDirections())
+# t = l
+# # print("Set of tempcache **********************", hasattr(l, "tempcache"))
 
-results = t.getNextStopDetails("mexican")
-placeId = results["restaurants"][0]["place_id"]
-t.addFood(placeId)
-l = TripClass()
-l.createFromJson(t.getDirections())
-t = l
-print("Set of tempcache **********************", hasattr(l, "tempcache"))
+# results = t.getNextStopDetails("mexican")
+# placeId = results["restaurants"][0]["place_id"]
+# print(results["hotels"])
+# t.addFood(placeId)
+# l = TripClass()
+# l.createFromJson(t.getDirections())
+# t = l
+# # print("Set of tempcache **********************", hasattr(l, "tempcache"))
 
-results = t.getNextStopDetails("mexican")
-placeId = results["restaurants"][0]["place_id"]
-t.addFood(placeId)
-l = TripClass()
-l.createFromJson(t.getDirections())
-t = l
-print("Set of tempcache **********************", hasattr(l, "tempcache"))
+# results = t.getNextStopDetails("mexican")
+# placeId = results["restaurants"][0]["place_id"]
+# t.addFood(placeId)
+# t.addHotel(results["hotels"][0]["place_id"])
+# print(results["hotels"])
+# print("Expected hotel here if I calculated right")
+# l = TripClass()
+# l.createFromJson(t.getDirections())
+# t = l
+# # print("Set of tempcache **********************", hasattr(l, "tempcache"))
 
-results = t.getNextStopDetails("mexican")
-placeId = results["restaurants"][0]["place_id"]
-t.addFood(placeId)
-t.addHotel(results["hotels"][0]["place_id"])
-print("ADDING HOTEL!!!!!")
-l = TripClass()
-l.createFromJson(t.getDirections())
-t = l
-print("Set of tempcache **********************", hasattr(l, "tempcache"))
+# results = t.getNextStopDetails("mexican")
+# placeId = results["restaurants"][0]["place_id"]
+# print(results["restaurants"][0])
+# print(results["hotels"])
+# t.addFood(placeId)
 
-results = t.getNextStopDetails("mexican")
-placeId = results["restaurants"][0]["place_id"]
-t.addFood(placeId)
-l = TripClass()
-l.createFromJson(t.getDirections())
-t = l
-print("Set of tempcache **********************", hasattr(l, "tempcache"))
+# l = TripClass()
+# l.createFromJson(t.getDirections())
+# t = l
+# # print("Set of tempcache **********************", hasattr(l, "tempcache"))
 
-results = t.getNextStopDetails("mexican")
-placeId = results["restaurants"][0]["place_id"]
-t.addFood(placeId)
-l = TripClass()
-l.createFromJson(t.getDirections())
-t = l
-print("Set of tempcache **********************", hasattr(l, "tempcache"))
+# results = t.getNextStopDetails("mexican")
+# placeId = results["restaurants"][0]["place_id"]
+# t.addFood(placeId)
+# print(results["hotels"])
+# l = TripClass()
+# l.createFromJson(t.getDirections())
+# t = l
+# # print("Set tempcache **********************", hasattr(l, "tempcache"))
+
+# results = t.getNextStopDetails("mexican")
+# placeId = results["restaurants"][0]["place_id"]
+# t.addFood(placeId)
+# print(results["hotels"])
+# l = TripClass()
+# l.createFromJson(t.getDirections())
+# t = l
+# # print("Set of tempcache **********************", hasattr(l, "tempcache"))
+# print(t.cache["stopArray"])
 
 # results = t.getNextStopDetails("mexican")
 # print(results)
