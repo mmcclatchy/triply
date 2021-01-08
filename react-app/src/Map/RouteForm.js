@@ -17,87 +17,18 @@ const RouteForm = ({}) => {
   const [destination, setDestination] = useState('');
   const [originFormContent, setOriginFormContent] = useState('');
   const [destinationFormContent, setDestinationFormContent] = useState('');
-  const [directions, setDirections] = useState(false);
-  const originField = document.getElementById('origin');
-  const destinationField = document.getElementById('destination');
   const dispatch = useDispatch();
   const history = useHistory();
-  const startTime = useSelector(state => state.directions.startTime);
-  const userId = useSelector(state => state.authentication.userId);
-  const or = useSelector(state => state.directions.origin);
-  const de = useSelector(state => state.directions.destination);
+  const loggedIn = useSelector(state => state.authentication.auth);
 
 
-  // const autoOrigin = new google.maps.places.Autocomplete(originField);
-  // const autoOrigin2 = new google.maps.places.Autocomplete(destinationField);
 
-  // autoOrigin.setFields([
-  //   "address_components",
-  // ]);
-  // autoOrigin2.setFields([
-  //   "address_components",
-  // ]);
-
-  // autoOrigin.addListener("place_changed", () => {
-  // const place = autoOrigin.getPlace();
-  //    console.log(place)
-  //    let address = "";
-  //    if (place.address_components) {
-  //       address = [
-  //       (place.address_components[0] &&
-  //         place.address_components[0].short_name) ||
-  //         "",
-  //       (place.address_components[1] &&
-  //         place.address_components[1].short_name) ||
-  //         "",
-  //       (place.address_components[2] &&
-  //         place.address_components[2].short_name) ||
-  //         "",
-  //       (place.address_components[5] &&
-  //         place.address_components[5].short_name) ||
-  //         "",
-  //     ].join(" ");
-  //    }
-  //   console.log(address)
-  //   setOriginFormContent(address)
-  // })
-
-  // autoOrigin2.addListener("place_changed", () => {
-  //   const place = autoOrigin2.getPlace();
-  //      console.log(place)
-  //      let address = "";
-  //      if (place.address_components) {
-  //         address = [
-  //         (place.address_components[0] &&
-  //           place.address_components[0].short_name) ||
-  //           "",
-  //         (place.address_components[1] &&
-  //           place.address_components[1].short_name) ||
-  //           "",
-  //         (place.address_components[2] &&
-  //           place.address_components[2].short_name) ||
-  //           "",
-  //         (place.address_components[5] &&
-  //           place.address_components[5].short_name) ||
-  //             "",
-  //       ].join(" ");
-  //      }
-  //   console.log(address)
-  //   setDestinationFormContent(address)
-  // })
   const handleClick = () => {
     setOrigin(originFormContent);
     setDestination(destinationFormContent);
     dispatch(setOriginAction(originFormContent));
     dispatch(setDestinationAction(destinationFormContent));
-    // const new_trip = {
-    //   userId: userId,
-    //   startTime: startTime,
-    //   startLocation: or,
-    //   endLocation: de
-    // };
 
-    // dispatch(postTrip(new_trip, userId));
     return history.push(`/create-trip`);
   };
   const updateOriginFormContent = e => {
@@ -112,11 +43,13 @@ const RouteForm = ({}) => {
   return (
     <>
       <div className='route_form'>
+        {loggedIn ?
+      <>
         <div
           className='form_header'
           style={{fontSize:'2em', marginRight:'0', marginBottom:'0'}}
         >
-          To get started fill out the fields below.
+            To get started fill out the fields below.
           </div>
         <div className='route_input_container'>
           <TextField
@@ -130,12 +63,6 @@ const RouteForm = ({}) => {
             onChange={updateOriginFormContent}
           />
         </div>
-        {/* <div
-          className='form_header'
-          style={{fontSize:'2em', marginRight:'0', marginBottom:'-.3em'}}
-        >
-          Step 2: Fill out your destination.
-          </div> */}
         <div className='route_input_container' style={{marginBottom:"1em"}}>
           <TextField
             id='destination'
@@ -148,12 +75,6 @@ const RouteForm = ({}) => {
             onChange={updateDestinationFormContent}
             />
         </div>
-        {/* <div
-          className='form_header'
-          style={{fontSize:'2em', marginRight:'0', marginBottom:'-.1em'}}
-        >
-          Step 3: When are you leaving?
-          </div> */}
         <div className='buttons'>
           <TimePicker  />
         </div>
@@ -165,9 +86,16 @@ const RouteForm = ({}) => {
               backgroundColor: 'yellow',
             }}
             onClick={handleClick}>
-            Set Route
+              Set Route
           </Button>
         </div>
+      </>
+          : <div
+              className='form_header'
+              style={{ fontSize: '2em', marginRight: '0', marginBottom: '0' }}>
+            To get started login or sign up
+            </div>
+          }
       </div>
     </>
   );
