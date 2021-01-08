@@ -147,8 +147,7 @@ class TripClass:
         delta = datetime.timedelta(seconds=buffer)
         lastStopTime = datetime.datetime.fromisoformat(self.cache["stopArray"][-1]["time"])
         stopISO = (lastStopTime + delta).isoformat()
-
-        print("Hotel stop:", hotelStop)
+        print(hotelStop)
         return{
             "stopISO": stopISO,
             "location": vertext,
@@ -177,11 +176,9 @@ class TripClass:
             estimatedTimeThere += 20 * 60
         return estimatedTimeThere + r["routes"][0]["legs"][-2]["duration"]["value"]
 
-    def removeDayFromTimeDelta(self, delta):
-        delta = datetime.timedelta(seconds=abs(delta.total_seconds()))
-        print(delta, ";;;;;;;;;;;;")
-        while(delta.total_seconds() > 86400):
-            delta = datetime.timedelta(seconds=delta.total_seconds() - 86400)
+    def normalizeTime(self, delta):
+        while(delta.total_seconds() < 0):
+            delta = datetime.timedelta(seconds=delta.total_seconds() + 86400)
         return delta
 
     def getTimeTillNextHotel(self, hotelForce):
@@ -192,15 +189,7 @@ class TripClass:
         ref = datetime.datetime.fromisoformat(self.cache["stopArray"][-1]['time']).time()
         lastStopTime = datetime.datetime(year=1, month=1, day=1, hour=ref.hour, minute=ref.minute, second=ref.second)
 
-        # figure out which way to subtract and subtract
-        print(endTimeForDay - lastStopTime, '!!!!')
-        print(lastStopTime - endTimeForDay, '!!!!')
-        delta1 = self.removeDayFromTimeDelta(endTimeForDay - lastStopTime)
-        delta2 = self.removeDayFromTimeDelta(lastStopTime - endTimeForDay)
-        print(delta1)
-        print(delta2)
-        return
-        delta = datetime.timedelta(seconds=min(abs(delta1.total_seconds()), abs(delta2.total_seconds())))
+        delta = self.normalizeTime(endTimeForDay - lastStopTime)
 
         # check if different day to see if delta needs to be flipped
         currentStop = lastStopTime + datetime.timedelta(seconds=self.cache["timeBetweenStops"])
@@ -209,7 +198,6 @@ class TripClass:
 
         seconds = delta.total_seconds()
         # print('***\n\n', seconds, '\n\n***')
-        print("Seconds:", seconds)
         return seconds
 
     # kwargs: hotel as bool, gas as bool
@@ -220,6 +208,7 @@ class TripClass:
             if not self.cache['endTimeForDay']:
                 self.tempCache['endTimeForDay'] = None
             else:
+                print("pushed")
                 endTimeOfDay = datetime.time.fromisoformat(self.tempCache["endTimeForDay"])
                 self.tempCache["endTimeForDay"] = (datetime.datetime(year=1, month=1, day=1, hour=endTimeOfDay.hour, minute=endTimeOfDay.minute, second=endTimeOfDay.second) + datetime.timedelta(hours=1)).time().isoformat()
             self.tempCache["timeBetweenStops"] += 60 * 60
@@ -238,6 +227,10 @@ class TripClass:
         if queries["hotelStop"]:
             r = requests.get(url + "&rankby=distance&type=lodging")
             hotelResults = r.json()
+            if not len(hotelResults["results"]):
+                if kwargs.get("push"):
+                    return self.getNextStopDetails(foodQuery, **kwargs)
+                return self.getNextStopDetails(foodQuery, push=True, **kwargs)
 
         gasResults = False
         if queries["gasStop"] or hotelResults:
@@ -382,6 +375,14 @@ t = l
 results = t.getNextStopDetails("mexican")
 placeId = results["restaurants"][0]["place_id"]
 t.addFood(placeId)
+t.addHotel(results["hotels"][0]["place_id"])
+l = TripClass()
+l.createFromJson(t.getDirections())
+t = l
+
+results = t.getNextStopDetails("mexican")
+placeId = results["restaurants"][0]["place_id"]
+t.addFood(placeId)
 l = TripClass()
 l.createFromJson(t.getDirections())
 t = l
@@ -394,6 +395,7 @@ l.createFromJson(t.getDirections())
 t = l
 
 # results = t.getNextStopDetails("mexican")
+# print(results)
 # placeId = results["restaurants"][0]["place_id"]
 # t.addFood(placeId)
 # l = TripClass()
