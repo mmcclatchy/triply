@@ -101,9 +101,10 @@ class TripClass:
             h = False
         timeTillNextHotel = self.getTimeTillNextHotel(h)
 
-        hotelStop = timeTillNextHotel < 0
-        if hotelStop:
-            timeTillNextHotel = 1000000000
+        # handles if later in the day
+        hotelStop = False
+        if timeTillNextHotel < 0:
+            timeTillNextHotel = 9999999999999
 
         # "end" to signify that the trip is ending
         end = False
@@ -147,6 +148,7 @@ class TripClass:
         lastStopTime = datetime.datetime.fromisoformat(self.cache["stopArray"][-1]["time"])
         stopISO = (lastStopTime + delta).isoformat()
 
+        print("Hotel stop:", hotelStop)
         return{
             "stopISO": stopISO,
             "location": vertext,
@@ -183,17 +185,16 @@ class TripClass:
             return 10000000
         ref = datetime.time.fromisoformat(self.cache["endTimeForDay"])
         endTimeForDay = datetime.datetime(year=1, month=1, day=1, hour=ref.hour, minute=ref.minute, second=ref.second)
-        ref = ref = datetime.datetime.fromisoformat(self.cache["stopArray"][-1]['time']).time()
+        ref = datetime.datetime.fromisoformat(self.cache["stopArray"][-1]['time']).time()
         lastStopTime = datetime.datetime(year=1, month=1, day=1, hour=ref.hour, minute=ref.minute, second=ref.second)
-        delta = abs(endTimeForDay - lastStopTime)
+        delta = endTimeForDay - lastStopTime
 
         #check if different day to see if delta needs to be flipped
         currentStop = lastStopTime + datetime.timedelta(seconds=self.cache["timeBetweenStops"])
 
         print(f'***\n\n {endTimeForDay}\n{lastStopTime}\n{delta}\n{currentStop} ')
-        mod = 1
 
-        seconds = delta.total_seconds() * mod
+        seconds = delta.total_seconds()
         # print('***\n\n', seconds, '\n\n***')
         if seconds < -1 * (4 * 60 * 60):
             return 10000000
@@ -242,8 +243,10 @@ class TripClass:
             r = requests.get(url + "&rankby=distance&keyword=" + parse.quote(foodQuery))
         foodResults = r.json()
         if not len(foodResults["results"]):
-            push = True if self.cache['endTimeForDay'] else False
+            # push = True if self.cache['endTimeForDay'] else False
             # print("got in here")
+            if kwargs.get("push"):
+                return self.getNextStopDetails(foodQuery, **kwargs)
             return self.getNextStopDetails(foodQuery, push=True, **kwargs)
 
         return {
@@ -347,30 +350,31 @@ class TripClass:
 
 
 
-# t = TripClass()
-# t.createNewTrip("Santa Rosa, California", "Holland, Mi", 100, 4 * 60 * 60, datetime.time(hour=2).isoformat(), datetime.datetime(year=2020, month=12, day=29, hour=10, minute=13).isoformat(), False, datetime.time(hour=8).isoformat())
-# results = t.getNextStopDetails("mexican")
-# placeId = results["restaurants"][0]["place_id"]
-# t.addFood(placeId)
-# l = TripClass()
-# l.createFromJson(t.getDirections())
-# t = l
+t = TripClass()
+t.createNewTrip("Santa Rosa, California", "Holland, Mi", 100, 4 * 60 * 60, datetime.time(hour=2).isoformat(), datetime.datetime(year=2020, month=12, day=29, hour=10, minute=13).isoformat(), False, datetime.time(hour=8).isoformat())
+results = t.getNextStopDetails("mexican")
+placeId = results["restaurants"][0]["place_id"]
+t.addFood(placeId)
+l = TripClass()
+l.createFromJson(t.getDirections())
+t = l
 
-# results = t.getNextStopDetails("mexican")
-# placeId = results["restaurants"][0]["place_id"]
-# t.addFood(placeId)
-# l = TripClass()
-# l.createFromJson(t.getDirections())
-# t = l
+results = t.getNextStopDetails("mexican")
+placeId = results["restaurants"][0]["place_id"]
+t.addFood(placeId)
+l = TripClass()
+l.createFromJson(t.getDirections())
+t = l
 
-# results = t.getNextStopDetails("mexican")
-# placeId = results["restaurants"][0]["place_id"]
-# t.addFood(placeId)
-# l = TripClass()
-# l.createFromJson(t.getDirections())
-# t = l
+results = t.getNextStopDetails("mexican")
+placeId = results["restaurants"][0]["place_id"]
+t.addFood(placeId)
+l = TripClass()
+l.createFromJson(t.getDirections())
+t = l
 
-# results = t.getNextStopDetails("mexican")
+results = t.getNextStopDetails("mexican")
+# print(results)
 # placeId = results["restaurants"][0]["place_id"]
 # t.addFood(placeId)
 # l = TripClass()
