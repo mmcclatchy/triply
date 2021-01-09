@@ -5,6 +5,7 @@ import StartOfTripForm from './StartOfTripForm';
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import './TripPage.css';
+import logo from '../assets/triply_logo_black.png';
 import Timeline from '../Stepper/Timeline';
 import SuggestionStepper from '../Stepper/Stepper';
 import TripComplete from './TripComplete';
@@ -44,7 +45,7 @@ const TripPage = () => {
       <div className='trip__container'>
         <div className='trip__container--initial'>
           <Link onClick={handleClick} to='/'>
-            <div className='trip__logo' />
+            <img src={logo} style={{ width: '200px' }} />
           </Link>
           <Test />
         </div>
