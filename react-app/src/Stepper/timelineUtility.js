@@ -5,6 +5,8 @@ import clockIcon from '../assets/clock.svg';
 import gasIcon from '../assets/GasStation.svg';
 import hotelIcon from '../assets/hotel.svg';
 import foodIcon from '../assets/food.svg';
+import breakfast from '../assets/pancakes.svg';
+import dinner from '../assets/wine-bottle.svg';
 
 Date.prototype.addHours = function (h) {
   this.setTime(this.getTime() + h * 60 * 60 * 1000);
@@ -55,6 +57,17 @@ export const mealTagline = time => {
   else if (hrs >= 12 && hrs <= 17) greeting = 'Lunch at';
   else if (hrs >= 17 && hrs <= 24) greeting = 'Dinner at';
   return greeting;
+};
+
+// *** QOL Function for Meal Icon ***
+export const mealIcon = time => {
+  const date = new Date(time);
+  const hrs = date.getHours();
+  if (hrs < 12) return <img src={breakfast} style={{ width: '32px' }} />;
+  else if (hrs >= 12 && hrs <= 17)
+    return <img src={foodIcon} style={{ width: '32px ' }} />;
+  else if (hrs >= 17 && hrs <= 24)
+    return <img src={dinner} style={{ width: '32px ' }} />;
 };
 
 export const stopTimes = array => {

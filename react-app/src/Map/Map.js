@@ -17,7 +17,6 @@ import foodIcon from '../assets/restaurant.svg';
 import gasIcon from '../assets/GasStation.svg';
 import hotelIcon from '../assets/hotel.svg';
 
-
 const InitMap = ({}) => {
   // *** Redux ***
   const reduxStartTime = useSelector(state => state.directions.startTime);
@@ -26,31 +25,30 @@ const InitMap = ({}) => {
   const reduxOrigin = useSelector(state => state.directions.origin);
   const step = useSelector(state => state.stepper.step);
   const reduxDestination = useSelector(state => state.directions.destination);
-  const itinerary = useSelector(state => state.directions.itinerary)
+  const itinerary = useSelector(state => state.directions.itinerary);
   const dispatch = useDispatch();
   const suggestions = useSelector(state => state.stepper.suggestions);
   const tripComplete = useSelector(state => state.stepper.tripComplete);
-  const displayedSuggestions = useSelector(state => state.stepper.displayedSuggestions)
-
+  const displayedSuggestions = useSelector(
+    state => state.stepper.displayedSuggestions
+  );
 
   // *** Local State ***
   const [directions, setDirections] = useState(false);
   const [waypoints, setWaypoints] = useState([]);
-  const [restaurants, setRestaurants] = useState("")
-  const [gasStations, setGasStations] = useState("")
-  const [hotels, setHotels] = useState("")
+  const [restaurants, setRestaurants] = useState('');
+  const [gasStations, setGasStations] = useState('');
+  const [hotels, setHotels] = useState('');
   const [center, setCenter] = useState({ lat: 40.99136, lng: -72.534203 });
   const [zoom, setZoom] = useState(10);
-
 
   // *** Google Maps ***
   const directionsService = new google.maps.DirectionsService();
 
-
   // *** Helper Functions ***
   // Return an array of each waypoint from the stepper.nodes slice of state
   const getWaypointsFrom = nodes => {
-    const waypointsArr = []
+    const waypointsArr = [];
 
     for (const stop of Object.values(nodes)) {
       for (const waypoint of Object.values(stop)) {
@@ -58,39 +56,37 @@ const InitMap = ({}) => {
         waypointsArr.push({ location, stopover: true });
       }
     }
-    console.log('GET WAYPOINTS FROM: NODE: ', nodes)
-    console.log('GET WAYPOINTS FROM: ARRAY:', waypointsArr)
+    console.log('GET WAYPOINTS FROM: NODE: ', nodes);
+    console.log('GET WAYPOINTS FROM: ARRAY:', waypointsArr);
     setWaypoints(waypointsArr);
-  }
-
+  };
 
   // *** Use Effect Hooks ***
 
   useEffect(() => {
-    getWaypointsFrom(nodes)
+    getWaypointsFrom(nodes);
     // console.log('getWaypointsFrom: ', getWaypointsFrom(nodes))
-  }, [itinerary])
-
+  }, [itinerary]);
 
   useEffect(() => {
     if (tripComplete) {
-      setZoom(10)
-      setCenter()
-      setRestaurants("")
-      setGasStations("")
-      setHotels("")
-      const matches = document.querySelectorAll("div.gm-style-iw, div.gm-style-iw-c, div.gm-style-iw-t")
-      for (let i = 0; i < matches.length; i++){
-        matches[i].classList.add("invisible")
+      setZoom(10);
+      setCenter();
+      setRestaurants('');
+      setGasStations('');
+      setHotels('');
+      const matches = document.querySelectorAll(
+        'div.gm-style-iw, div.gm-style-iw-c, div.gm-style-iw-t'
+      );
+      for (let i = 0; i < matches.length; i++) {
+        matches[i].classList.add('invisible');
       }
     }
-  }, [tripComplete])
-
+  }, [tripComplete]);
 
   useEffect(() => {
     // console.log('displayedSuggestions: ', displayedSuggestions?.restaurants)
-  }, [displayedSuggestions])
-
+  }, [displayedSuggestions]);
 
   // Create a Google Maps request to render the route
   useEffect(() => {
@@ -114,7 +110,7 @@ const InitMap = ({}) => {
           },
           travelMode: google.maps.TravelMode.DRIVING,
           waypoints,
-          avoidTolls,
+          avoidTolls
         },
         (response, status) => {
           if (status === 'OK') {
@@ -131,7 +127,6 @@ const InitMap = ({}) => {
             }
 
             setDirections(response);
-
           } else {
             window.alert('Directions request failed due to ' + status);
           }
@@ -142,71 +137,90 @@ const InitMap = ({}) => {
     // console.log('RENDER MAP')
   }, [reduxOrigin, reduxDestination, waypoints]);
 
-
   // *** JSX ***
   return (
     <>
-      {
-        !displayedSuggestions?.restaurants || !displayedSuggestions?.gasStations
-          ? <GoogleMap
-              zoom={12}
-              id={"newMap"}
-              center={center}>
-              {directions ? <DirectionsRenderer directions={directions} /> : null}
-            </GoogleMap>
-          : <GoogleMap
-              id="newMap"
-              zoom={zoom}
-              center={center}
-            >
-              {
-                displayedSuggestions?.restaurants.map(suggestion => {
-                  {/* console.log('RESTAURANT SUGGESTION INFO WINDOW: ', suggestion) */}
-                  return (
-                    <InfoWindow
-                      key={suggestion.place_id}
-                      zIndex={10}
-                      position={{ lat: suggestion.geometry.location.lat, lng: suggestion.geometry.location.lng }}
-                    >
-                      <div style={{display: "flex", justifyContent:"center", alignItems:"center"}}>
-                        <img src={foodIcon} style={{ width: "3em", margin: "1em" }}/>
-                        <h3>{suggestion.name}</h3>
-                      </div>
-                    </InfoWindow>)
-                })
-              }
-              {
-                displayedSuggestions?.gasStations.map(suggestion => {
-                  return (
-                    <InfoWindow
-                      key={suggestion.place_id}
-                      zIndex={10}
-                      position={{ lat: suggestion.geometry.location.lat, lng: suggestion.geometry.location.lng }}
-                    >
-                    <div style={{display: "flex", justifyContent:"center", alignItems:"center"}}>
-                        <img src={gasIcon} style={{ width: "3em", margin: "1em" }}/>
-                        <h3>{suggestion.name}</h3>
-                      </div>
-                    </InfoWindow>)
-                })
-              }
-              {
-                displayedSuggestions?.hotels.map(suggestion => {
-                  return (
-                    <InfoWindow
-                      key={suggestion.place_id}
-                      zIndex={10}
-                      position={{ lat: suggestion.geometry.location.lat, lng: suggestion.geometry.location.lng }}
-                    >
-                      <div style={{display: "flex", justifyContent:"center", alignItems:"center"}}>
-                        <img src={hotelIcon} style={{ width: "3em", margin: "1em" }}/>
-                        <h3>{suggestion.name}</h3>
-                      </div>
-                    </InfoWindow>)
-                })
-              }
-            </GoogleMap>
-      }
+      {!displayedSuggestions?.restaurants ||
+      !displayedSuggestions?.gasStations ? (
+        <GoogleMap zoom={12} id={'newMap'} center={center}>
+          {directions ? <DirectionsRenderer directions={directions} /> : null}
+        </GoogleMap>
+      ) : (
+        <GoogleMap id='newMap' zoom={zoom} center={center}>
+          {displayedSuggestions?.restaurants.map(suggestion => {
+            {
+              /* console.log('RESTAURANT SUGGESTION INFO WINDOW: ', suggestion) */
+            }
+            return (
+              <InfoWindow
+                key={suggestion.place_id}
+                zIndex={10}
+                position={{
+                  lat: suggestion.geometry.location.lat,
+                  lng: suggestion.geometry.location.lng
+                }}>
+                <div
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center'
+                  }}>
+                  <img
+                    src={foodIcon}
+                    style={{ width: '3em', margin: '1em' }}
+                  />
+                  <h3>{suggestion.name}</h3>
+                </div>
+              </InfoWindow>
+            );
+          })}
+          {displayedSuggestions?.gasStations.map(suggestion => {
+            return (
+              <InfoWindow
+                key={suggestion.place_id}
+                zIndex={10}
+                position={{
+                  lat: suggestion.geometry.location.lat,
+                  lng: suggestion.geometry.location.lng
+                }}>
+                <div
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center'
+                  }}>
+                  <img src={gasIcon} style={{ width: '3em', margin: '1em' }} />
+                  <h3>{suggestion.name}</h3>
+                </div>
+              </InfoWindow>
+            );
+          })}
+          {displayedSuggestions?.hotels.map(suggestion => {
+            return (
+              <InfoWindow
+                key={suggestion.place_id}
+                zIndex={10}
+                position={{
+                  lat: suggestion.geometry.location.lat,
+                  lng: suggestion.geometry.location.lng
+                }}>
+                <div
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center'
+                  }}>
+                  <img
+                    src={hotelIcon}
+                    style={{ width: '3em', margin: '1em' }}
+                  />
+                  <h3>{suggestion.name}</h3>
+                </div>
+              </InfoWindow>
+            );
+          })}
+        </GoogleMap>
+      )}
     </>
   );
 };
@@ -226,7 +240,7 @@ export default function Map() {
         googleMapURL={`https://maps.googleapis.com/maps/api/js?key=${process.env.REACT_APP_GOOGLE_KEY}&v=3.exp&libraries=geometry,drawing,places`}
         loadingElement={<div style={{ height: '100% ' }} />}
         containerElement={
-          <div style={{ width: `60vw`, height: '100vh', maxHeight: 'auto' }} />
+          <div style={{ height: '100vh', maxHeight: 'auto' }} />
         }
         mapElement={<div style={{ height: '100% ' }} />}
       />

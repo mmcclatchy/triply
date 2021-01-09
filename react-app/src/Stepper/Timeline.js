@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { getIcon, getTagline, mealTagline } from './timelineUtility';
 import { DateTime } from 'luxon';
-import { Paper } from '@material-ui/core';
+import { Paper, Switch, Slide } from '@material-ui/core';
 import './Stepper.css';
 
 const Timeline = () => {
@@ -13,8 +13,10 @@ const Timeline = () => {
   const duration = useSelector(state => state.directions.duration);
   const suggestions = useSelector(state => state.stepper.suggestions);
   const startTime = DateTime.fromISO(start).toLocaleString(
-    DateTime.DATETIME_SHORT
+    DateTime.DATETIME_MED
   );
+  const [display, setDisplay] = useState('');
+  const [checked, setChecked] = useState(true);
 
   const getStopTime = (node, suggestions) => {
     if (!suggestions[node]) return;
@@ -35,65 +37,78 @@ const Timeline = () => {
     };
     return DateTime.fromISO(start)
       .plus(durationObj)
-      .toLocaleString(DateTime.DATETIME_SHORT);
+      .toLocaleString(DateTime.DATETIME_MED);
+  };
+
+  const handleChange = () => {
+    setChecked(prev => !prev);
   };
 
   const converter = require('number-to-words');
 
   return (
-    <div
-      style={{
-        width: '100%',
-        textAlignLast: 'center'
-      }}>
-      <h3>Trip Timeline</h3>
-      <Paper elevation={3} className='Timeline__Card'>
-        <h4>{getIcon('Origin')} Departing</h4>
-        <div>{startTime}</div>
-        <div>{origin}</div>
-      </Paper>
-      {nodes &&
-        Object.keys(nodes).map(node => {
-          return (
-            <div>
-              <Paper elevation={3} className='Timeline__Divider'>
-                {converter.toWordsOrdinal(node).toUpperCase()} STOP
-              </Paper>
-              <Paper elevation={3} className='Timeline__Card'>
-                <a className='Card__Clock'>{getIcon('clock')}</a>
-                <a className='Card__Time'>{getStopTime(node, suggestions)}</a>
-              </Paper>
-              {nodes[node].map(e => {
-                return (
-                  <Paper elevation={3} className='Timeline__Card'>
-                    {getIcon(e.type)}
-                    <div>
-                      {e.type === 'restaurants' ? (
-                        <h3>
-                          {mealTagline(getStopTime(node, suggestions))}
-                          {'  '}
-                          {e.name}
-                        </h3>
-                      ) : (
-                        <>
-                          <h3>{getTagline(e.type)}</h3>
-                          <h3>{e.name}</h3>
-                        </>
-                      )}
-                      <div>{e.vicinity}</div>
-                    </div>
-                  </Paper>
-                );
-              })}
-            </div>
-          );
-        })}
-      <Paper elevation={3} className='Timeline__Card'>
-        <h4>{getIcon('Destination')} Arriving</h4>
-        <div>{getEndTime(start, duration)}</div>
-        <div>{destination}</div>
-      </Paper>
-    </div>
+    <>
+      <Switch checked={checked} onChange={handleChange} />
+
+      <Slide direction='top' in={checked} mountOnEnter unmountOnExit>
+        <div className='Timeline__Container'>
+          <Paper elevation={3} className='Start__Card'>
+            {getIcon('Origin')}
+            <h4>Departing</h4>
+            <div>{startTime}</div>
+            <div>{origin}</div>
+          </Paper>
+
+          {nodes &&
+            Object.keys(nodes).map(node => {
+              return (
+                <div style={{ display: 'flex' }}>
+                  {nodes[node].length ? (
+                    <Paper elevation={3} className='Timeline__Divider'>
+                      {converter.toWordsOrdinal(node).toUpperCase()} STOP
+                      <a className='Card__Clock'>{getIcon('clock')}</a>
+                      <a className='Card__Time'>
+                        {getStopTime(node, suggestions)}
+                      </a>
+                    </Paper>
+                  ) : null}
+
+                  {nodes[node].map(e => {
+                    return (
+                      <Paper elevation={3} className='Timeline__Card'>
+                        {getIcon(e.type)}
+
+                        <div>
+                          {e.type === 'restaurants' ? (
+                            <h3>
+                              {mealTagline(getStopTime(node, suggestions))}
+                              {'  '}
+                              {e.name}
+                            </h3>
+                          ) : (
+                            <>
+                              <h3>{getTagline(e.type)}</h3>
+                              <h3>{e.name}</h3>
+                            </>
+                          )}
+                          <div>{e.vicinity}</div>
+                        </div>
+                      </Paper>
+                    );
+                  })}
+                </div>
+              );
+            })}
+
+          <Paper elevation={3} className='Start__Card'>
+            {getIcon('Destination')}
+            <h4> Arriving</h4>
+            <div>{getEndTime(start, duration)}</div>
+            <div>{destination}</div>
+          </Paper>
+        </div>
+      </Slide>
+    </>
   );
 };
 

@@ -5,6 +5,7 @@ import StartOfTripForm from './StartOfTripForm';
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import './TripPage.css';
+import logo from '../assets/triply_logo_black.png';
 import Timeline from '../Stepper/Timeline';
 import SuggestionStepper from '../Stepper/Stepper';
 import TripComplete from './TripComplete';
@@ -18,6 +19,7 @@ import {
 } from '../store/actions/directions';
 import { clearTrips } from '../store/actions/trips';
 import { clearStepper } from '../store/actions/stepper';
+import Test from '../Stepper/Test';
 
 const TripPage = () => {
   const [toggle, setToggle] = useState(true);
@@ -43,9 +45,9 @@ const TripPage = () => {
       <div className='trip__container'>
         <div className='trip__container--initial'>
           <Link onClick={handleClick} to='/'>
-            <div className='trip__logo' />
+            <img src={logo} style={{ width: '200px' }} />
           </Link>
-          <Timeline nodes={nodes} />
+          <Test />
         </div>
 
         <div className='trip__map'>
