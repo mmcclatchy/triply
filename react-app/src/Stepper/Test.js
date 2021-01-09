@@ -2,9 +2,10 @@ import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { getIcon, getTagline, mealTagline } from './timelineUtility';
 import { DateTime } from 'luxon';
-import { Paper, Switch, Slide } from '@material-ui/core';
+import { Paper, Switch, Slide, FormControlLabel } from '@material-ui/core';
 import './Stepper.css';
 import { Timeline, TimelineEvent } from 'react-event-timeline';
+import { useN01SwitchStyles } from '@mui-treasury/styles/switch/n01';
 
 const Tester = () => {
   //#region *** Redux *** Click Tab to Toggle ***
@@ -19,8 +20,9 @@ const Tester = () => {
   );
   //#endregion
 
-  const [display, setDisplay] = useState('');
   const [checked, setChecked] = useState(true);
+  const [showAll, setShowAll] = useState(true);
+  const switchStyles = useN01SwitchStyles();
 
   const getStopTime = (node, suggestions) => {
     if (!suggestions[node]) return;
@@ -48,19 +50,44 @@ const Tester = () => {
     setChecked(prev => !prev);
   };
 
-  const converter = require('number-to-words');
-
-  const toggleDetails = e => {
-    console.log(e.target.child);
+  const toggleInfo = () => {
+    setShowAll(prev => !prev);
   };
+
+  const converter = require('number-to-words');
 
   return (
     <>
-      <Switch checked={checked} onChange={handleChange} />
+      <div>
+        <FormControlLabel
+          control={
+            <Switch
+              classes={switchStyles}
+              checked={checked}
+              onChange={handleChange}
+              color='primary'
+            />
+          }
+          label='Timeline'
+        />
+        <FormControlLabel
+          label='Details'
+          control={
+            <Switch
+              classes={switchStyles}
+              checked={showAll}
+              onChange={toggleInfo}
+              color='primary'
+            />
+          }
+        />
+      </div>
+
       <Slide direction='right' in={checked} mountOnEnter unmountOnExit>
-        <Timeline onClick={toggleDetails}>
+        <Timeline className='Timeline__Wrapper'>
           <TimelineEvent
-            collapsible={true}
+            title={origin}
+            collapsible={!showAll}
             icon={getIcon('Origin')}
             contentStyle={{ backgroundColor: 'none' }}>
             <Paper elevation={3} className='Start__Card'>
@@ -72,9 +99,16 @@ const Tester = () => {
 
           {nodes &&
             Object.keys(nodes).map(node => {
+              const ref = nodes[node][0].type || null;
               return (
-                <TimelineEvent>
-                  <div style={{ display: 'flex' }}>
+                <TimelineEvent
+                  icon={getIcon(ref)}
+                  collapsible={!showAll}
+                  style={{ postion: 'absolute', overflow: 'scroll' }}
+                  contentStyle={{
+                    backgroundColor: 'none'
+                  }}>
+                  <div className='individual__stop'>
                     {nodes[node].length ? (
                       <Paper elevation={3} className='Timeline__Divider'>
                         {converter.toWordsOrdinal(node).toUpperCase()} STOP
@@ -113,6 +147,8 @@ const Tester = () => {
               );
             })}
           <TimelineEvent
+            title={destination}
+            collapsible={!showAll}
             icon={getIcon('Destination')}
             contentStyle={{ backgroundColor: 'none' }}>
             <Paper elevation={3} className='Start__Card'>

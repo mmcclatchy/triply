@@ -22,20 +22,14 @@
   padding: 5px;
 }
 
-.tester {
-  position: fixed;
-  z-index: 99999;
-}
-
 .trip__container--initial {
   position: fixed;
-  display: flex;
   z-index: 99999;
   text-align-last: start;
   -webkit-text-stroke-width: medium;
   padding: 10px;
-  width: 69vw;
-  max-height: 20vh;
+  width: 100%;
+  max-width: fit-content;
   border: 2px solid red;
   overflow: scroll;
 }

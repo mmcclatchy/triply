@@ -46,10 +46,6 @@ const TripPage = () => {
           <Link onClick={handleClick} to='/'>
             <div className='trip__logo' />
           </Link>
-          <Timeline nodes={nodes} />
-        </div>
-
-        <div className='tester'>
           <Test />
         </div>
 
