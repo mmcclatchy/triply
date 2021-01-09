@@ -12,111 +12,103 @@ import { setDisplayedSuggestions } from '../store/actions/stepper';
 
 const Suggestions = ({ type, typeName, label }) => {
   // *** Redux ***
-  const currentSuggestions = useSelector(state => state.stepper.displayedSuggestions);
+  const currentSuggestions = useSelector(
+    state => state.stepper.displayedSuggestions
+  );
   const dispatch = useDispatch();
-  
-  
+
   // *** Local State ***
-  const [nodeIndex, setNodeIndex] = useState(0);  
-  
+  const [nodeIndex, setNodeIndex] = useState(0);
 
   // *** Helper Functions ***
   const handlePrevClick = (index, cb) => {
     if (index <= 3) cb(0);
     cb(index - 3);
-  }
-  
+  };
+
   const handleNextClick = (index, cb) => {
-    cb(index + 3)
-  }
-  
-  
+    cb(index + 3);
+  };
+
   // *** Use Effects ***
   useEffect(() => {
-    const suggestions = type.slice(nodeIndex, nodeIndex + 3)
-    dispatch(setDisplayedSuggestions(typeName, suggestions))
+    const suggestions = type.slice(nodeIndex, nodeIndex + 3);
+    dispatch(setDisplayedSuggestions(typeName, suggestions));
   }, [nodeIndex]);
-  
-  useEffect(() => {}, [currentSuggestions])
-  
 
-  
+  useEffect(() => {}, [currentSuggestions]);
+
   // *** JSX ***
   return (
     <div>
       <div className='Type__Container'>
-        <div className="node__prev-wrapper">
-          {
-            nodeIndex === 0
-              ? <Button 
-                  disabled 
-                  disableElevation 
-                  variant='outlined' 
-                  // style={{ color: '#3f51b5' }}
-                  className='node__suggestion-buttons'
-                >
-                  Previous
-                </Button>
-              : <Button 
-                  disableElevation 
-                  variant='outlined' 
-                  // style={{ color: '#3f51b5' }}
-                  className='node__suggestion-buttons'
-                  onClick={() => handlePrevClick(nodeIndex, setNodeIndex)}
-                >
-                  Previous
-                </Button>
-          }
+        <div className='node__prev-wrapper'>
+          {nodeIndex === 0 ? (
+            <Button
+              disabled
+              disableElevation
+              variant='outlined'
+              className='node__suggestion-buttons'>
+              Previous
+            </Button>
+          ) : (
+            <Button
+              disableElevation
+              variant='outlined'
+              className='node__suggestion-buttons'
+              onClick={() => handlePrevClick(nodeIndex, setNodeIndex)}>
+              Previous
+            </Button>
+          )}
         </div>
-        
-        <div className="node__icon-label-wrapper">
-          {typeName === 'restaurants' && <img src={foodIcon} style={{ width: '30px' }} />}
-          {typeName === 'gasStations' && <img src={gasIcon} style={{ width: '30px' }} />}
-          {typeName === 'hotels' && <img src={hotelIcon} style={{ width: '30px' }} />}
+
+        <div className='node__icon-label-wrapper'>
+          {typeName === 'restaurants' && (
+            <img src={foodIcon} style={{ width: '30px' }} />
+          )}
+          {typeName === 'gasStations' && (
+            <img src={gasIcon} style={{ width: '30px' }} />
+          )}
+          {typeName === 'hotels' && (
+            <img src={hotelIcon} style={{ width: '30px' }} />
+          )}
           <div className='node__label'>{label}</div>
         </div>
-        
-        <div className="node_next-wrapper">
-          {
-            nodeIndex >= type?.length - 4
-              ? <Button 
-                  disabled 
-                  disableElevation 
-                  variant='outlined' 
-                  // style={{ color: '#3f51b5' }}
-                  className='node__suggestion-buttons'
-                >
-                  Next
-                </Button>
-              : <Button 
-                  disableElevation 
-                  variant='outlined' 
-                  // style={{ color: '#3f51b5' }}
-                  className='node__suggestion-buttons'
-                  onClick={() => handleNextClick(nodeIndex, setNodeIndex)}
-                >
-                  Next
-                </Button>
-          }
+
+        <div className='node_next-wrapper'>
+          {nodeIndex >= type?.length - 4 ? (
+            <Button
+              disabled
+              disableElevation
+              variant='outlined'
+              className='node__suggestion-buttons'>
+              Next
+            </Button>
+          ) : (
+            <Button
+              disableElevation
+              variant='outlined'
+              className='node__suggestion-buttons'
+              onClick={() => handleNextClick(nodeIndex, setNodeIndex)}>
+              Next
+            </Button>
+          )}
         </div>
       </div>
-      
+
       <div className='node__container'>
-        {
-          currentSuggestions?.[typeName]?.map((suggestion, i) => {
-            return (
-              <Node
-                data={suggestion}
-                type={typeName}
-                key={i}
-                index={i}
-                className={`node_${typeName}`}
-              />
-            );
-          })
-        }
+        {currentSuggestions?.[typeName]?.map((suggestion, i) => {
+          return (
+            <Node
+              data={suggestion}
+              type={typeName}
+              key={i}
+              index={i}
+              className={`node_${typeName}`}
+            />
+          );
+        })}
       </div>
-      
     </div>
   );
 };

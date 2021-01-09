@@ -5,7 +5,6 @@ import clockIcon from '../assets/clock.svg';
 import gasIcon from '../assets/GasStation.svg';
 import hotelIcon from '../assets/hotel.svg';
 import foodIcon from '../assets/food.svg';
-import { requirePropFactory } from '@material-ui/core';
 
 Date.prototype.addHours = function (h) {
   this.setTime(this.getTime() + h * 60 * 60 * 1000);
@@ -47,16 +46,15 @@ export const getTagline = key => {
   if (key === 'gasStations') return `Refill`;
 };
 
-export const meal = time => {
-  const idx = time.indexOf(':');
-  const hour = time.slice(0, idx);
-  if (time.includes('am') && parseInt(hour) >= 5) {
-    return 'Breakfast';
-  } else if (time.includes('pm') && parseInt(hour) < 6) {
-    return 'Lunch';
-  } else {
-    return 'Dinner';
-  }
+// *** QOL Function for Meal Time on Timeline Nodes ***
+export const mealTagline = time => {
+  const date = new Date(time);
+  const hrs = date.getHours();
+  let greeting;
+  if (hrs < 12) greeting = 'Breakfast at';
+  else if (hrs >= 12 && hrs <= 17) greeting = 'Lunch at';
+  else if (hrs >= 17 && hrs <= 24) greeting = 'Dinner at';
+  return greeting;
 };
 
 export const stopTimes = array => {

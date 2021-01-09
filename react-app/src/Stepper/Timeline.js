@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { getIcon, getTagline } from './timelineUtility';
+import { getIcon, getTagline, mealTagline } from './timelineUtility';
 import { DateTime } from 'luxon';
 import { Paper } from '@material-ui/core';
 import './Stepper.css';
@@ -15,29 +15,28 @@ const Timeline = () => {
   const startTime = DateTime.fromISO(start).toLocaleString(
     DateTime.DATETIME_SHORT
   );
-  
+
   const getStopTime = (node, suggestions) => {
     if (!suggestions[node]) return;
-    
+
     const stopISO = suggestions[node].stopISO;
     return DateTime.fromISO(stopISO).toLocaleString(DateTime.DATETIME_SHORT);
-  }
-  
+  };
+
   const getEndTime = (start, duration) => {
     if (!duration) return;
-    
+
     const durationSplit = duration.split(' ');
     if (durationSplit[3] === 'mins') durationSplit[3] = 'minutes';
-    
+
     const durationObj = {
       [durationSplit[1]]: parseInt(durationSplit[0]) || 0,
       [durationSplit[3]]: parseInt(durationSplit[2]) || 0
-    }
-    // console.log('durations Obj: ', durationObj)
+    };
     return DateTime.fromISO(start)
       .plus(durationObj)
       .toLocaleString(DateTime.DATETIME_SHORT);
-  }
+  };
 
   const converter = require('number-to-words');
 
@@ -61,20 +60,26 @@ const Timeline = () => {
                 {converter.toWordsOrdinal(node).toUpperCase()} STOP
               </Paper>
               <Paper elevation={3} className='Timeline__Card'>
-                <a className='Card__Clock'>
-                  {getIcon('clock')}  
-                </a>
-                <a className='Card__Time'>
-                  {getStopTime(node, suggestions)}
-                </a>
+                <a className='Card__Clock'>{getIcon('clock')}</a>
+                <a className='Card__Time'>{getStopTime(node, suggestions)}</a>
               </Paper>
               {nodes[node].map(e => {
                 return (
                   <Paper elevation={3} className='Timeline__Card'>
                     {getIcon(e.type)}
                     <div>
-                      <h3>{getTagline(e.type)}</h3>
-                      <h3>{e.name}</h3>
+                      {e.type === 'restaurants' ? (
+                        <h3>
+                          {mealTagline(getStopTime(node, suggestions))}
+                          {'  '}
+                          {e.name}
+                        </h3>
+                      ) : (
+                        <>
+                          <h3>{getTagline(e.type)}</h3>
+                          <h3>{e.name}</h3>
+                        </>
+                      )}
                       <div>{e.vicinity}</div>
                     </div>
                   </Paper>

@@ -36,8 +36,8 @@
 }
 
 .trip_summary_container {
-  padding: 5px 10px 5px 10px;
   text-align: center;
+  padding: 20px;
 }
 
 .trip_customize_container {
@@ -48,6 +48,8 @@
 .trip_summary_details {
   text-align: left;
   font-family: Arial, Helvetica, sans-serif;
+  width: 75%;
+  margin: auto;
 }
 
 .trip_mini_detail {
@@ -61,4 +63,26 @@
 .StartOfTripForm {
   margin: 15px;
   font-family: Arial, Helvetica, sans-serif;
+}
+
+.endmodal__container {
+  display: flex;
+  justify-content: space-between;
+  width: 800px;
+  height: 35vh;
+  padding: 80px 100px 80px 100px;
+}
+
+.endmodal__qr {
+  margin: 20px;
+  width: 100%;
+}
+
+.endmodal__email {
+  margin: 20px;
+  width: 100%;
+}
+
+.hidden {
+  display: none;
 }

@@ -9,7 +9,6 @@ import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
 import HotelIcon from '@material-ui/icons/Hotel';
 import FastfoodIcon from '@material-ui/icons/Fastfood';
 import DirectionsCarIcon from '@material-ui/icons/DirectionsCar';
-// import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 
 import './TripPage.css';
 import { postTrip } from '../store/actions/trips';
@@ -29,13 +28,12 @@ const StartOfTripForm = ({ setToggle }) => {
   const endLocation = useSelector(state => state.directions.destination);
   const startTime = useSelector(state => state.directions.startTime);
 
-  
   // *** Local State ***
   const [car, setCar] = useState([]);
   const [selectedCar, setSelectedCar] = useState('1');
   const [timeBetweenStops, setTimeBetweenStops] = useState(5400);
   const [endTimeForDay, setEndTimeForDay] = useState(null);
-  const [dailyStartTime, setDailyStartTime] = useState("");
+  const [dailyStartTime, setDailyStartTime] = useState('');
   const [disabled, setDisabled] = useState(true);
   const [avoidTolls, setAvoidTolls] = useState(false);
   const [options, setOptions] = useState([
@@ -48,14 +46,13 @@ const StartOfTripForm = ({ setToggle }) => {
   const [additionalOption, setAdditionalOption] = useState('');
   const [selectedFoods, setSelectedFoods] = useState(['Food']);
 
-  
   // *** Helper Functions ***
   const handleCarChange = e => setSelectedCar(e.target.value);
   const handleStopChange = e => setTimeBetweenStops(e.target.value);
   const handleSleepChange = e => {
     e.target.value === '' ? setDisabled(true) : setDisabled(false);
     setEndTimeForDay(e.target.value);
-  }
+  };
   const handleDailyStartTimeChange = e => setDailyStartTime(e.target.value);
   const handleCheck = e => setAvoidTolls(e.target.checked);
   const handleAdditionalOptionChange = e =>
@@ -73,7 +70,6 @@ const StartOfTripForm = ({ setToggle }) => {
     setAdditionalOption('');
   };
 
-  
   // *** Add and Removes Foods from Selected Array ***
   const handleCheckOfFood = e => {
     if (selectedFoods.includes(e.target.value)) {
@@ -83,7 +79,6 @@ const StartOfTripForm = ({ setToggle }) => {
     if (e.target.value) setSelectedFoods([...selectedFoods, e.target.value]);
   };
 
-  
   // *** Use Effect Hooks ***
   // On Mount: Get User's Car Data
   useEffect(() => {
@@ -98,11 +93,11 @@ const StartOfTripForm = ({ setToggle }) => {
     };
     getCars();
   }, []);
-  
+
   // Re-Render when a hotel time is chosen
   useEffect(() => {
     // console.log('disabled: ', disabled)
-  }, [disabled])
+  }, [disabled]);
 
   // Re-Render Options and Add Option to Selected Foods
   useEffect(() => {
@@ -112,7 +107,6 @@ const StartOfTripForm = ({ setToggle }) => {
     setSelectedFoods([...selectedFoods, newBox.value]);
   }, [options.length]);
 
-  
   // *** Post Trip Info to the Backend ***
   const saveInfo = e => {
     dispatch(
@@ -140,7 +134,6 @@ const StartOfTripForm = ({ setToggle }) => {
     setToggle(false);
   };
 
-  
   // *** JSX ***
 
   return (
@@ -196,7 +189,9 @@ const StartOfTripForm = ({ setToggle }) => {
           <div>
             <label>What time do you want to stop for a hotel?</label>
             <select value={endTimeForDay} onChange={handleSleepChange}>
-              <option value={null} selected>I don't need a hotel</option>
+              <option value={null} selected>
+                I don't need a hotel
+              </option>
               <option value={'00:00:00'}>12 AM</option>
               <option value={'00:01:00'}>1 AM</option>
               <option value={'00:02:00'}>2 AM</option>
@@ -225,11 +220,10 @@ const StartOfTripForm = ({ setToggle }) => {
           </div>
           <div>
             <label>What time will you get back on the road?</label>
-            <select 
-              value={dailyStartTime} 
-              onChange={handleDailyStartTimeChange} 
-              disabled={disabled}
-            >
+            <select
+              value={dailyStartTime}
+              onChange={handleDailyStartTimeChange}
+              disabled={disabled}>
               <option value={'00:00:00'}>12 AM</option>
               <option value={'00:01:00'}>1 AM</option>
               <option value={'00:02:00'}>2 AM</option>
