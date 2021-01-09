@@ -48,7 +48,6 @@ function App() {
 
       <Route path='/create-trip' exact={true}>
         <TripPage />
-        <Footer />
       </Route>
 
       <Route path='/profile/:userId' authenticated={authenticated}>

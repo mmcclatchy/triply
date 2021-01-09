@@ -1,10 +1,11 @@
 .trip__logo {
-  background-image: url('../assets/triply_logo3.png');
+  background-image: url('../assets/triply_logo_black.png');
   background-size: 100%;
   background-repeat: no-repeat;
   width: 160px;
   height: 125px;
   margin: auto;
+  margin-right: 5px;
 }
 
 .trip__container {
@@ -16,22 +17,27 @@
   flex-direction: column;
   overflow: auto;
   height: 98vh;
-  width: 100%;
+  width: 42vw;
   align-items: center;
   padding: 5px;
 }
 
 .trip__container--initial {
+  position: fixed;
+  display: flex;
+  z-index: 99999;
   text-align-last: start;
   -webkit-text-stroke-width: medium;
   padding: 10px;
-  width: 40%;
+  width: 69vw;
+  max-height: 20vh;
+  border: 2px solid red;
+  overflow: scroll;
 }
 
 .trip__map {
   height: fit-content;
   border-right: 1px solid black;
-  border-left: 1px solid black;
   width: 100%;
 }
 
