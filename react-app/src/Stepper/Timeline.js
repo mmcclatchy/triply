@@ -63,13 +63,16 @@ const Timeline = () => {
             Object.keys(nodes).map(node => {
               return (
                 <div style={{ display: 'flex' }}>
-                  <Paper elevation={3} className='Timeline__Divider'>
-                    {converter.toWordsOrdinal(node).toUpperCase()} STOP
-                    <a className='Card__Clock'>{getIcon('clock')}</a>
-                    <a className='Card__Time'>
-                      {getStopTime(node, suggestions)}
-                    </a>
-                  </Paper>
+                  {nodes[node].length ? (
+                    <Paper elevation={3} className='Timeline__Divider'>
+                      {converter.toWordsOrdinal(node).toUpperCase()} STOP
+                      <a className='Card__Clock'>{getIcon('clock')}</a>
+                      <a className='Card__Time'>
+                        {getStopTime(node, suggestions)}
+                      </a>
+                    </Paper>
+                  ) : null}
+
                   {nodes[node].map(e => {
                     return (
                       <Paper elevation={3} className='Timeline__Card'>
