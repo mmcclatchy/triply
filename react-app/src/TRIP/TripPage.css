@@ -31,7 +31,6 @@
   width: 100%;
   max-width: fit-content;
   border: 2px solid red;
-  overflow: scroll;
 }
 
 .trip__map {

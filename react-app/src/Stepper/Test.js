@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { getIcon, getTagline, mealTagline } from './timelineUtility';
 import { DateTime } from 'luxon';
@@ -20,15 +20,34 @@ const Tester = () => {
   );
   //#endregion
 
+  const [formatNodes, setFormatNodes] = useState([]);
   const [checked, setChecked] = useState(true);
   const [showAll, setShowAll] = useState(true);
   const switchStyles = useN01SwitchStyles();
 
-  const getStopTime = (node, suggestions) => {
-    if (!suggestions[node]) return;
+  //#region  *** UE Formatting Node Data *** Click Tab to Toggle ***
+  useEffect(() => {
+    (async () => {
+      const data = Object.keys(nodes)
+        .map(stop => {
+          return [
+            ...nodes[stop].map(n => {
+              n['stop'] = parseInt(stop);
+              return n;
+            })
+          ];
+        })
+        .flat();
+      setFormatNodes(data);
+    })();
+  }, [nodes]);
+  //#endregion
 
-    const stopISO = suggestions[node].stopISO;
-    return DateTime.fromISO(stopISO).toLocaleString(DateTime.DATETIME_SHORT);
+  const getStopTime = (node, suggestions) => {
+    if (suggestions && suggestions[node]) {
+      const stopISO = suggestions[node].stopISO;
+      return DateTime.fromISO(stopISO).toLocaleString(DateTime.DATETIME_SHORT);
+    }
   };
 
   const getEndTime = (start, duration) => {
@@ -59,35 +78,34 @@ const Tester = () => {
   return (
     <>
       <div>
+        <label style={{ marginRight: '6px' }}>View</label>
         <FormControlLabel
           control={
             <Switch
               classes={switchStyles}
               checked={checked}
               onChange={handleChange}
-              color='primary'
             />
           }
-          label='Timeline'
         />
+        <label style={{ marginRight: '6px' }}>Details</label>
         <FormControlLabel
-          label='Details'
           control={
             <Switch
               classes={switchStyles}
               checked={showAll}
               onChange={toggleInfo}
-              color='primary'
             />
           }
         />
       </div>
 
       <Slide direction='right' in={checked} mountOnEnter unmountOnExit>
-        <Timeline className='Timeline__Wrapper'>
+        <Timeline className='Timeline__Wrapper' lineColor='black'>
           <TimelineEvent
             title={origin}
             collapsible={!showAll}
+            bubbleStyle={{ border: '2px solid black' }}
             icon={getIcon('Origin')}
             contentStyle={{ backgroundColor: 'none' }}>
             <Paper elevation={3} className='Start__Card'>
@@ -98,57 +116,44 @@ const Tester = () => {
           </TimelineEvent>
 
           {nodes &&
-            Object.keys(nodes).map(node => {
-              const ref = nodes[node][0].type || null;
+            formatNodes.map((node, idx) => {
+              let time = getStopTime(node.stop, suggestions);
               return (
                 <TimelineEvent
-                  icon={getIcon(ref)}
+                  icon={getIcon(node.type)}
                   collapsible={!showAll}
-                  style={{ postion: 'absolute', overflow: 'scroll' }}
+                  bubbleStyle={{ border: '2px solid black' }}
                   contentStyle={{
                     backgroundColor: 'none'
                   }}>
-                  <div className='individual__stop'>
-                    {nodes[node].length ? (
-                      <Paper elevation={3} className='Timeline__Divider'>
-                        {converter.toWordsOrdinal(node).toUpperCase()} STOP
-                        <a className='Card__Clock'>{getIcon('clock')}</a>
-                        <a className='Card__Time'>
-                          {getStopTime(node, suggestions)}
-                        </a>
-                      </Paper>
-                    ) : null}
-
-                    {nodes[node].map(e => {
-                      return (
-                        <Paper elevation={3} className='Timeline__Card'>
-                          {getIcon(e.type)}
-
-                          <div>
-                            {e.type === 'restaurants' ? (
-                              <h3>
-                                {mealTagline(getStopTime(node, suggestions))}
-                                {'  '}
-                                {e.name}
-                              </h3>
-                            ) : (
-                              <>
-                                <h3>{getTagline(e.type)}</h3>
-                                <h3>{e.name}</h3>
-                              </>
-                            )}
-                            <div>{e.vicinity}</div>
-                          </div>
-                        </Paper>
-                      );
-                    })}
-                  </div>
+                  <Paper elevation={3} className='Timeline__Divider'>
+                    {getIcon('clock')}
+                    {converter.toWordsOrdinal(idx + 1).toUpperCase()} STOP
+                    {getStopTime(time)}
+                  </Paper>
+                  <Paper elevation={3} className='Start__Card'>
+                    {node.type === 'restaurants' ? (
+                      <h3>
+                        {mealTagline(getStopTime(time))}
+                        {'  '}
+                        {node.name}
+                      </h3>
+                    ) : (
+                      <>
+                        <h3>{getTagline(node.type)}</h3>
+                        <h3>{node.name}</h3>
+                      </>
+                    )}
+                    <div>{node.vicinity}</div>
+                  </Paper>
                 </TimelineEvent>
               );
             })}
+
           <TimelineEvent
             title={destination}
             collapsible={!showAll}
+            bubbleStyle={{ border: '2px solid black' }}
             icon={getIcon('Destination')}
             contentStyle={{ backgroundColor: 'none' }}>
             <Paper elevation={3} className='Start__Card'>
