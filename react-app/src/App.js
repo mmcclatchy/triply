@@ -8,10 +8,8 @@ import View from './shared_components/Drawer';
 import Homepage from './Homepage/Homepage';
 import { authenticate } from './services/auth';
 import TripPage from './TRIP/TripPage';
-import Footer from './shared_components/Footer'
+import Footer from './shared_components/Footer';
 import { setAuth } from './store/actions/authentication';
-import SuggestionStepper from './Suggestions/SuggestionStepper';
-import TestEnvironment from './TestEnvironment/TestEnvironment';
 
 function App() {
   const [authenticated, setAuthenticated] = useState(false);

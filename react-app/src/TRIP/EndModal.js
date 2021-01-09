@@ -8,7 +8,7 @@ const Transition = forwardRef(function Transition(props, ref) {
 });
 
 export default function EndModal() {
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
 
   const handleClickOpen = () => {
     setOpen(true);
