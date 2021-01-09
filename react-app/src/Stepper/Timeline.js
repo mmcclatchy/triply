@@ -3,7 +3,6 @@ import { useSelector } from 'react-redux';
 import { getIcon, getTagline, mealTagline } from './timelineUtility';
 import { DateTime } from 'luxon';
 import { Paper, Switch, Slide } from '@material-ui/core';
-import DoubleArrowIcon from '@material-ui/icons/DoubleArrow';
 import './Stepper.css';
 
 const Timeline = () => {
@@ -17,7 +16,7 @@ const Timeline = () => {
     DateTime.DATETIME_MED
   );
   const [display, setDisplay] = useState('');
-  const [checked, setChecked] = useState(false);
+  const [checked, setChecked] = useState(true);
 
   const getStopTime = (node, suggestions) => {
     if (!suggestions[node]) return;
@@ -50,6 +49,7 @@ const Timeline = () => {
   return (
     <>
       <Switch checked={checked} onChange={handleChange} />
+
       <Slide direction='top' in={checked} mountOnEnter unmountOnExit>
         <div className='Timeline__Container'>
           <Paper elevation={3} className='Start__Card'>
@@ -99,6 +99,7 @@ const Timeline = () => {
                 </div>
               );
             })}
+
           <Paper elevation={3} className='Start__Card'>
             {getIcon('Destination')}
             <h4> Arriving</h4>

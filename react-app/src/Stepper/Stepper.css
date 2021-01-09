@@ -81,8 +81,8 @@
 }
 
 .Timeline__Container {
-  border: 2px solid blue;
   display: flex;
+  justify-content: space-between;
   width: 100%;
   text-align-last: center;
 }

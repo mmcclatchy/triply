@@ -18,6 +18,7 @@ import {
 } from '../store/actions/directions';
 import { clearTrips } from '../store/actions/trips';
 import { clearStepper } from '../store/actions/stepper';
+import Test from '../Stepper/Test';
 
 const TripPage = () => {
   const [toggle, setToggle] = useState(true);
@@ -46,6 +47,10 @@ const TripPage = () => {
             <div className='trip__logo' />
           </Link>
           <Timeline nodes={nodes} />
+        </div>
+
+        <div className='tester'>
+          <Test />
         </div>
 
         <div className='trip__map'>

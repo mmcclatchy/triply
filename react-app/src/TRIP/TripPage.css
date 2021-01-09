@@ -22,6 +22,11 @@
   padding: 5px;
 }
 
+.tester {
+  position: fixed;
+  z-index: 99999;
+}
+
 .trip__container--initial {
   position: fixed;
   display: flex;
