@@ -53,8 +53,7 @@ const TripPage = () => {
         </div>
 
         <div className='trip__container--inner'>
-          <TripComplete />
-          {/* {toggle ? (
+          {toggle ? (
             <>
               <TripSummary view={false} />
               <StartOfTripForm setToggle={setToggle} />
@@ -63,7 +62,7 @@ const TripPage = () => {
             <TripComplete />
           ) : (
             <SuggestionStepper />
-          )} */}
+          )}
         </div>
       </div>
     </>
