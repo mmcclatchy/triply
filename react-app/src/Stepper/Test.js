@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { getIcon, getTagline, mealTagline } from './timelineUtility';
+import { getIcon, getTagline, mealTagline, mealIcon } from './timelineUtility';
 import { DateTime } from 'luxon';
 import { Paper, Switch, Slide, FormControlLabel } from '@material-ui/core';
 import './Stepper.css';
@@ -22,7 +22,6 @@ const Tester = () => {
 
   const [formatNodes, setFormatNodes] = useState([]);
   const [checked, setChecked] = useState(true);
-  const [showAll, setShowAll] = useState(true);
   const switchStyles = useN01SwitchStyles();
 
   //#region  *** UE Formatting Node Data *** Click Tab to Toggle ***
@@ -44,8 +43,11 @@ const Tester = () => {
   //#endregion
 
   const getStopTime = (node, suggestions) => {
+    console.log('hitting function');
     if (suggestions && suggestions[node]) {
+      console.log('have sug and node');
       const stopISO = suggestions[node].stopISO;
+      console.log('STOP ISO', stopISO);
       return DateTime.fromISO(stopISO).toLocaleString(DateTime.DATETIME_SHORT);
     }
   };
@@ -69,16 +71,11 @@ const Tester = () => {
     setChecked(prev => !prev);
   };
 
-  const toggleInfo = () => {
-    setShowAll(prev => !prev);
-  };
-
   const converter = require('number-to-words');
 
   return (
     <>
       <div>
-        <label style={{ marginRight: '6px' }}>View</label>
         <FormControlLabel
           control={
             <Switch
@@ -87,16 +84,7 @@ const Tester = () => {
               onChange={handleChange}
             />
           }
-        />
-        <label style={{ marginRight: '6px' }}>Details</label>
-        <FormControlLabel
-          control={
-            <Switch
-              classes={switchStyles}
-              checked={showAll}
-              onChange={toggleInfo}
-            />
-          }
+          label='Toggle Timeline'
         />
       </div>
 
@@ -104,7 +92,7 @@ const Tester = () => {
         <Timeline className='Timeline__Wrapper' lineColor='black'>
           <TimelineEvent
             title={origin}
-            collapsible={!showAll}
+            collapsible={true}
             bubbleStyle={{ border: '2px solid black' }}
             icon={getIcon('Origin')}
             contentStyle={{ backgroundColor: 'none' }}>
@@ -120,31 +108,43 @@ const Tester = () => {
               let time = getStopTime(node.stop, suggestions);
               return (
                 <TimelineEvent
+                  title={node.name}
+                  subtitle={time}
                   icon={getIcon(node.type)}
-                  collapsible={!showAll}
+                  collapsible={true}
                   bubbleStyle={{ border: '2px solid black' }}
                   contentStyle={{
                     backgroundColor: 'none'
                   }}>
-                  <Paper elevation={3} className='Timeline__Divider'>
-                    {getIcon('clock')}
-                    {converter.toWordsOrdinal(idx + 1).toUpperCase()} STOP
-                    {getStopTime(time)}
-                  </Paper>
-                  <Paper elevation={3} className='Start__Card'>
-                    {node.type === 'restaurants' ? (
-                      <h3>
-                        {mealTagline(getStopTime(time))}
-                        {'  '}
-                        {node.name}
-                      </h3>
-                    ) : (
-                      <>
-                        <h3>{getTagline(node.type)}</h3>
-                        <h3>{node.name}</h3>
-                      </>
-                    )}
-                    <div>{node.vicinity}</div>
+                  {node.type === 'restaurants' ? (
+                    <div style={{ marginBottom: '-20px', marginLeft: '-8px' }}>
+                      {mealIcon(time)}
+                    </div>
+                  ) : (
+                    <div style={{ marginBottom: '-20px', marginLeft: '-8px' }}>
+                      {getIcon(node.type)}
+                    </div>
+                  )}
+
+                  <Paper elevation={3} className='Start__Card flex'>
+                    <div style={{ textAlign: 'left' }}>
+                      {node.type === 'restaurants' ? (
+                        <>
+                          <h3>
+                            {mealTagline(time)}
+                            {'  '}
+                            {node.name}
+                          </h3>
+                          <p>{node.vicinity}</p>
+                        </>
+                      ) : (
+                        <>
+                          <h3>{getTagline(node.type)}</h3>
+                          <h3>{node.name}</h3>
+                          <p>{node.vicinity}</p>
+                        </>
+                      )}
+                    </div>
                   </Paper>
                 </TimelineEvent>
               );
@@ -152,7 +152,7 @@ const Tester = () => {
 
           <TimelineEvent
             title={destination}
-            collapsible={!showAll}
+            collapsible={true}
             bubbleStyle={{ border: '2px solid black' }}
             icon={getIcon('Destination')}
             contentStyle={{ backgroundColor: 'none' }}>
