@@ -195,7 +195,7 @@ class TripClass:
     def getTimeTillNextHotel(self, hotelForce):
         if not hotelForce:
             return 1000000000
-        print("\n \n \n")
+        # print("\n \n \n")
         if not self.tempCache["endTimeForDay"]:
             return 1000000000
         ref = datetime.time.fromisoformat(self.tempCache["endTimeForDay"])
