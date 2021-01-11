@@ -59,6 +59,7 @@ def post_stop(trip_id):
     if data['hotel']:
         trip_algo.addHotel(data['hotel']['place_id'])
 
+    print("\n \n \n THIS IS WHAT IS BEING CHECKED FOR SKIP *******", data['restaurant'], data['gasStation'], data['hotel'])
     if (data['restaurant'] is None and
             data['gasStation'] is None and
             data['hotel'] is None):
