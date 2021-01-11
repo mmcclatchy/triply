@@ -85,10 +85,9 @@ def post_trip(user_id):
         directions=directions_json
     )
 
-    hotel_needed = True if data['endTimeForDay'] else False
+    # hotel_needed = True if data['endTimeForDay'] else False
     next_stop_suggestions = trip_algo.getNextStopDetails(
         foodQuery=food_query[0],
-        hotel=hotel_needed
     )
 
     try:
