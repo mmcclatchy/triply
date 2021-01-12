@@ -367,6 +367,14 @@ class TripClass:
                     break
         del stop[scopedVar]
 
+    def getGoogleMapsUrl(self):
+        url = "https://www.google.com/maps/dir/"
+        url += str(self.directions["routes"][0]["legs"][0]["start_location"]["lat"]) + ",+" + str(self.directions["routes"][0]["legs"][0]["start_location"]["lng"]) + "/"
+        for point in self.directions["routes"][0]["legs"]:
+            url += str(point["end_location"]["lat"]) + ",+" + str(point["end_location"]["lng"]) + "/"
+        return url
+
+
 
 
 
@@ -402,6 +410,10 @@ class TripClass:
 # l = TripClass()
 # l.createFromJson(t.getDirections())
 # t = l
+
+# print(t.getGoogleMapsUrl())
+
+# print(t.getDirections())
 # # print("Set of tempcache **********************", hasattr(l, "tempcache"))
 
 # results = t.getNextStopDetails("mexican")
