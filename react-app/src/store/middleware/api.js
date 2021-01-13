@@ -13,7 +13,7 @@ const api = ({ dispatch, getState }) => next => async action => {
   //* Payload will determine the fetch call and what is being dispatched
   const { endpoint, method, body, actionConst } = action.payload;
   
-  
+  console.log('API: ', action.payload)
   
   
   const response = await fetch(`${baseUrl}${endpoint}`, {
@@ -27,19 +27,15 @@ const api = ({ dispatch, getState }) => next => async action => {
       payload, 
       suggestions, 
       directions, 
-      tripComplete 
+      tripComplete
     } = await response.json(); 
     
     if (directions) dispatch({ 
       type: SET_DIRECTIONS, 
-      payload: {
-        itinerary: await JSON.parse(directions.itinerary),
-        foodQuery: directions.foodQuery,
-        avoidTolls: directions.avoidTolls,
-      }
+      payload: { ...directions, itinerary: await JSON.parse(directions.itinerary) }
     });
     
-    console.log('api middleware: suggestions: ', suggestions);
+    console.log('api middleware: directions URL: ', directions.tripUrl);
     
     if (suggestions) dispatch({ type: ADD_SUG, payload: suggestions });
     

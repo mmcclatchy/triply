@@ -21,6 +21,7 @@ export const getTrip = tripId => ({
 });
 
 export const postTrip = (trip, userId) => {
+  console.log('POST TRIP: ', trip)
   return {
     type: API,
     payload: {

@@ -30,11 +30,12 @@ export default function reducer(state = initialState, { type, payload }) {
       return {...state, duration: payload }
     
     case SET_DIRECTIONS:
-      const { itinerary, foodQuery, avoidTolls } = payload;
+      // const { itinerary, foodQuery, tripUrl } = payload;
       // console.log('DIRECTION STATE: ', state)
-      const newState = { ...state, itinerary, foodQuery, avoidTolls }
+      // const newState = { ...state, itinerary, foodQuery, tripUrl }
       // console.log("🚀 ~ file: directions.js ~ line 36 ~ reducer ~ newState", newState)
-      return newState
+      console.log('SET_DIRECTIONS: ', payload)
+      return { ...state, ...payload }
       
     case CLEAR_DIRECTIONS:
       return initialState;
