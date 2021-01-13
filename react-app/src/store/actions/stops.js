@@ -22,6 +22,7 @@ export const getStop = stopId => ({
 
 
 export const postStop = (stop, tripId) => {
+  console.log('POST STOP: ', stop, tripId)
   return {
     type: API,
     payload: {

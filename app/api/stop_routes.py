@@ -143,20 +143,21 @@ def post_stop(trip_id):
         directions = trip_algo.getDirections()
         trip.directions = directions
 
+        # Get suggestions for next stop or mark trip as complete
+        suggestions = trip_algo.getNextStopDetails(foodQuery=food_pref)
+
+        trip_complete = False
+        trip_url = None
+
+        if not suggestions:
+            trip_complete = True
+            trip_url = trip_algo.getGoogleMapsUrl()
+            trip.trip_url = trip_url
+
         # Update the database with all changes
         db.session.add(trip)
         db.session.add(stop)
         db.session.commit()
-
-        # Get suggestions for next stop or mark trip as complete
-        suggestions = trip_algo.getNextStopDetails(foodQuery=food_pref)
-        trip_complete = False
-
-        if not suggestions:
-            trip_complete = True
-
-        trip_url = trip_algo.getGoogleMapsUrl() if trip_complete else None
-        print(f'*****\n\nTrip URL: {trip_url}\n\n*****')
 
         # Create a dictionary to return to the front end
         stop_info = {

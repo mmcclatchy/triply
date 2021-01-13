@@ -4,6 +4,7 @@ import { Paper, Typography, Button } from '@material-ui/core';
 import DriveEtaIcon from '@material-ui/icons/DriveEta';
 import { postTrip } from '../store/actions/trips';
 import './TripPage.css';
+import { DateTime } from 'luxon';
 
 const TripSummary = ({ view }) => {
   const [details, setDetails] = useState(view);
@@ -55,7 +56,13 @@ const TripSummary = ({ view }) => {
                       <td>
                         <b>Departure Date</b>
                       </td>
-                      <td> {startTime}</td>
+                      <td> 
+                        {
+                          startTime instanceof DateTime
+                            ? startTime.toLocaleString(DateTime.DATETIME_MED)
+                            : startTime
+                        }
+                      </td>
                     </tr>
                     <tr>
                       <td>

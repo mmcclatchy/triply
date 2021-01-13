@@ -82,7 +82,10 @@ def post_trip(user_id):
         user_id=data['userId'],
         name=f'{origin} -> {destination}',
         car_id=data['carId'],
-        directions=directions_json
+        directions=directions_json,
+        start_location=origin,
+        end_location=destination,
+        start_iso=data['startISO']
     )
 
     # hotel_needed = True if data['endTimeForDay'] else False
