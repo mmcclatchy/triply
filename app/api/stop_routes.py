@@ -155,14 +155,18 @@ def post_stop(trip_id):
         if not suggestions:
             trip_complete = True
 
+        trip_url = trip_algo.getGoogleMapsUrl() if trip_complete else None
+        print(f'*****\n\nTrip URL: {trip_url}\n\n*****')
+
         # Create a dictionary to return to the front end
         stop_info = {
             'suggestions': suggestions,
             'directions': {
                 'itinerary': directions,
-                'foodQuery': food_query
+                'foodQuery': food_query,
+                'tripUrl': trip_url
             },
-            'tripComplete': trip_complete
+            'tripComplete': trip_complete,
         }
         stop_json = jsonify(stop_info)
         return stop_json

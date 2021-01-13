@@ -5,6 +5,8 @@ import TripSummary from './TripSummary';
 import confetti from '../assets/confetti.svg';
 
 export default function TripComplete() {
+  
+  
   return (
     <div
       className='complete-wrapper'

@@ -21,7 +21,7 @@ export default function stepperReducer(state = initState, action) {
 
   let displayedSuggestions;
   // console.log("stepper reducer", type, payload)
-  console.log(ADD_SUG, 'add sug');
+  // console.log(ADD_SUG, 'add sug');
   switch (action.type) {
     case ADD_SUG:
       // console.log("this is state.step", state.step)

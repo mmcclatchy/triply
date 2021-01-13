@@ -22,5 +22,6 @@
     "prettier.bracketSpacing": true,
     "prettier.jsxBracketSameLine": true,
     "prettier.arrowParens": "avoid",
+    "python.pythonPath": ".venv/bin/python",
     
 }
