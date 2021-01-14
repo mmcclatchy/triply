@@ -5,10 +5,12 @@ const baseUrl = process.env.REACT_APP_BASE_URL;
 const api = ({ dispatch, getState }) => next => async action => {
   
   
-  // console.log('API ACTION: ', action)
+  console.log('API ACTION: ', action)
   
   
-  if (action.type !== API) return next(action);
+  if (action.type !== API) { 
+    return next(action); 
+  }
 
   //* Payload will determine the fetch call and what is being dispatched
   const { endpoint, method, body, actionConst } = action.payload;
@@ -35,7 +37,7 @@ const api = ({ dispatch, getState }) => next => async action => {
       payload: { ...directions, itinerary: await JSON.parse(directions.itinerary) }
     });
     
-    console.log('api middleware: directions URL: ', directions.tripUrl);
+    console.log('api middleware: Trip complete: ', tripComplete);
     
     if (suggestions) dispatch({ type: ADD_SUG, payload: suggestions });
     

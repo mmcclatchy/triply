@@ -14,6 +14,7 @@ class Trip(db.Model):
     end_location = db.Column(db.String(255))
     start_iso = db.Column(db.String(35))
     end_iso = db.Column(db.String(35))
+    trip_url = db.Column(db.Text)
 
     stops = db.relationship('Stop', back_populates='trip', lazy='joined')
     car = db.relationship('Car', back_populates='trips', lazy='joined')
@@ -27,6 +28,7 @@ class Trip(db.Model):
             'start_location': self.start_location,
             'end_location': self.end_location,
             'start_iso': self.start_iso,
+            "trip_url": self.trip_url,
             'stops': [stop.id for stop in self.stops]
         }
 
