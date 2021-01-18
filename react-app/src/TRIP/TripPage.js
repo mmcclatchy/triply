@@ -47,7 +47,7 @@ const TripPage = () => {
           <Link onClick={handleClick} to='/'>
             <img src={logo} style={{ width: '200px' }} />
           </Link>
-          {/* <Test /> */}
+          <Test />
         </div>
 
         <div className='trip__map'>
