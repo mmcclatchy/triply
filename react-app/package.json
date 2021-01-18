@@ -17,6 +17,7 @@
     "http-proxy-middleware": "^1.0.5",
     "luxon": "^1.25.0",
     "number-to-words": "^1.2.4",
+    "qrcode.react": "^1.0.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-event-timeline": "^1.6.3",
