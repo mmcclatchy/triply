@@ -351,6 +351,7 @@ class TripClass:
     # returns directions as json
     def getDirections(self):
         self.updateDirections()
+        print("\n \n \n This is the stopArray:", self.cache["stopArray"], "\n \n \n")
         return json.dumps(self.directions)
 
     def editStop(self, oldPlaceId, newPlaceId):
