@@ -200,6 +200,7 @@ class TripClass:
             return 1000000000
         ref = datetime.time.fromisoformat(self.tempCache["endTimeForDay"])
         endTimeForDay = datetime.datetime(year=1, month=1, day=1, hour=ref.hour, minute=ref.minute, second=ref.second)
+        print("Where it is breaking:", self.cache["stopArray"][-1]['time'])
         ref = datetime.datetime.fromisoformat(self.cache["stopArray"][-1]['time']).time()
         lastStopTime = datetime.datetime(year=1, month=1, day=1, hour=ref.hour, minute=ref.minute, second=ref.second)
 
@@ -379,7 +380,8 @@ class TripClass:
 
 
 
-
+print(datetime.time(hour=22).isoformat())
+print(datetime.datetime(year=2020, month=12, day=29, hour=10, minute=13).isoformat())
 
 # t = TripClass()
 # t.createNewTrip("Santa Rosa, California", "Holland, Mi", 100, 4 * 60 * 60, datetime.time(hour=22).isoformat(), datetime.datetime(year=2020, month=12, day=29, hour=10, minute=13).isoformat(), False, datetime.time(hour=8).isoformat())
