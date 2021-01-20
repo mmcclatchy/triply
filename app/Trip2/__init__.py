@@ -141,7 +141,8 @@ class TripClass:
 
 
         # we now have the vertext. Now we need to look for the places nearby
-        needGas = distance * 2 > self.tempCache["metersToRefuel"]
+        # needGas = distance * 2 > self.tempCache["metersToRefuel"]
+        needGas = True
 
         delta = datetime.timedelta(seconds=buffer)
         lastStopTime = datetime.datetime.fromisoformat(self.tempCache["stopArray"][-1]["time"])
@@ -200,7 +201,6 @@ class TripClass:
             return 1000000000
         ref = datetime.time.fromisoformat(self.tempCache["endTimeForDay"])
         endTimeForDay = datetime.datetime(year=1, month=1, day=1, hour=ref.hour, minute=ref.minute, second=ref.second)
-        print("Where it is breaking:", self.cache["stopArray"][-1]['time'])
         ref = datetime.datetime.fromisoformat(self.cache["stopArray"][-1]['time']).time()
         lastStopTime = datetime.datetime(year=1, month=1, day=1, hour=ref.hour, minute=ref.minute, second=ref.second)
 
