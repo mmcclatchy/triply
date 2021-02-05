@@ -39,8 +39,11 @@ const useStyles = makeStyles((theme) => ({
   },
   footer: {
     width: "100vw",
-    height: "12vh",
-    background: "black",
+    // height: "12vh",
+    // background: "black",
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
     display: "flex",
     alignItems: "center",
     justifyContent: "space-between"
