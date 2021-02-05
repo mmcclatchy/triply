@@ -83,7 +83,9 @@ const RouteForm = ({}) => {
             className='submit_route'
             variant='contained'
             style={{
-              backgroundColor: 'yellow',
+              backgroundColor: 'rgb(253, 210, 0)',
+              fontWeight: 'bold',
+              border: '2px solid rgba(34,34,34,.6)'
             }}
             onClick={handleClick}>
               Set Route
