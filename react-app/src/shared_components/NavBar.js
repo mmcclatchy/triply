@@ -42,22 +42,25 @@ import { clearStepper } from '../store/actions/stepper';
           </div>
           <Button
             className="profile_button"
-              style={{
+            style={{
               fontWeight: "bold",
               marginRight: "3em",
               marginTop: "1.75em",
-
-            }}>
+              backgroundColor: 'rgba(0, 0, 0, 0)',
+              
+            }}
+          >
            <View anchor='My Profile'/>
           </Button>
 
           <Button
-            variant='outlined'
+            variant='contained'
             style={{
-              backgroundColor: "yellow",
+              backgroundColor: "rgb(253, 210, 0)",
               marginRight: "3em",
               fontWeight: "bold",
-              marginTop:"1em"
+              marginTop:"1em",
+              width: '120px',
             }}
             onClick={onLogout}
             className='homepage__button'>
@@ -67,26 +70,26 @@ import { clearStepper } from '../store/actions/stepper';
       ) : (
         <>
             <Button
-              variant='outlined'
               style={{
-                backgroundColor: "yellow",
+                backgroundColor: "rgba(0, 0, 0, 0)",
                 fontWeight: "bold",
                 marginRight: "3em",
                 marginTop: "1em",
                 height: "3em",
+                width: '125px',
               }}
               className='homepage__button'>
             <View anchor='Login' />
           </Button>
             <Button
-              variant='outlined'
               className='homepage__button'
               style={{
-                backgroundColor: "yellow",
+                backgroundColor: "rgba(0, 0, 0, 0)",
                 fontWeight: "bold",
                 height: "3em",
                 marginRight: "3em",
-                marginTop:"1em"
+                marginTop:"1em",
+                width: '125px',
               }}>
             <View anchor='Sign Up' />
           </Button>
