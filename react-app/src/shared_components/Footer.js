@@ -3,6 +3,7 @@ import {
   makeStyles,
   Drawer
 } from '@material-ui/core';
+import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 
 const useStyles = makeStyles((theme) => ({
   aboutMe: {
@@ -14,14 +15,23 @@ const useStyles = makeStyles((theme) => ({
   },
   drawerButton: {
     marginLeft: "1.5em",
-    color: "yellow",
+    backgroundColor: "rgba(34, 34, 34, .7)",
+    color: 'rgb(255, 255, 255)',
     cursor: "pointer",
-    fontSize: "1em",
-    height: "auto",
-    width: "fit-content",
+    fontSize: "1rem",
+    fontWeight: 'bold',
+    minHeight: "40px",
+    width: "200px",
+    display: 'flex',
+    justifyContent: 'space-evenly',
+    alignItems: 'center',
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
+    transition: 'background-color 300ms ease-in-out',
+    // border: '2px solid rgba(34,34,34,.7)',
     "&:hover": {
       //you want this to be the same as the backgroundColor above
-     color: "#74c69d"
+     backgroundColor: 'rgba(34,34,34,1)'
     },
   },
   email: {
@@ -42,7 +52,7 @@ const useStyles = makeStyles((theme) => ({
     // height: "12vh",
     // background: "black",
     position: 'absolute',
-    bottom: 0,
+    bottom: -2,
     left: 0,
     display: "flex",
     alignItems: "center",
@@ -98,7 +108,8 @@ export default function Footer() {
           <div
             onClick={() => setDrawerOpen(true)}
             className={classes.drawerButton}>
-          About the creators
+            <div>About the creators</div>
+            <ExpandLessIcon />
           </div>
           <Drawer
           anchor="bottom"
