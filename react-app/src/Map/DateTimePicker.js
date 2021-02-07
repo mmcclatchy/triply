@@ -29,7 +29,8 @@ const useStyles = makeStyles(theme => ({
 export default function DateAndTimePickers() {
   const dispatch = useDispatch();
   const classes = useStyles();
-  const [startTimeContent, setStartTimeContent] = useState(new Date());
+  const rightNow = new Date();
+  const [startTimeContent, setStartTimeContent] = useState(rightNow.addHours(1));
 
   useEffect(() => {
     dispatch(setStartTimeAction(startTimeContent));

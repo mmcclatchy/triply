@@ -84,7 +84,8 @@ const RouteForm = ({}) => {
                 style={{
                   backgroundColor: 'var(--yellow)',
                   fontWeight: 'bold',
-                  border: '2px solid rgba(34,34,34,.6)'
+                  border: '2px solid rgba(34,34,34,.6)',
+                  width: '125px',
                 }}
                 onClick={handleClick}>
                 Set Route
