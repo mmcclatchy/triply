@@ -18,11 +18,11 @@
   margin-left: 30px;
   width: 35vw;
   height: 35vh;
-  display: flex
+  display: flex;
 }
 
-.MuiButton-root{
-  background-color: rgb(253, 210, 0);
+.MuiButton-root {
+  background-color: var(--yellow);
 }
 
 .MuiInputBase-input {
@@ -46,7 +46,7 @@
   justify-content: center;
   font-family: 'Anton', sans-serif;
   font-size: 70px;
-  color: rgb(253, 210, 0);
+  color: var(--yellow);
   letter-spacing: 0.2px;
   -webkit-text-stroke: 3px rgb(34, 34, 30);
   font-weight: 400;
@@ -63,7 +63,7 @@
   justify-content: center;
   font-family: 'Anton', sans-serif;
   font-size: 70px;
-  color: rgb(253, 210, 0);
+  color: var(--yellow);
   letter-spacing: 0.2px;
   -webkit-text-stroke: 3px rgb(34, 34, 30);
   font-weight: 400;
@@ -72,7 +72,7 @@
   font-variant: normal;
   text-transform: uppercase;
   margin-right: 1em;
-  margin-top: -.1em;
+  margin-top: -0.1em;
 }
 
 /* .tag_container {
@@ -91,22 +91,22 @@
 .navbar_container {
   display: flex;
   justify-content: flex-end;
-  width: 70em
+  width: 70em;
 }
 
 .form_header {
-    display: flex;
-    justify-content: flex-end;
-    font-family: 'Anton', sans-serif;
-    font-size: 4em;
-    color: rgb(253, 210, 0);
-    letter-spacing: 0.2px;
-    -webkit-text-stroke: 3px rgb(34, 34, 30);
-    font-weight: 400;
-    text-decoration: none;
-    font-style: normal;
-    font-variant: normal;
-    text-transform: uppercase;
-    margin-right: 2em;
-    margin-bottom: 0;
+  display: flex;
+  justify-content: flex-end;
+  font-family: 'Anton', sans-serif;
+  font-size: 4em;
+  color: var(--yellow);
+  letter-spacing: 0.2px;
+  -webkit-text-stroke: 3px rgb(34, 34, 30);
+  font-weight: 400;
+  text-decoration: none;
+  font-style: normal;
+  font-variant: normal;
+  text-transform: uppercase;
+  margin-right: 2em;
+  margin-bottom: 0;
 }

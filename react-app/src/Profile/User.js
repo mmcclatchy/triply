@@ -47,7 +47,7 @@ const useStyles = makeStyles({
     fontSize: '3.5em',
     // fontFamily: "Anton, sans-serif",
     // fontSize: "70px",
-    // color: "rgb(253, 210, 0)",
+    // color: "var(--yellow)",
     // letterSpacing: "0.2px",
     // webkitTextStroke: "3px rgb(34, 34, 30)",
     // fontWeight: 400,
