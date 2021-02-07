@@ -163,7 +163,7 @@ const SignUpForm = () => {
         {passwordError ? (
           <div style={{ color: 'red', fontSize: 12 }}>{passwordError}</div>
         ) : null}
-        <Button className={classes.button} type='submit'>
+        <Button variant='contained' className={classes.button} type='submit'>
           Sign Up
         </Button>
       </form>
