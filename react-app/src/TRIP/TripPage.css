@@ -7,7 +7,7 @@
   flex-direction: column;
   overflow: auto;
   height: 98vh;
-  width: 42vw;
+  width: 600px;
   align-items: center;
   padding: 5px;
 }
@@ -25,7 +25,7 @@
 .trip__map {
   height: fit-content;
   border-right: 1px solid black;
-  width: 100%;
+  width: calc(100% - 600px);
 }
 
 .trip_summary_container {

@@ -12,9 +12,6 @@ import DirectionsCarIcon from '@material-ui/icons/DirectionsCar';
 
 import './TripPage.css';
 import { postTrip } from '../store/actions/trips';
-// import SuggestionStepper from '../Suggestions/SuggestionStepper';
-import SuggestionStepper from '../Stepper/Stepper';
-// import { setDuration } from '../store/actions/setDuration';
 
 //************************************************************
 
