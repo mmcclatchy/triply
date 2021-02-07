@@ -307,20 +307,27 @@ const StartOfTripForm = ({ setToggle }) => {
                   value={additionalOption}
                   className={classes.optionField}
                 />
-                <Button
-                  variant='outlined'
-                  color='secondary'
-                  onClick={handleAdditionalOptionAddition}>
-                  Add
-                </Button>
-              </div>
+                  <Button
+                    variant='outlined'
+                    color='secondary'
+                    onClick={handleAdditionalOptionAddition}
+                  >
+                    Add
+                  </Button>
+                </div>
             </FormControl>
           </div>
           <br />
 
-          <Button color='primary' variant='contained' onClick={saveInfo}>
-            Generate Trip
-          </Button>
+          <div className={classes.generateTripButton} >
+            <Button 
+              color='primary' 
+              variant='contained' 
+              onClick={saveInfo}
+            >
+              Generate Trip
+            </Button>
+          </div>
         </div>
       </div>
     </Paper>

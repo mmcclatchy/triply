@@ -9,6 +9,7 @@ const tripFormStyling = makeStyles(theme => ({
     width: '100%',
     display: 'flex',
     flexFlow: 'column',
+    height: '-webkit-fill-available',
   },
   inputContainer: {
     display: 'flex',
@@ -54,6 +55,7 @@ const tripFormStyling = makeStyles(theme => ({
     width: '100%',
     marginRight: 16
   },
+  generateTripButton: { display: 'flex', justifyContent: 'center' }
 }))
 
 
