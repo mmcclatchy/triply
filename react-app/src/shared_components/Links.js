@@ -23,12 +23,12 @@ const useStyles = makeStyles(() => ({
       
       '& .top': {
           minWidth: '15px', 
-          top: '-20px',
+          top: '0px',
           left: '50%',
           transform: 'translate(-50%, -100%)',
-          padding: '10px 20px',
+          padding: '0px 10px',
           color: '#222',
-          backgroundColor: '#cecdcd',
+          backgroundColor: '#ddd',
           fontWeight: 'bold',
           fontSize: '13px',
           borderRadius: '8px',

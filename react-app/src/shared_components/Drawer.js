@@ -21,7 +21,7 @@ const useStyles = makeStyles({
       width: "1em",
       marginLeft: "2em",
       marginTop: "2em",
-    textAlign: "center",
+      textAlign: "center",
       fontWeight: "bold"
 
   }

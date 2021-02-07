@@ -26,7 +26,7 @@ const Drawer = withStyles({
 const useStyles = makeStyles((theme) => ({
   aboutMe: {
     fontWeight: 'bold',
-    fontSize: "1.75rem",
+    fontSize: "1.5rem",
     fontFamily: "gt-super, Georgia, Cambria, Times New Roman, Times, serif;",
     margin: "1em 1em -.5em 1em"
   },
