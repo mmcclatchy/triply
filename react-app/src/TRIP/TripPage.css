@@ -38,6 +38,7 @@
   text-align: center;
   width: 100%;
   height: -webkit-fill-available;
+  max-height: 1000px;
   display: flex;
   flex-flow: column;
   justify-content: space-evenly;
