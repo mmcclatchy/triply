@@ -9,13 +9,22 @@ import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
 import HotelIcon from '@material-ui/icons/Hotel';
 import FastfoodIcon from '@material-ui/icons/Fastfood';
 import DirectionsCarIcon from '@material-ui/icons/DirectionsCar';
+import InputLabel from '@material-ui/core/InputLabel';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import FormControl from '@material-ui/core/FormControl';
+import NativeSelect from '@material-ui/core/NativeSelect';
+import Checkbox from '@material-ui/core/Checkbox';
+import TextField from '@material-ui/core/TextField';
 
 import './TripPage.css';
 import { postTrip } from '../store/actions/trips';
+import tripFormStyling from './tripFormStyling';
 
 //************************************************************
 
 const StartOfTripForm = ({ setToggle }) => {
+  const classes = tripFormStyling();
+  
   // *** Redux ***
   const dispatch = useDispatch();
   const userName = useSelector(state => state.authentication.userName);
@@ -27,7 +36,7 @@ const StartOfTripForm = ({ setToggle }) => {
 
   // *** Local State ***
   const [car, setCar] = useState([]);
-  const [selectedCar, setSelectedCar] = useState('1');
+  const [selectedCar, setSelectedCar] = useState('');
   const [timeBetweenStops, setTimeBetweenStops] = useState(5400);
   const [endTimeForDay, setEndTimeForDay] = useState(null);
   const [dailyStartTime, setDailyStartTime] = useState('');
@@ -143,154 +152,160 @@ const StartOfTripForm = ({ setToggle }) => {
           </Typography>
 
           <br />
-
-          <DirectionsCarIcon />
-          <div>
-            {userName ? (
-              <>
-                <label>Which car will you be driving?</label>
-                <select value={selectedCar} onChange={handleCarChange}>
-                  {car &&
-                    Object.keys(car).map(key => {
-                      const current = car[`${key}`];
-                      return (
-                        <option key={current.id} value={current.id}>
-                          {current.year}
-                          {current.make}
-                          {current.model}
-                        </option>
-                      );
-                    })}
-                  ,
-                </select>
-              </>
-            ) : (
-              <Link to='/'>
-                <label>Sign In To Choose a Vehicle</label>
-              </Link>
-            )}
+          <div className={classes.inputContainer}>
+            <DirectionsCarIcon />
+            <FormControl>
+              {/* <InputLabel>Which car will you be driving?</InputLabel> */}
+              <FormHelperText>Which car will you be driving?</FormHelperText>
+              <NativeSelect 
+                // defaultValue={1}
+                value={selectedCar} 
+                onChange={handleCarChange}
+                inputProps={{ name: 'Car' }}
+              >
+                {car &&
+                  Object.keys(car).map(key => {
+                    const current = car[`${key}`];
+                    return (
+                      <option key={current.id} value={current.id}>
+                        {current.year}
+                        {current.make}
+                        {current.model}
+                      </option>
+                    );
+                  })}
+                ,
+              </NativeSelect>
+            </FormControl>
           </div>
           <br />
-          <LocalGasStationIcon />
-          <div>
-            <label>How often are we stopping?</label>
-            <select value={timeBetweenStops} onChange={handleStopChange}>
-              <option value={5400}>Every Hour or Two</option>
-              <option value={9000}>Every Two or Three Hours</option>
-              <option value={10800}>Every Three or Four Hours</option>
-              <option value={20000}>Only When I Will Run Out of Gas</option>
-            </select>
+          <div className={classes.inputContainer}>
+            <LocalGasStationIcon />
+            <FormControl>
+              <InputLabel>How often are we stopping?</InputLabel>
+              <NativeSelect value={timeBetweenStops} onChange={handleStopChange}>
+                <option value={5400}>Every Hour or Two</option>
+                <option value={9000}>Every Two or Three Hours</option>
+                <option value={10800}>Every Three or Four Hours</option>
+                <option value={20000}>Only When I Will Run Out of Gas</option>
+              </NativeSelect>
+            </FormControl>
           </div>
           <br />
-          <HotelIcon />
-          <div>
-            <label>What time do you want to stop for a hotel?</label>
-            <select value={endTimeForDay} onChange={handleSleepChange}>
-              <option value={null} selected>
-                I don't need a hotel
-              </option>
-              <option value={'00:00:00'}>12 AM</option>
-              <option value={'00:01:00'}>1 AM</option>
-              <option value={'00:02:00'}>2 AM</option>
-              <option value={'00:03:00'}>3 AM</option>
-              <option value={'00:04:00'}>4 AM</option>
-              <option value={'00:05:00'}>5 AM</option>
-              <option value={'00:06:00'}>6 AM</option>
-              <option value={'00:07:00'}>7 AM</option>
-              <option value={'00:08:00'}>8 AM</option>
-              <option value={'00:09:00'}>9 AM</option>
-              <option value={'00:10:00'}>10 AM</option>
-              <option value={'00:11:00'}>11 AM</option>
-              <option value={'00:12:00'}>12 PM</option>
-              <option value={'00:13:00'}>1 PM</option>
-              <option value={'00:14:00'}>2 PM</option>
-              <option value={'00:15:00'}>3 PM</option>
-              <option value={'00:16:00'}>4 PM</option>
-              <option value={'00:17:00'}>5 PM</option>
-              <option value={'00:18:00'}>6 PM</option>
-              <option value={'00:19:00'}>7 PM</option>
-              <option value={'00:20:00'}>8 PM</option>
-              <option value={'00:21:00'}>9 PM</option>
-              <option value={'00:22:00'}>10 PM</option>
-              <option value={'00:23:00'}>11 PM</option>
-            </select>
-          </div>
-          <div>
-            <label>What time will you get back on the road?</label>
-            <select
-              value={dailyStartTime}
-              onChange={handleDailyStartTimeChange}
-              disabled={disabled}>
-              <option value={'00:00:00'}>12 AM</option>
-              <option value={'00:01:00'}>1 AM</option>
-              <option value={'00:02:00'}>2 AM</option>
-              <option value={'00:03:00'}>3 AM</option>
-              <option value={'00:04:00'}>4 AM</option>
-              <option value={'00:05:00'}>5 AM</option>
-              <option value={'00:06:00'}>6 AM</option>
-              <option value={'00:07:00'}>7 AM</option>
-              <option value={'00:08:00'}>8 AM</option>
-              <option value={'00:09:00'}>9 AM</option>
-              <option value={'00:10:00'}>10 AM</option>
-              <option value={'00:11:00'}>11 AM</option>
-              <option value={'00:12:00'}>12 PM</option>
-              <option value={'00:13:00'}>1 PM</option>
-              <option value={'00:14:00'}>2 PM</option>
-              <option value={'00:15:00'}>3 PM</option>
-              <option value={'00:16:00'}>4 PM</option>
-              <option value={'00:17:00'}>5 PM</option>
-              <option value={'00:18:00'}>6 PM</option>
-              <option value={'00:19:00'}>7 PM</option>
-              <option value={'00:20:00'}>8 PM</option>
-              <option value={'00:21:00'}>9 PM</option>
-              <option value={'00:22:00'}>10 PM</option>
-              <option value={'00:23:00'}>11 PM</option>
-            </select>
-          </div>
-          <br />
-
-          <div>
-            <MonetizationOnIcon />
-            <div>
-              <label>Avoid Tolls?</label>
-              <input
-                type={'checkbox'}
-                checked={avoidTolls}
-                onClick={handleCheck}
-              />
+          <div className={classes.inputContainer} >
+            <HotelIcon />
+            <div className={classes.hotelTimes}>
+              <FormControl>
+                <FormHelperText>What time do you want to stop for a hotel?</FormHelperText>
+                <NativeSelect value={endTimeForDay} onChange={handleSleepChange}>
+                  <option value={null} selected>
+                    I don't need a hotel
+                  </option>
+                  <option value={'00:00:00'}>12 AM</option>
+                  <option value={'00:01:00'}>1 AM</option>
+                  <option value={'00:02:00'}>2 AM</option>
+                  <option value={'00:03:00'}>3 AM</option>
+                  <option value={'00:04:00'}>4 AM</option>
+                  <option value={'00:05:00'}>5 AM</option>
+                  <option value={'00:06:00'}>6 AM</option>
+                  <option value={'00:07:00'}>7 AM</option>
+                  <option value={'00:08:00'}>8 AM</option>
+                  <option value={'00:09:00'}>9 AM</option>
+                  <option value={'00:10:00'}>10 AM</option>
+                  <option value={'00:11:00'}>11 AM</option>
+                  <option value={'00:12:00'}>12 PM</option>
+                  <option value={'00:13:00'}>1 PM</option>
+                  <option value={'00:14:00'}>2 PM</option>
+                  <option value={'00:15:00'}>3 PM</option>
+                  <option value={'00:16:00'}>4 PM</option>
+                  <option value={'00:17:00'}>5 PM</option>
+                  <option value={'00:18:00'}>6 PM</option>
+                  <option value={'00:19:00'}>7 PM</option>
+                  <option value={'00:20:00'}>8 PM</option>
+                  <option value={'00:21:00'}>9 PM</option>
+                  <option value={'00:22:00'}>10 PM</option>
+                  <option value={'00:23:00'}>11 PM</option>
+                </NativeSelect>
+              </FormControl>
+            
+              <FormHelperText>What time will you get back on the road?</FormHelperText>
+              <NativeSelect
+                value={dailyStartTime}
+                onChange={handleDailyStartTimeChange}
+                disabled={disabled}>
+                <option value={'00:00:00'}>12 AM</option>
+                <option value={'00:01:00'}>1 AM</option>
+                <option value={'00:02:00'}>2 AM</option>
+                <option value={'00:03:00'}>3 AM</option>
+                <option value={'00:04:00'}>4 AM</option>
+                <option value={'00:05:00'}>5 AM</option>
+                <option value={'00:06:00'}>6 AM</option>
+                <option value={'00:07:00'}>7 AM</option>
+                <option value={'00:08:00'}>8 AM</option>
+                <option value={'00:09:00'}>9 AM</option>
+                <option value={'00:10:00'}>10 AM</option>
+                <option value={'00:11:00'}>11 AM</option>
+                <option value={'00:12:00'}>12 PM</option>
+                <option value={'00:13:00'}>1 PM</option>
+                <option value={'00:14:00'}>2 PM</option>
+                <option value={'00:15:00'}>3 PM</option>
+                <option value={'00:16:00'}>4 PM</option>
+                <option value={'00:17:00'}>5 PM</option>
+                <option value={'00:18:00'}>6 PM</option>
+                <option value={'00:19:00'}>7 PM</option>
+                <option value={'00:20:00'}>8 PM</option>
+                <option value={'00:21:00'}>9 PM</option>
+                <option value={'00:22:00'}>10 PM</option>
+                <option value={'00:23:00'}>11 PM</option>
+              </NativeSelect>
             </div>
+          </div>
+          <br />
+
+          <div className={classes.inputContainer}>
+            <MonetizationOnIcon />
+            <FormControl>
+              <InputLabel>Avoid Tolls?</InputLabel>
+              <Checkbox
+                checked={avoidTolls}
+                onChange={handleCheck}
+                label='Start'
+                inputProps={{ "aria-label": 'avoid tolls checkbox' }}
+              />
+            </FormControl>
             <br />
             <FastfoodIcon />
             <div>
               <label>Select Food Preferences</label>
-              <div id='options'>
+              <div id='options' className={classes.foodCheckGroup}>
                 {options.map((el, i) => (
                   <div>
                     <label key={i * 2}>{el}</label>{' '}
-                    <input
+                    <Checkbox
                       key={i * 2 + 1}
-                      type='checkbox'
                       value={el}
                       onChange={handleCheckOfFood}
-                      className={el}
+                      className={classes.foodCheckbox}
                       id={el}
                     />
                   </div>
                 ))}
               </div>
-              <input
+              <TextField
+                label='Add Additional Preferences'
                 onChange={handleAdditionalOptionChange}
                 value={additionalOption}
               />
               <Button
                 variant='outlined'
+                color='secondary'
                 onClick={handleAdditionalOptionAddition}>
                 Add Option
               </Button>
             </div>
             <br />
 
-            <Button color='primary' variant='outlined' onClick={saveInfo}>
+            <Button color='primary' variant='contained' onClick={saveInfo}>
               Generate Trip
             </Button>
           </div>
