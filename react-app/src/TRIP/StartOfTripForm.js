@@ -143,7 +143,11 @@ const StartOfTripForm = ({ setToggle }) => {
   // *** JSX ***
 
   return (
-    <Paper variant='outlined' elevation={8}>
+    <Paper 
+      // variant='outlined' 
+      elevation={0} 
+      className={classes.formContainer}
+    >
       <div className='StartOfTripForm'>
         <div className='trip_customize_container'>
           <CardTravelIcon />
@@ -153,8 +157,8 @@ const StartOfTripForm = ({ setToggle }) => {
 
           <br />
           <div className={classes.inputContainer}>
-            <DirectionsCarIcon />
-            <FormControl>
+            <DirectionsCarIcon fontSize='large' color='primary' />
+            <FormControl className={classes.formControl}>
               {/* <InputLabel>Which car will you be driving?</InputLabel> */}
               <FormHelperText>Which car will you be driving?</FormHelperText>
               <NativeSelect 
@@ -180,8 +184,8 @@ const StartOfTripForm = ({ setToggle }) => {
           </div>
           <br />
           <div className={classes.inputContainer}>
-            <LocalGasStationIcon />
-            <FormControl>
+            <LocalGasStationIcon fontSize='large' color='primary' />
+            <FormControl className={classes.formControl}>
               <InputLabel>How often are we stopping?</InputLabel>
               <NativeSelect value={timeBetweenStops} onChange={handleStopChange}>
                 <option value={5400}>Every Hour or Two</option>
@@ -193,9 +197,9 @@ const StartOfTripForm = ({ setToggle }) => {
           </div>
           <br />
           <div className={classes.inputContainer} >
-            <HotelIcon />
+            <HotelIcon fontSize='large' color='primary' />
             <div className={classes.hotelTimes}>
-              <FormControl>
+              <FormControl className={classes.formControl}>
                 <FormHelperText>What time do you want to stop for a hotel?</FormHelperText>
                 <NativeSelect value={endTimeForDay} onChange={handleSleepChange}>
                   <option value={null} selected>
@@ -228,8 +232,11 @@ const StartOfTripForm = ({ setToggle }) => {
                 </NativeSelect>
               </FormControl>
             
-              <FormHelperText>What time will you get back on the road?</FormHelperText>
+              <FormHelperText className={classes.backOnRoad}>
+                What time will you get back on the road?
+              </FormHelperText>
               <NativeSelect
+                className={classes.backOnRoadSelect}
                 value={dailyStartTime}
                 onChange={handleDailyStartTimeChange}
                 disabled={disabled}>
@@ -263,52 +270,57 @@ const StartOfTripForm = ({ setToggle }) => {
           <br />
 
           <div className={classes.inputContainer}>
-            <MonetizationOnIcon />
-            <FormControl>
-              <InputLabel>Avoid Tolls?</InputLabel>
+            <MonetizationOnIcon fontSize='large' color='primary' />
+            <FormControl className={classes.avoidTolls}>
+              <label>Avoid Tolls?</label>
               <Checkbox
                 checked={avoidTolls}
                 onChange={handleCheck}
-                label='Start'
+                // label='Start'
                 inputProps={{ "aria-label": 'avoid tolls checkbox' }}
               />
             </FormControl>
-            <br />
-            <FastfoodIcon />
-            <div>
-              <label>Select Food Preferences</label>
+          </div>
+          <br />
+
+          <div className={classes.inputContainer}>
+            <FastfoodIcon fontSize='large' color='primary' />
+            <FormControl className={classes.formControl}>
+              <FormHelperText>Select Food Preferences</FormHelperText>
               <div id='options' className={classes.foodCheckGroup}>
                 {options.map((el, i) => (
-                  <div>
+                  <div className={classes.foodCheckbox} >
                     <label key={i * 2}>{el}</label>{' '}
                     <Checkbox
                       key={i * 2 + 1}
                       value={el}
                       onChange={handleCheckOfFood}
-                      className={classes.foodCheckbox}
                       id={el}
                     />
                   </div>
                 ))}
               </div>
-              <TextField
-                label='Add Additional Preferences'
-                onChange={handleAdditionalOptionChange}
-                value={additionalOption}
-              />
-              <Button
-                variant='outlined'
-                color='secondary'
-                onClick={handleAdditionalOptionAddition}>
-                Add Option
-              </Button>
-            </div>
-            <br />
-
-            <Button color='primary' variant='contained' onClick={saveInfo}>
-              Generate Trip
-            </Button>
+              <div className={classes.additionalOption} >
+                <TextField
+                  label='Additional Preferences'
+                  onChange={handleAdditionalOptionChange}
+                  value={additionalOption}
+                  className={classes.optionField}
+                />
+                <Button
+                  variant='outlined'
+                  color='secondary'
+                  onClick={handleAdditionalOptionAddition}>
+                  Add
+                </Button>
+              </div>
+            </FormControl>
           </div>
+          <br />
+
+          <Button color='primary' variant='contained' onClick={saveInfo}>
+            Generate Trip
+          </Button>
         </div>
       </div>
     </Paper>
