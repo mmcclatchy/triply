@@ -66,7 +66,7 @@ const Stepper = () => {
     <div className='Stepper__Container'>
       {suggestions[step] ? (
         <>
-          <Paper elevation={3} className='Stop__Header' style={{ height: '25%' }}>
+          <Paper elevation={3} className='Stop__Header' >
             <h1>BOOK {converter.toWordsOrdinal(step).toUpperCase()} STOP</h1>
           </Paper>
 

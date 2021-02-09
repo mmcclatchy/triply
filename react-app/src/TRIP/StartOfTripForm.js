@@ -56,7 +56,8 @@ const StartOfTripForm = ({ setToggle }) => {
   const handleCarChange = e => setSelectedCar(e.target.value);
   const handleStopChange = e => setTimeBetweenStops(e.target.value);
   const handleSleepChange = e => {
-    e.target.value === '' ? setDisabled(true) : setDisabled(false);
+    console.log(e.target.value)
+    e.target.value === `I don't need a hotel` ? setDisabled(true) : setDisabled(false);
     setEndTimeForDay(e.target.value);
   };
   const handleDailyStartTimeChange = e => setDailyStartTime(e.target.value);
