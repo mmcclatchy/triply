@@ -44,6 +44,11 @@
   justify-content: space-evenly;
 }
 
+.start_trip_header {
+  display: flex;
+  justify-content: space-around;
+}
+
 .trip_summary_details {
   text-align: left;
   font-family: Arial, Helvetica, sans-serif;

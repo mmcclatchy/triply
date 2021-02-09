@@ -56,7 +56,6 @@ const StartOfTripForm = ({ setToggle }) => {
   const handleCarChange = e => setSelectedCar(e.target.value);
   const handleStopChange = e => setTimeBetweenStops(e.target.value);
   const handleSleepChange = e => {
-    console.log(e.target.value)
     e.target.value === `I don't need a hotel` ? setDisabled(true) : setDisabled(false);
     setEndTimeForDay(e.target.value);
   };
@@ -151,10 +150,12 @@ const StartOfTripForm = ({ setToggle }) => {
     >
       <div className='StartOfTripForm'>
         <div className='trip_customize_container'>
-          <CardTravelIcon />
-          <Typography variant='h5' component='h1'>
-            Customize Your Trip
-          </Typography>
+          <div className="start_trip_header">
+            <CardTravelIcon color='primary' fontSize='large' />
+            <Typography variant='h5' component='h1' style={{ width: 350 }}>
+              Customize Your Trip
+            </Typography>
+          </div>
 
           <br />
           <div className={classes.inputContainer}>
