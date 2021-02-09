@@ -36,7 +36,7 @@ const StartOfTripForm = ({ setToggle }) => {
 
   // *** Local State ***
   const [car, setCar] = useState([]);
-  const [selectedCar, setSelectedCar] = useState('');
+  const [selectedCar, setSelectedCar] = useState(1);
   const [timeBetweenStops, setTimeBetweenStops] = useState(5400);
   const [endTimeForDay, setEndTimeForDay] = useState(null);
   const [dailyStartTime, setDailyStartTime] = useState('');
