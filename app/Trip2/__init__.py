@@ -6,6 +6,7 @@ import copy
 import json
 import os
 import datetime
+from datetime import date
 import copy
 
 
@@ -145,9 +146,21 @@ class TripClass:
         needGas = True
 
         delta = datetime.timedelta(seconds=buffer)
-        lastStopTime = datetime.datetime.fromisoformat(self.tempCache["stopArray"][-1]["time"])
+        lastStopTime = datetime.datetime.fromisoformat(self.tempCache["stopArray"][-1]["time"]) 
+        if self.tempCache["stopArray"][-1].get("hotel"):
+            todays_Date = date.today()
+            year = todays_Date.year
+            month = str(todays_Date.month)
+            if len(month) < 2:
+                month = "0" + month
+            day = str(todays_Date.day)
+            if len(day) < 2:
+                day = "0" + day
+            print("THE THING!!!!!:", str(year) + "-" + month + "-" + day + "T" + self.cache["dailyStartTime"])
+            lastStopTime = datetime.datetime.fromisoformat(str(year) + "-" + str(month) + "-" + str(day) + "T" + self.cache["dailyStartTime"])
+
         stopISO = (lastStopTime + delta).time().isoformat()
-        # print("HOTEL STOP:", hotelStop)
+        print("\n\n\n\n\n HOTEL STOP:", hotelStop, stopISO, "\n\n\n\n\n")
         return{
             "stopISO": stopISO,
             "location": vertext,
