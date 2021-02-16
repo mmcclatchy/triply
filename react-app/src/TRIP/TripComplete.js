@@ -13,7 +13,8 @@ export default function TripComplete() {
       style={{ textAlign: 'center', margin: '15%' }}>
       <img src={confetti} style={{ width: '50px' }} />
       <h2>You're all Set! Happy Adventuring!</h2>
-      <TripSummary view={true} />
+      {/* set to false as to be sure itinerary is viewable upon loading */}
+      <TripSummary view={false} />
       <img src={endImage} style={{ width: '100%' }} />
       <h2>How should we send your Itinerary?</h2>
       <EndModal />

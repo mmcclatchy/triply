@@ -141,7 +141,8 @@ class TripClass:
 
 
         # we now have the vertext. Now we need to look for the places nearby
-        needGas = distance * 2 > self.tempCache["metersToRefuel"]
+        # needGas = distance * 2 > self.tempCache["metersToRefuel"]
+        needGas = True
 
         delta = datetime.timedelta(seconds=buffer)
         lastStopTime = datetime.datetime.fromisoformat(self.tempCache["stopArray"][-1]["time"])
@@ -350,6 +351,7 @@ class TripClass:
     # returns directions as json
     def getDirections(self):
         self.updateDirections()
+        print("\n \n \n This is the stopArray:", self.cache["stopArray"], "\n \n \n")
         return json.dumps(self.directions)
 
     def editStop(self, oldPlaceId, newPlaceId):
@@ -379,7 +381,8 @@ class TripClass:
 
 
 
-
+print(datetime.time(hour=22).isoformat())
+print(datetime.datetime(year=2020, month=12, day=29, hour=10, minute=13).isoformat())
 
 # t = TripClass()
 # t.createNewTrip("Santa Rosa, California", "Holland, Mi", 100, 4 * 60 * 60, datetime.time(hour=22).isoformat(), datetime.datetime(year=2020, month=12, day=29, hour=10, minute=13).isoformat(), False, datetime.time(hour=8).isoformat())
