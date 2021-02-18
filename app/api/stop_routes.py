@@ -116,11 +116,14 @@ def post_stop(trip_id):
             else:
                 hotel_photo_url = None
 
+            # hardcoded 3 stars
+            
             hotel = Hotel(
                 name=req_hotel['name'],
                 coordinates=coords_to_str(req_hotel['geometry']['location']),
                 img_url=hotel_photo_url,
                 place_id=req_hotel['place_id'],
+                stars=3
             )
             db.session.add(hotel)
 

@@ -31,7 +31,13 @@ const Stepper = () => {
   }, [step]);
 
   // *** Actions ***
+  // this is where the trouble is
   const nextHandler = () => {
+    //this formats the data correctly
+    const tempStops = {}
+    data[step].forEach(el=>{
+      tempStops[el.type] = el
+    })
     const stop = {
       tripId,
       step,
@@ -40,9 +46,9 @@ const Stepper = () => {
         suggestions[step]?.restaurants[0]?.place_id ||
         suggestions[step]?.gasStations[0]?.place_id,
       tripStopNum: step,
-      restaurant: data[step]?.restaurants || null,
-      gasStation: data[step]?.gasStations || null,
-      hotel: data[step]?.hotels || null,
+      restaurant: tempStops?.restaurants || null,
+      gasStation: tempStops?.gasStations || null,
+      hotel: tempStops?.hotels || null,
       coordinates: suggestions[step].centerOfSearch,
       starMin: null, // TODO: Fix this when Hotels are added
       starMax: null,

@@ -29,8 +29,9 @@ const useStyles = makeStyles(theme => ({
 export default function DateAndTimePickers() {
   const dispatch = useDispatch();
   const classes = useStyles();
-  const rightNow = new Date();
-  const [startTimeContent, setStartTimeContent] = useState(rightNow.addHours(1));
+  //this fixes a bug with the iso format in the backend
+  const [startTimeContent, setStartTimeContent] = useState(new Date().toISOString().split(".")[0]);
+  console.log(startTimeContent)
 
   useEffect(() => {
     dispatch(setStartTimeAction(startTimeContent));
