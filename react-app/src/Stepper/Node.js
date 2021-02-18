@@ -90,6 +90,8 @@ const Node = ({ data, type, index }) => {
     <Card elevation={3} className='node'>
       <div>
         {getStarIcon(data.rating)}
+      </div>
+      <div>
         {data.user_ratings_total} Reviews
       </div>
       <CardMedia>
