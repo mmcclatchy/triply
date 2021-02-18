@@ -57,7 +57,10 @@ const StartOfTripForm = ({ setToggle }) => {
   const handleStopChange = e => setTimeBetweenStops(e.target.value);
   const handleSleepChange = e => {
     e.target.value === `I don't need a hotel` ? setDisabled(true) : setDisabled(false);
-    setEndTimeForDay(e.target.value);
+    console.log(e.target)
+    const time = e.target.value;
+    const regex = new RegExp(/\d{2}:\d{2}:\d{2}/)
+    setEndTimeForDay(regex.test(time) ? time : null);
   };
   const handleDailyStartTimeChange = e => setDailyStartTime(e.target.value);
   const handleCheck = e => setAvoidTolls(e.target.checked);
