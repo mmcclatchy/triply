@@ -1,6 +1,9 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import emailjs from 'emailjs-com';
+
+import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
 import './TripPage.css';
 
 const EmailService = ({ tripUrl, closeModal }) => {
@@ -36,8 +39,14 @@ const EmailService = ({ tripUrl, closeModal }) => {
         />
         <input name='link' defaultValue={tripUrl} className='hidden' />
         <input name='trip_name' defaultValue={trip_name} className='hidden' />
-        <input type='email' name='to_email'></input>
-        <button type='submit'>Send</button>
+        <TextField type='email' name='to_email' label='Email' />
+        <Button
+          color='primary'
+          variant='contained'
+          disableElevation
+          type='submit'>
+          Send Email
+        </Button>
       </form>
     </div>
   );

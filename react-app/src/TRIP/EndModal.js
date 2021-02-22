@@ -42,9 +42,9 @@ export default function EndModal() {
         onClose={handleClose}>
         <div className='endmodal__container'>
           <div className='endmodal__qr'>
-            <h1>Send to your Mobile Device</h1>
+            <h3>Send to your Mobile Device</h3>
             <QRCode value={tripUrl} />
-            <h1>Scan QR</h1>
+            <h3>Scan QR</h3>
           </div>
           <div className="endmodal_link">
             <Button 
@@ -53,10 +53,12 @@ export default function EndModal() {
               rel="noopener noreferrer"
               color='primary'
               variant='contained'
-            >Link</Button>
+            >
+              Link to Google Maps
+            </Button>
           </div>
           <div className='endmodal__email'>
-            <h1>Send to Email</h1>
+            <h3>Send to Email</h3>
             <EmailService tripUrl={tripUrl} closeModal={handleClose} />
           </div>
         </div>
