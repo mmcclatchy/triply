@@ -29,8 +29,8 @@ const EmailService = ({ tripUrl, closeModal }) => {
   };
 
   return (
-    <div>
-      <form onSubmit={sendEmail}>
+    <div className="email__content">
+      <form onSubmit={sendEmail} className='content__email-form'>
         <input name='name' defaultValue={name} className='hidden' />
         <input
           name='destination'
@@ -39,12 +39,15 @@ const EmailService = ({ tripUrl, closeModal }) => {
         />
         <input name='link' defaultValue={tripUrl} className='hidden' />
         <input name='trip_name' defaultValue={trip_name} className='hidden' />
-        <TextField type='email' name='to_email' label='Email' />
+        <TextField type='email' name='to_email' label='Email Address' />
         <Button
           color='primary'
           variant='contained'
           disableElevation
-          type='submit'>
+          type='submit'
+          className='email-form__button'
+          style={{ marginTop: 20 }}
+        >
           Send Email
         </Button>
       </form>

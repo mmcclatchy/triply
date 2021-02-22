@@ -74,22 +74,64 @@
   display: flex;
   justify-content: space-between;
   flex-flow: column;
-  width: 800px;
-  height: 35vh;
+  width: 600px;
+  height: 700px;
   padding: 80px 100px 80px 100px;
 }
 
-.qr__icon,
-.link__icon,
-.email__icon {
-  width: 30%;
+.endmodal__title {
+  text-align: center;
 }
 
 .endmodal__qr,
 .endmodal__link,
 .endmodal__email {
   margin: 20px;
-  width: 70%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.qr__img,
+.link__img,
+.email__img {
+  width: 200px;
+}
+
+.qr__img img,
+.link__img img,
+.email__img img {
+  width: 200px;
+  object-fit: cover;
+}
+
+.qr__content,
+.link__content,
+.email__content {
+  width: 100%;
+  display: flex;
+  flex-flow: column;
+  margin-left: 35px;
+  justify-content: space-around;
+}
+
+.qr__content {
+  height: 100%;
+  align-items: center;
+}
+
+.qr__heading {
+  font-size: 1.25em;
+  font-weight: bold;
+}
+
+.content__email-form {
+  display: flex;
+  flex-flow: column;
+}
+
+.email-form__button {
+  margin-top: 20px;
 }
 
 .hidden {

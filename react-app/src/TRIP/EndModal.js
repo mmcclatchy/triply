@@ -2,9 +2,9 @@ import React, { useState, forwardRef } from 'react';
 import { useSelector } from 'react-redux';
 
 import { Button, Dialog, Slide, Link, TextField } from '@material-ui/core';
-import PhoneAndroidIcon from '@material-ui/icons/PhoneAndroid';
-import LanguageIcon from '@material-ui/icons/Language';
-import MailOutlineIcon from '@material-ui/icons/MailOutline';
+import website from '../assets/website.jpg'
+import phone from '../assets/phone.jpg'
+import email from '../assets/email.jpg'
 import QRCode from 'qrcode.react';
 import EmailService from './EmailService';
 
@@ -45,20 +45,21 @@ export default function EndModal() {
         onClose={handleClose}>
         <div className='endmodal__container'>
           
+          <h1 className='endmodal__title'>How do you want to get your itinerary?</h1>
+          
           <div className='endmodal__qr'>
-            <div className='qr__icon'>
-              <PhoneAndroidIcon />
+            <div className='qr__img' >
+              <img src={phone} alt="phone picture"/>
             </div>
             <div className="qr__content">
-              <h3>Send to your Mobile Device</h3>
+              <div className='qr__heading'>Scan QR to your Mobile Device</div>
               <QRCode value={tripUrl} />
-              <h3>Scan QR</h3>
             </div>
           </div>
           
-          <div className="endmodal_link">
-            <div className='link__icon' >
-              <LanguageIcon />
+          <div className="endmodal__link">
+            <div className='link__img' >
+              <img src={website} alt="website picture"/>
             </div>
             <Button 
               href={tripUrl} 
@@ -66,19 +67,20 @@ export default function EndModal() {
               rel="noopener noreferrer"
               color='primary'
               variant='contained'
+              className='link__content'
+              style={{ marginLeft: 35 }}
             >
               Link to Google Maps
             </Button>
           </div>
           
           <div className='endmodal__email'>
-            <div className='email__icon' >
-              <MailOutlineIcon />
+            <div className='email__img' >
+              <img src={email} alt="email picture"/>
             </div>
-            <div className="email__content">
-              <h3>Send to Email</h3>
-              <EmailService tripUrl={tripUrl} closeModal={handleClose} />
-            </div>
+            
+            <EmailService tripUrl={tripUrl} closeModal={handleClose} />
+            
           </div>
           
         </div>
