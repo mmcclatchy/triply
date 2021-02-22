@@ -15,6 +15,7 @@
 .node__container {
   display: flex;
   justify-content: center;
+  height: 25%;
 }
 
 .node {
@@ -34,11 +35,15 @@
   max-height: fit-content;
 }
 
+.title__name {
+  font-weight: bold;
+  font-size: 1rem;
+  
+}
+
 .node__image {
-  min-height: 180px;
-  min-width: 250px;
-  max-height: 200px;
-  min-width: 250px;
+  min-height: 100px;
+  max-height: 100px;
 }
 
 .node__prev-wrapper,

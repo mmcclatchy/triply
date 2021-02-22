@@ -1,6 +1,14 @@
 body {
   margin: 0;
   font-family: Arial, Helvetica, sans-serif;
+  overflow: hidden;
+  --yellow: #fdd300;
+  --yellow-dark: #eac200;
+  --off-white: #f0f0f0;
+  --blue: #007ffd;
+  --blue-dark: #0054c9;
+  --orange: #e54f20;
+  --orange-dark: #ab1600;
 }
 
 .flex {

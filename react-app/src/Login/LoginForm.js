@@ -8,19 +8,36 @@ import './LoginForm.css';
 import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles({
+  container: {
+    margin: '5% 0',
+    display: 'flex',
+    flexFlow: 'column',
+    justifyContent: 'center',
+    // width: '100%',
+  },
+  logo: {
+    marginBottom: '10%',
+  },
   button: {
-    background: 'linear-gradient(45deg, #E9F61C  30%, #FF8E53 90%)',
-    border: 0,
-    borderRadius: 3,
-    boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
-    color: 'Black',
-    height: 48,
-    padding: '0 30px'
+    backgroundColor: 'var(--yellow)',
+    width: 100,
+    fontWeight: 'bold',
+
+    '&:hover': {
+      backgroundColor: 'var(--yellow-dark)',
+    }
   },
   login_header: {
     fontFamily:
       'Circular, -apple-system, BlinkMacSystemFont, Roboto, Helvetica Neue, sans-serif',
-    fontSize: '60px'
+    fontSize: '2rem',
+    textAlign: 'center',
+    marginTop: '20px'
+  },
+  form: {
+    display: 'flex',
+    flexFlow: 'column',
+    alignItems: 'center',
   },
   email_input: {
     marginTop: '2em',
@@ -64,10 +81,13 @@ const LoginForm = () => {
   }
 
   return (
-    <div className='login__container'>
-      <img src='https://drama-deets.s3.amazonaws.com/triply_logo_contained.png' className='login__logo' />
+    <div className={classes.container}>
+      <img
+        src='https://drama-deets.s3.amazonaws.com/triply_logo_contained.png'
+        className={classes.logo}
+      />
       <div className={classes.login_header}>Welcome Back!</div>
-      <form onSubmit={onLogin}>
+      <form onSubmit={onLogin} className={classes.form}>
         <div style={{ color: 'red' }}>
           {errors.map(error => (
             <div>{error}</div>
@@ -97,10 +117,10 @@ const LoginForm = () => {
             required={true}
           />
           <div></div>
-          <Button variant='contained' type='submit' className={classes.button}>
-            Login
-          </Button>
         </div>
+        <Button variant='contained' type='submit' className={classes.button}>
+          Login
+        </Button>
       </form>
     </div>
   );

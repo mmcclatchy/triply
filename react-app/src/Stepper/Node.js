@@ -5,11 +5,22 @@ import { fetchImg, setNode, unsetNode } from '../store/actions/stepper';
 import gasStationsImg from '../images/gas.jpg';
 import restaurantsImg from '../images/restaurant.jpg';
 import hotelsImg from '../images/hotel.jpg';
-import { Card, CardMedia, Button } from '@material-ui/core';
+import { Card as MuiCard, CardMedia, Button, withStyles } from '@material-ui/core';
 import hotelIcon from '../assets/hotel.svg';
 import gasIcon from '../assets/GasStation.svg';
 import foodIcon from '../assets/restaurant.svg';
 import { getIcon, getStarIcon, getPriceDisplay } from './timelineUtility';
+
+//*************************************************************
+
+const Card = withStyles({
+  root: {
+    maxHeight: '20%'
+  }
+})(MuiCard)
+
+
+
 
 //*************************************************************
 
@@ -79,6 +90,8 @@ const Node = ({ data, type, index }) => {
     <Card elevation={3} className='node'>
       <div>
         {getStarIcon(data.rating)}
+      </div>
+      <div>
         {data.user_ratings_total} Reviews
       </div>
       <CardMedia>
@@ -96,11 +109,11 @@ const Node = ({ data, type, index }) => {
       </CardMedia>
 
       <div className='node__title'>
-        <h2>
+        <div className='title__name'>
           {data.name}
           <br />
           {getPriceDisplay(data.price_level || 2)}
-        </h2>
+        </div>
       </div>
 
       {booked ? (
@@ -109,6 +122,7 @@ const Node = ({ data, type, index }) => {
           size='large'
           onClick={unregisterNode}
           variant='outlined'
+          color='secondary'
           style={{ backgroundColor: '#5ecc8a', color: 'white' }}>
           Unbook
         </Button>

@@ -57,7 +57,7 @@ const TripPage = () => {
         <div className='trip__container--inner'>
           {toggle ? (
             <>
-              <TripSummary view={false} />
+              {/* <TripSummary view={false} /> */}
               <StartOfTripForm setToggle={setToggle} />
             </>
           ) : tripComplete ? (

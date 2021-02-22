@@ -48,15 +48,19 @@ const Suggestions = ({ type, typeName, label }) => {
               disabled
               disableElevation
               variant='outlined'
-              className='node__suggestion-buttons'>
+              color='var(--orange)'
+              // className='node__suggestion-buttons'
+            >
               Previous
             </Button>
           ) : (
             <Button
               disableElevation
               variant='outlined'
-              className='node__suggestion-buttons'
-              onClick={() => handlePrevClick(nodeIndex, setNodeIndex)}>
+              color='var(--orange)'
+              // className='node__suggestion-buttons'
+              onClick={() => handlePrevClick(nodeIndex, setNodeIndex)}
+            >
               Previous
             </Button>
           )}
@@ -81,15 +85,17 @@ const Suggestions = ({ type, typeName, label }) => {
               disabled
               disableElevation
               variant='outlined'
-              className='node__suggestion-buttons'>
+              // className='node__suggestion-buttons'
+            >
               Next
             </Button>
           ) : (
             <Button
               disableElevation
               variant='outlined'
-              className='node__suggestion-buttons'
-              onClick={() => handleNextClick(nodeIndex, setNodeIndex)}>
+              // className='node__suggestion-buttons'
+              onClick={() => handleNextClick(nodeIndex, setNodeIndex)}
+            >
               Next
             </Button>
           )}

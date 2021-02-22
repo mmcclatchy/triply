@@ -7,7 +7,7 @@
   flex-direction: column;
   overflow: auto;
   height: 98vh;
-  width: 42vw;
+  width: 500px;
   align-items: center;
   padding: 5px;
 }
@@ -25,7 +25,7 @@
 .trip__map {
   height: fit-content;
   border-right: 1px solid black;
-  width: 100%;
+  width: calc(100% - 500px);
 }
 
 .trip_summary_container {
@@ -36,6 +36,17 @@
 .trip_customize_container {
   padding: 5px 10px 5px 10px;
   text-align: center;
+  width: 100%;
+  height: -webkit-fill-available;
+  max-height: 1000px;
+  display: flex;
+  flex-flow: column;
+  justify-content: space-evenly;
+}
+
+.start_trip_header {
+  display: flex;
+  justify-content: space-around;
 }
 
 .trip_summary_details {
@@ -56,24 +67,71 @@
 .StartOfTripForm {
   margin: 15px;
   font-family: Arial, Helvetica, sans-serif;
+  height: -webkit-fill-available;
 }
 
 .endmodal__container {
   display: flex;
   justify-content: space-between;
-  width: 800px;
-  height: 35vh;
+  flex-flow: column;
+  width: 600px;
+  height: 700px;
   padding: 80px 100px 80px 100px;
 }
 
-.endmodal__qr {
-  margin: 20px;
-  width: 100%;
+.endmodal__title {
+  text-align: center;
 }
 
+.endmodal__qr,
+.endmodal__link,
 .endmodal__email {
   margin: 20px;
   width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.qr__img,
+.link__img,
+.email__img {
+  width: 200px;
+}
+
+.qr__img img,
+.link__img img,
+.email__img img {
+  width: 200px;
+  object-fit: cover;
+}
+
+.qr__content,
+.link__content,
+.email__content {
+  width: 100%;
+  display: flex;
+  flex-flow: column;
+  margin-left: 35px;
+  justify-content: space-around;
+}
+
+.qr__content {
+  height: 100%;
+  align-items: center;
+}
+
+.qr__heading {
+  font-size: 1.25em;
+  font-weight: bold;
+}
+
+.content__email-form {
+  display: flex;
+  flex-flow: column;
+}
+
+.email-form__button {
+  margin-top: 20px;
 }
 
 .hidden {
