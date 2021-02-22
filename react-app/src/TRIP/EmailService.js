@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import emailjs from 'emailjs-com';
 import './TripPage.css';
 
-const EmailService = ({ tripUrl }) => {
+const EmailService = ({ tripUrl, closeModal }) => {
   const name = useSelector(state => state.authentication.userName);
   const destination = useSelector(state => state.directions.destination);
   const trip_name = 'Graduation Roadtrip'; // TODO: Add Ability to name Trips => Store in Redux
@@ -22,6 +22,7 @@ const EmailService = ({ tripUrl }) => {
           console.log(error.text);
         }
       );
+    closeModal();
   };
 
   return (

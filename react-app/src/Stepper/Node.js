@@ -122,6 +122,7 @@ const Node = ({ data, type, index }) => {
           size='large'
           onClick={unregisterNode}
           variant='outlined'
+          color='secondary'
           style={{ backgroundColor: '#5ecc8a', color: 'white' }}>
           Unbook
         </Button>

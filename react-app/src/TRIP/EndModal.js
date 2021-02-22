@@ -57,7 +57,7 @@ export default function EndModal() {
           </div>
           <div className='endmodal__email'>
             <h1>Send to Email</h1>
-            <EmailService tripUrl={tripUrl}/>
+            <EmailService tripUrl={tripUrl} closeModal={handleClose} />
           </div>
         </div>
       </Dialog>
