@@ -2,6 +2,9 @@ import React, { useState, forwardRef } from 'react';
 import { useSelector } from 'react-redux';
 
 import { Button, Dialog, Slide, Link, TextField } from '@material-ui/core';
+import PhoneAndroidIcon from '@material-ui/icons/PhoneAndroid';
+import LanguageIcon from '@material-ui/icons/Language';
+import MailOutlineIcon from '@material-ui/icons/MailOutline';
 import QRCode from 'qrcode.react';
 import EmailService from './EmailService';
 
@@ -41,12 +44,22 @@ export default function EndModal() {
         maxWidth='lg'
         onClose={handleClose}>
         <div className='endmodal__container'>
+          
           <div className='endmodal__qr'>
-            <h3>Send to your Mobile Device</h3>
-            <QRCode value={tripUrl} />
-            <h3>Scan QR</h3>
+            <div className='qr__icon'>
+              <PhoneAndroidIcon />
+            </div>
+            <div className="qr__content">
+              <h3>Send to your Mobile Device</h3>
+              <QRCode value={tripUrl} />
+              <h3>Scan QR</h3>
+            </div>
           </div>
+          
           <div className="endmodal_link">
+            <div className='link__icon' >
+              <LanguageIcon />
+            </div>
             <Button 
               href={tripUrl} 
               target="_blank" 
@@ -57,10 +70,17 @@ export default function EndModal() {
               Link to Google Maps
             </Button>
           </div>
+          
           <div className='endmodal__email'>
-            <h3>Send to Email</h3>
-            <EmailService tripUrl={tripUrl} closeModal={handleClose} />
+            <div className='email__icon' >
+              <MailOutlineIcon />
+            </div>
+            <div className="email__content">
+              <h3>Send to Email</h3>
+              <EmailService tripUrl={tripUrl} closeModal={handleClose} />
+            </div>
           </div>
+          
         </div>
       </Dialog>
     </div>

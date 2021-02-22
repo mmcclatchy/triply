@@ -73,19 +73,23 @@
 .endmodal__container {
   display: flex;
   justify-content: space-between;
+  flex-flow: column;
   width: 800px;
   height: 35vh;
   padding: 80px 100px 80px 100px;
 }
 
-.endmodal__qr {
-  margin: 20px;
-  width: 100%;
+.qr__icon,
+.link__icon,
+.email__icon {
+  width: 30%;
 }
 
+.endmodal__qr,
+.endmodal__link,
 .endmodal__email {
   margin: 20px;
-  width: 100%;
+  width: 70%;
 }
 
 .hidden {
